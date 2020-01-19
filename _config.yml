@@ -93,8 +93,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
-#theme: 7mi
+theme: 7mi
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

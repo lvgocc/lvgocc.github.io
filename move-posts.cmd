@@ -1,1 +1,0 @@
-move posts\*.md source\_posts

@@ -3,13 +3,12 @@
 #### 介绍
 hexo
 
-#### 软件架构
-软件架构说明
-
-
 #### 安装教程
 
-1.  xxxx
+1.  运行 install hexo
+```$xslt
+npm install hexo --save
+```
 2.  xxxx
 3.  xxxx
 

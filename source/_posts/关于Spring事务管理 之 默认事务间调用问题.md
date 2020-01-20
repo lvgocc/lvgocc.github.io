@@ -3,8 +3,8 @@
 date: 2019-12-24 15:59:17
 updated: 2019-12-24 15:59:20
 comments: true
-tags: 标签
-categories: 分类
+tags: [Spring事务,默认事务]
+categories: Spring
 ---
 
 

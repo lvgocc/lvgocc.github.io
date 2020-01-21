@@ -8,9 +8,7 @@ categories: Spring
 ---
 
 
-```
 本文介绍的内容为, 在spring管理的项目中使用Quartz2.2.2版本进行任务调度
-```
 
 <!--more-->
 

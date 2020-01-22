@@ -21,3 +21,10 @@ git clone https://gitee.com/lvgo/hexo-theme-7mi.git themes/7mi
 hexo g
 hexo s
 ```
+
+
+3. 问题
+    - 博客图片问题, 过大
+    - 访问次数
+    - 国际化
+    - 评论插件

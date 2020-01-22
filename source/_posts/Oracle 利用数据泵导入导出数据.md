@@ -4,11 +4,8 @@ title: Oracle 利用数据泵导入导出数据
 date: 2019-03-12 16:04:57
 updated: 2019-03-12 16:04:57
 comments: true
-tags: 导入&导出
-categories: 
-    - 操作
-    - 教程
-    - Oracle
+tags: [Oracle,导入&导出]
+categories: [随笔,教程]
 ---
 
 

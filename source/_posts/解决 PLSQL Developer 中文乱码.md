@@ -5,9 +5,7 @@ date: 2019-03-08 10:19:50
 updated: 2019-03-08 10:19:50
 comments: true
 tags: [PL/SQL,乱码]
-categories: 
-    - 教程
-    - 随笔
+categories: [随笔,教程]
 ---
 
 # 当前中文显示

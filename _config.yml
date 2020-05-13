@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: 埋着梦想种子的地方
 subtitle: ''
 description: ''
 keywords:
-author: John Doe
-language: en
+author: lvgo
+language: zh-CN
 timezone: ''
 
 # URL
@@ -93,7 +93,8 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: 7mi
+#theme: 7mi
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

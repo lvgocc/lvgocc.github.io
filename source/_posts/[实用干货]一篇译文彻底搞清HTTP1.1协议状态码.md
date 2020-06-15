@@ -1,6 +1,6 @@
 
 ---
-title: \[实用干货]一篇译文彻底搞清HTTP1.1协议状态码
+title: [实用干货]一篇译文彻底搞清HTTP1.1协议状态码
 comments: true
 tags: [http/1.1协议,http请求状态码]
 //excerpt: 

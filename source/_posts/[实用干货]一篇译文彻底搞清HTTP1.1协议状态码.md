@@ -1,13 +1,13 @@
 
 ---
-title: [实用干货]一篇译文彻底搞清HTTP1.1协议状态码
+title: 【实用干货】一篇译文彻底搞清HTTP1.1协议状态码
 comments: true
 tags: [http/1.1协议,http请求状态码]
 //excerpt: 
 categories: http
 ---
 
-#译文 + 诠释
+# 译文 + 诠释
 
 有问题的地方请配合原文食用 [走你](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
 
@@ -19,7 +19,7 @@ categories: http
 <!--more-->
 
 
-#译文 + 部分诠释
+# 译文 + 部分诠释
 
 有问题的地方请配合原文食用 [https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
 

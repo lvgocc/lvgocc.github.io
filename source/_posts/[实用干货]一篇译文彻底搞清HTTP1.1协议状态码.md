@@ -5,8 +5,8 @@ comments: true
 tags: [http/1.1协议,http请求状态码]
 //excerpt: 
 categories: http
+id: http-protocol
 ---
-
 # 译文 + 部分诠释
 
 有问题的地方请配合原文食用 [https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)

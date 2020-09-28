@@ -7,18 +7,6 @@ tags: [http/1.1协议,http请求状态码]
 categories: http
 ---
 
-# 译文 + 诠释
-
-有问题的地方请配合原文食用 [走你](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
-
-##  Hypertext Transfer Protocol -- HTTP/1.1
-节选 **RFC 2616**  sec 10  *超文本传输协议状态码*
-
-
-
-<!--more-->
-
-
 # 译文 + 部分诠释
 
 有问题的地方请配合原文食用 [https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
@@ -26,7 +14,7 @@ categories: http
 ##  Hypertext Transfer Protocol -- HTTP/1.1
 节选 **RFC 2616**  sec 10  *超文本传输协议状态码*
 
-
+<!--more-->
 
 
 #### 10 状态码定义

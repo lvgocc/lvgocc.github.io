@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 埋着梦想种子的地方
-subtitle: ''
-description: ''
+title: 我的空间
+subtitle: '亦或繁星、亦或尘埃。不要抱怨，坚持下去'
+description: '专注并发编程、网络编程、大数据方向相关内容研究。'
 keywords:
 author: lvgo
 language: zh-CN
@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: http://lvgo.org
 root: /
 permalink: :year/:month/:day/:id/
 permalink_defaults:
@@ -45,9 +45,9 @@ post_asset_folder: false
 relative_link: false
 future: true
 highlight:
-  enable: false
-  line_number: false
-  auto_detect: false
+  enable: true
+  line_number: true
+  auto_detect: true
   tab_replace: ''
   wrap: false
   hljs: false
@@ -95,6 +95,13 @@ ignore:
 ## Themes: https://hexo.io/themes/
 #theme: 7mi
 theme: next
+
+#search
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

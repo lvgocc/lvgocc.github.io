@@ -1,3 +1,3 @@
 ```
-git clone https://github.com/next-theme/hexo-theme-next themes/next
+git clone https://github.com/lvgocc/hexo-theme-next themes/next
 ```

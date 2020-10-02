@@ -13,7 +13,7 @@ categories: Java
 
 AQS 意为队列同步器, 实际它就是 locks 包下的一个工具组件, 它出现的目的即为所有出现的自定义锁服务的.
 
-
+<!-- more -->
 
 ![image](image/javalock.png)
 

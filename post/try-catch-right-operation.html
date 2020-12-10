@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      try catch 中的异常怎么处理 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>try catch 中的异常怎么处理</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2019-06-26</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#编码技巧" >
+    <span class="tag-code">编码技巧</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在我们日常开发中, 经常会遇到一些异常需要去手动处理, 或者说是一些可能出现的异常去处理, 又或者说你不知道的异常, 等着暴露出来发现后去处理, 无论哪种异常, 当它出现的时候都是头疼的. </p>
+<h3 id="实况"><a href="#实况" class="headerlink" title="实况"></a>实况</h3><p>在我们开发过程中对一些可能出现异常的地方, 也就是非检查型异常, 需要我们自己凭经验去做异常处理, 当然你也可以大手一挥任其随意抛出.(佛系异常, 道系领导). 下面我们把镜头转向正在加班开发需求的几位选手, 看看他们是如何对待异常处理逻辑的;</p>
+<a id="more"></a>
+
+<hr>
+<h4 id="round-one"><a href="#round-one" class="headerlink" title="round one"></a>round one</h4><p>这是来自一个对try catch第一次使用的 #$%^选手</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>	......<br>	<span class="hljs-comment">// 中间嵌套10个业务处理方法</span><br>	fun1();<br>	fun2();<br>	......<br>	.<br>	.<br>	.<br>&#125; <span class="hljs-keyword">catch</span> (Execption e) &#123;<br>	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该选手使用的<strong>不动声色管你用户死活开发法</strong>(魔法伤害), 一招制胜, 此招会使问题分析陷入僵局数天, 客户因体验极差流失等异常状态, 此招杀伤力极强, 伤害值 : ∞;</p>
+<h5 id="伤害分析"><a href="#伤害分析" class="headerlink" title="伤害分析"></a>伤害分析</h5><p>伤人于无形, 破坏力 ? 视具体功能而定;</p>
+<p>当在try中出现异常后, catch无反应, 相当于你作为一个bug负责人, 知道有问题, 但你谁都不告诉.</p>
+<p>此招式可使问题永远藏在 #$%^ 的代码中, 永远做一个”优秀的开发者”, 相信他会在自己的梦想道路上渐行渐远</p>
+<hr>
+<h4 id="round-two"><a href="#round-two" class="headerlink" title="round two"></a>round two</h4><p>这是来自一个对try catch第二次使用的 *&amp;^% 选手</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>	......<br>	<span class="hljs-comment">// 中间嵌套10个业务处理方法</span><br>	fun1();<br>	fun2();<br>	......<br>	.<br>	.<br>	.<br>&#125; <span class="hljs-keyword">catch</span> (Execption e) &#123;<br>	syso(<span class="hljs-string">&quot;出现异常&quot;</span>);<br>	sout(<span class="hljs-string">&quot;处理***业务出错了&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们看到, 同样这位选手使用了<strong>不动声色随风飘摇记录知道问题不知道问题在哪抓心挠肝难受开发法</strong>(魔法伤害), 伤害值 : ∞;</p>
+<h5 id="伤害分析-1"><a href="#伤害分析-1" class="headerlink" title="伤害分析"></a>伤害分析</h5><p>这种伤害类似于什么呢? 相当于你看见你给物业说你办公室灯坏了. 物业心里阴影面积.<br>不修灯被投诉, 修不知道修哪一个.</p>
+<p>这种写法可以知道有问题, 但不知道哪有问题.</p>
+<hr>
+<h4 id="round-three"><a href="#round-three" class="headerlink" title="round three"></a>round three</h4><p>这是来自一个对try catch第三次使用的 3号选手</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>	......<br>	<span class="hljs-comment">// 中间嵌套10个业务处理方法</span><br>	fun1();<br>	fun2();<br>	......<br>	.<br>	.<br>	.<br>&#125; <span class="hljs-keyword">catch</span> (Execption e) &#123;<br>	log.error(<span class="hljs-string">&quot;处理***业务出错了&quot;</span>, e.getMessage());<br>	<span class="hljs-comment">// 写你自己的异常处理逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们看到, 这位选手使用了<strong>化骨绵掌</strong>伤害值 : 能够知道错误信息, 具体位置仍需分析;</p>
+<h5 id="伤害分析-2"><a href="#伤害分析-2" class="headerlink" title="伤害分析"></a>伤害分析</h5><p>这种操作对于我们自定义异常是有一定的帮助, 但单业务内出现异常位置多的时候, 这种方式就有一些不适用了.</p>
+<p>业务中如果出现非检查型异常那么恭喜你, 你又可以加班了.</p>
+<p>空指针, 数组越界, 类型转换, ….. 一个一个排查吧.</p>
+<hr>
+<h4 id="round-four-划重点-最常见-隐患最多的一种写法"><a href="#round-four-划重点-最常见-隐患最多的一种写法" class="headerlink" title="round four (划重点, 最常见, 隐患最多的一种写法)"></a>round four (划重点, 最常见, 隐患最多的一种写法)</h4><p>这是来自一个对try catch第三次使用的 4 号选手</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>	......<br>	<span class="hljs-comment">// 中间嵌套10个业务处理方法</span><br>	fun1();<br>	fun2();<br>	......<br>	.<br>	.<br>	.<br>&#125; <span class="hljs-keyword">catch</span> (Execption e) &#123;<br>	e.printStackTrace()<br>	<span class="hljs-comment">// 写你自己的异常处理逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="伤害分析-3"><a href="#伤害分析-3" class="headerlink" title="伤害分析"></a>伤害分析</h4><p>这个时候同学会问了, 兄弟, 这有什么伤害呢? 这还不行吗? 是因为我没写注释吗, </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">&#125; <span class="hljs-keyword">catch</span> (Execption e) &#123;<br>	sout(<span class="hljs-string">&quot;出错了&quot;</span>, e.getMessage());<br>	e.printStackTrace();<br>	<span class="hljs-comment">// 写你自己的异常处理逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这样吗? 其实这个堆栈打印的没毛病, 但是这个底层有问题. 不推荐这样使用, 这样使用的结果就是系统日志内容与堆栈日志会并行输出, 造成抢话</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">system.log : 今天是<br><span class="hljs-keyword">exception</span>.stack : 我有<br>system.log : 好<br><span class="hljs-keyword">exception</span>.stack : 问<br>system.log : 天气<br><span class="hljs-keyword">exception</span>.stack : 题了<br></code></pre></td></tr></table></figure>
+<p>具体日志随便取一个, 大家随便感受一下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">genException</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> nums[] = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[<span class="hljs-number">4</span>];<br>        System.out.println(<span class="hljs-string">&quot;Before exception is generated.&quot;</span>);<br>        nums[<span class="hljs-number">7</span>] = <span class="hljs-number">10</span>;<br>        System.out.println(<span class="hljs-string">&quot;this won&#x27;t be displayed&quot;</span>);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span></span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            genException();<br>        &#125;<br>        <span class="hljs-keyword">catch</span> (ArrayIndexOutOfBoundsException exc)&#123;<br>            System.out.println(<span class="hljs-string">&quot;Standard message is:&quot;</span>);<br>            System.out.println(exc);<br>            System.out.println(<span class="hljs-string">&quot;\nStack trace:&quot;</span>);<br>            exc.printStackTrace();<br>        &#125;<br>        System.out.println(<span class="hljs-string">&quot;After catch&quot;</span>);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>输出日志</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">Before</span> <span class="hljs-selector-tag">exception</span> <span class="hljs-selector-tag">is</span> <span class="hljs-selector-tag">generated</span>.<br><span class="hljs-selector-tag">java</span><span class="hljs-selector-class">.lang</span><span class="hljs-selector-class">.ArrayIndexOutOfBoundsException</span>: 7<br><span class="hljs-selector-tag">Standard</span> <span class="hljs-selector-tag">message</span> <span class="hljs-selector-tag">is</span>:<br><span class="hljs-selector-tag">java</span><span class="hljs-selector-class">.lang</span><span class="hljs-selector-class">.ArrayIndexOutOfBoundsException</span>: 7<br><br><span class="hljs-selector-tag">Stack</span> <span class="hljs-selector-tag">trace</span>:<br><span class="hljs-selector-tag">After</span> <span class="hljs-selector-tag">catch</span><br>	<span class="hljs-selector-tag">at</span> <span class="hljs-selector-tag">com</span><span class="hljs-selector-class">.erayt</span><span class="hljs-selector-class">.xpad</span><span class="hljs-selector-class">.ipdp</span><span class="hljs-selector-class">.service</span><span class="hljs-selector-class">.IpdpServiceImpl</span><span class="hljs-selector-class">.genException</span>(<span class="hljs-selector-tag">IpdpServiceImpl</span><span class="hljs-selector-class">.java</span><span class="hljs-selector-pseudo">:47)</span><br>	<span class="hljs-selector-tag">at</span> <span class="hljs-selector-tag">com</span><span class="hljs-selector-class">.erayt</span><span class="hljs-selector-class">.xpad</span><span class="hljs-selector-class">.ipdp</span><span class="hljs-selector-class">.service</span><span class="hljs-selector-class">.IpdpServiceImpl</span><span class="hljs-selector-class">.main</span>(<span class="hljs-selector-tag">IpdpServiceImpl</span><span class="hljs-selector-class">.java</span><span class="hljs-selector-pseudo">:52)</span><br></code></pre></td></tr></table></figure>
+
+<p>同时当堆栈深度较深时, 当该方法被多线程访问时. 会出现内存爆掉系统瘫痪.</p>
+<p>关于堆栈打印直接调用的相关文章列几篇<br><a target="_blank" rel="noopener" href="https://my.oschina.net/sxgkwei/blog/825700">https://my.oschina.net/sxgkwei/blog/825700</a><br><a target="_blank" rel="noopener" href="https://zsk-china.iteye.com/blog/1133918">https://zsk-china.iteye.com/blog/1133918</a></p>
+<hr>
+<h4 id="标准写法-不接受反驳"><a href="#标准写法-不接受反驳" class="headerlink" title="标准写法. 不接受反驳"></a>标准写法. 不接受反驳</h4><p>这是来自一个对try catch第n次使用以上几种方法后的 X 选手</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>	......<br>	<span class="hljs-comment">// 中间嵌套10个业务处理方法</span><br>	fun1();<br>	fun2();<br>	......<br>	.<br>	.<br>	.<br>&#125; <span class="hljs-keyword">catch</span> (Execption e) &#123;<br>	log.error(<span class="hljs-string">&quot;处理***业务出错了&quot;</span>, e);<br>	<span class="hljs-comment">// 写你自己的异常处理逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="结尾再说两句"><a href="#结尾再说两句" class="headerlink" title="结尾再说两句"></a>结尾再说两句</h3><p>使用log框架中方法.进行日志输出. 保证异常使用的输出流与系统日志一致, 同时将异常信息内容输出到日志文件中, 不占用字符缓冲区大小</p>
+<p>同时与大家共勉, 为我们热爱的代码做一点贡献, 发现自己的项目中有以上列举的缺陷代码能够及时完善.</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#编码技巧" >
+    <span class="tag-code">编码技巧</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/course-oracle-import-export.html">
+        <span class="nav-arrow">← </span>
+        
+          Oracle 利用数据泵导入导出数据
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/course-spring-quartz.html">
+        
+          Spring中Quartz2.2.2的使用
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '5b26939cb0448ab0d985056b80dc025f',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="toc-nav-text">背景介绍</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E5%86%B5"><span class="toc-nav-text">实况</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#round-one"><span class="toc-nav-text">round one</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%88%86%E6%9E%90"><span class="toc-nav-text">伤害分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#round-two"><span class="toc-nav-text">round two</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%88%86%E6%9E%90-1"><span class="toc-nav-text">伤害分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#round-three"><span class="toc-nav-text">round three</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%88%86%E6%9E%90-2"><span class="toc-nav-text">伤害分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#round-four-%E5%88%92%E9%87%8D%E7%82%B9-%E6%9C%80%E5%B8%B8%E8%A7%81-%E9%9A%90%E6%82%A3%E6%9C%80%E5%A4%9A%E7%9A%84%E4%B8%80%E7%A7%8D%E5%86%99%E6%B3%95"><span class="toc-nav-text">round four (划重点, 最常见, 隐患最多的一种写法)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%BC%A4%E5%AE%B3%E5%88%86%E6%9E%90-3"><span class="toc-nav-text">伤害分析</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%A0%87%E5%87%86%E5%86%99%E6%B3%95-%E4%B8%8D%E6%8E%A5%E5%8F%97%E5%8F%8D%E9%A9%B3"><span class="toc-nav-text">标准写法. 不接受反驳</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%BB%93%E5%B0%BE%E5%86%8D%E8%AF%B4%E4%B8%A4%E5%8F%A5"><span class="toc-nav-text">结尾再说两句</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/try-catch-right-operation.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

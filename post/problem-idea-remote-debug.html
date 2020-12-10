@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      Intellij IDEA 配置 tomcat 远程 debug 模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Intellij IDEA 配置 tomcat 远程 debug 模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-07-20</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#教程" >
+    <span class="tag-code">教程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="一-配置服务器"><a href="#一-配置服务器" class="headerlink" title="一.配置服务器"></a>一.配置服务器</h3><p>在catalina.sh 中添加 address 调试端口 9999  <strong>catalina.sh的位置在tocmat下的bin目录</strong></p>
+<blockquote>
+<p>以下方法任选其一</p>
+</blockquote>
+<p>第一种方法</p>
+<a id="more"></a>
+
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">JAVA_OPTS</span>=<span class="hljs-string">&quot;-agentlib:jdwp=transport=dt_socket,address=9999,suspend=n,server=y&quot;</span><br></code></pre></td></tr></table></figure>
+<p>第二种方法</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">CATALINA_OPTS</span>=<span class="hljs-string">&quot;-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999&quot;</span> <br></code></pre></td></tr></table></figure>
+
+<h3 id="二-配置IDE"><a href="#二-配置IDE" class="headerlink" title="二.配置IDE"></a>二.配置IDE</h3><p><img src="/images/posts/problem-idea-remote-debug/20180720213720867.png" alt="编辑启动配置"></p>
+<p><img src="/images/posts/problem-idea-remote-debug/2018072021380811.png" alt="点击+号,选择remote"></p>
+<p><img src="/images/posts/problem-idea-remote-debug/20180720213902702.png" alt="将host改成服务器的ip地址,port改成刚配置好的端口."></p>
+<hr>
+<p>以debug模式运行</p>
+<p>当控制台出现“Connected to the target VM, address: ‘xx.xx.xx.xx:9999’, transport: ‘socket’”的字样即可,记得加入要调试的断点.</p>
+<hr>
+<p>#end</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#教程" >
+    <span class="tag-code">教程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/course-nginx-port-setting.html">
+        <span class="nav-arrow">← </span>
+        
+          nginx 怎么通过域名访问8080端口(指定端口)
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/problem-Failed-to-resolve-support-fragment.html">
+        
+          Failed to resolve support-fragment（已解决）
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'd7b3d19b32f2d0b5250bf70be1af8754',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%80-%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-nav-text">一.配置服务器</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8C-%E9%85%8D%E7%BD%AEIDE"><span class="toc-nav-text">二.配置IDE</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/problem-idea-remote-debug.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

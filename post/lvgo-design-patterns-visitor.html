@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（二十二）行为型之访问者模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（二十二）行为型之访问者模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-06</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="访问者模式"><a href="#访问者模式" class="headerlink" title="访问者模式"></a>访问者模式</h1><blockquote>
+<p>将作用于某种数据结构中的各元素的操作分离出来封装成独立的类，使其在不改变数据结构的前提下可以添加作用于这些元素的新的操作，为数据结构中的每个元素提供多种访问方式。它将对数据的操作与数据结构进行分离，是行为类模式中最复杂的一种模式。</p>
+</blockquote>
+<p>刚看到这个模式的时候，我人都傻了，完全不知道说的是啥，直到看了近5份资料！才搞清楚这个设计模式，不愧是最复杂的一种，我也这样觉得。不过千万别被复杂吓到，捋清了之后，还是比较简单的。</p>
+<h2 id="开门见山"><a href="#开门见山" class="headerlink" title="开门见山"></a>开门见山</h2><p>访问者模式“人如其名”，就是说不同的访问者对同一个对象的访问结果不同。为什么会不同呢？因为这个访问者是我们自己定义的，我们就想让他不同😂。</p>
+<p>而实际情况更是如此。我通过几份资料总结下来，这个访问者模式所谓的访问者其实就是我们想要控制的访问权限一样。因为任何一个“访问者”都可以看到具体数据的全部内容，他只是选择性的”不看“，这样便区分开了”访问者“<strong>关注的内容</strong>，或者<strong>”限制“了”访问者“的权限</strong>。</p>
+<p>可能我说的有点绕，有点抱歉，我再简化一下这个内容。</p>
+<h2 id="网络用语"><a href="#网络用语" class="headerlink" title="网络用语"></a>网络用语</h2><p><strong>抛开表象看本质</strong></p>
+<p>如果我们抛开访问者模式这些专业的定义，单纯的去理解这个访问者模式要表达的意思，我觉得用一个东西最合适不过。那就是“网络用语”；</p>
+<p>不知道大家听没听过前阵子火了的百度广告《你说啥》单曲。歌曲中的朝阳大妈就是一个不知道关注点或者是被限制了访问权限的访问者，当然他歌曲中说的网络语有好多我也不知道是啥🙃。没听过的快去听吧。</p>
+<p>还有最近的 <code>凡尔赛文学</code> 我不百度的时候以为是个地名，所以我的 <code>权限</code> 也被限制了。</p>
+<p>正好提到这个了，那我们就拿 <code>凡尔赛文学</code> 这个网络语来学习一下访问者模式吧~🤩</p>
+<h2 id="凡尔赛文学"><a href="#凡尔赛文学" class="headerlink" title="凡尔赛文学"></a>凡尔赛文学</h2><p><strong>首先我们就要再一次抛开表象看本质😂</strong></p>
+<p>下面是我搜集到有关凡尔赛的释义：</p>
+<ol>
+<li>凡尔赛是法国巴黎的卫星城以及伊夫林省省会，曾是法兰西王朝的行政中心。</li>
+<li>《凡尔赛》是皮埃尔·苏勒执导的剧情片。</li>
+<li>以法国路易十四为时代背景的电视剧。</li>
+<li>凡尔赛文学，网络热词，指通过先抑后扬、自问自答或第三人称视角，不经意间露出”贵族生活的线索”。</li>
+<li>啥？？？</li>
+</ol>
+<p>对于凡尔赛一共有 5 种释义，他的结构应该是这样的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Versailles</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation1 = <span class="hljs-string">&quot;凡尔赛是法国巴黎的卫星城以及伊夫林省省会，曾是法兰西王朝的行政中心。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation2 = <span class="hljs-string">&quot;《凡尔赛》是皮埃尔·苏勒执导的剧情片。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation3 = <span class="hljs-string">&quot;以法国路易十四为时代背景的电视剧。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation4 = <span class="hljs-string">&quot;凡尔赛文学，网络热词，指通过先抑后扬、自问自答或第三人称视角，不经意间露出\&quot;贵族生活的线索\&quot;。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation5 = <span class="hljs-string">&quot;啥？？？&quot;</span>;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>因为我们还要对这个数据进行访问，所以还要给他加个访问的方法 #visit</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Versailles</span> </span>&#123;<br><br>   .....<br>       ....<br>       ...<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * 访问</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">visit</span><span class="hljs-params">()</span></span>&#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>既然要访问，肯定要有访问者啊，因为访问者挺多的，比如我、我的小伙伴、还有你，所以我们就使用依赖倒置原则来定义一个访问者接口 <code>Visitor</code> 然后有个访问方法，再把凡尔赛给访问者去让其自己访问，那代码实现起来应该是这样的。</p>
+<p> <code>Visitor</code>接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Visitor</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">visit</span><span class="hljs-params">(Versailles versailles)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>凡尔赛的访问方法调整一下，最终完整类如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Versailles</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation1 = <span class="hljs-string">&quot;凡尔赛是法国巴黎的卫星城以及伊夫林省省会，曾是法兰西王朝的行政中心。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation2 = <span class="hljs-string">&quot;《凡尔赛》是皮埃尔·苏勒执导的剧情片。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation3 = <span class="hljs-string">&quot;以法国路易十四为时代背景的电视剧。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation4 = <span class="hljs-string">&quot;凡尔赛文学，网络热词，指通过先抑后扬、自问自答或第三人称视角，不经意间露出\&quot;贵族生活的线索\&quot;。&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String interpretation5 = <span class="hljs-string">&quot;啥？？？&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将该对象提供给访问者访问</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> visitor 访问者</span><br><span class="hljs-comment">     * 方法名改成 accept 更好，表示这个类接受一个访问者来访问自己🙅</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(Visitor visitor)</span></span>&#123;<br>        visitor.visit(<span class="hljs-keyword">this</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来就是具体的访问者了，那我根据实际情况来定义一些访问者</p>
+<ol>
+<li>I</li>
+<li>MyFriend</li>
+<li>You</li>
+</ol>
+<p>一共三个访问者</p>
+<p><strong>I</strong>（我自己）</p>
+<p>我比较博学多识，我知道凡尔赛是地名、电影、电视剧三个</p>
+<p><strong>MyFriend</strong>（狗哥）</p>
+<p>看他的样子应该是不知道</p>
+<p><img src="https://i.loli.net/2020/12/03/fBnOdChGT9mZ2Yj.png" alt="visitor-unkown.png"></p>
+<p><strong>You</strong>（你呢？）</p>
+<p>我就当你知道凡尔赛文学，已经领悟到了无形装逼的境界好了🌚</p>
+<p>看下这三个类的情况</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 我比较博学多识</span><br><span class="hljs-comment"> * &lt;p&gt;</span><br><span class="hljs-comment"> * 欢迎跟我一起学习，微信（lvgocc）公众号搜索：星尘的一个朋友</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@blog</span> <span class="hljs-doctag">@see</span> http://lvgo.org</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@CSDN</span> <span class="hljs-doctag">@see</span> https://blog.csdn.net/sinat_34344123</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/12/1</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">I</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Visitor</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">visit</span><span class="hljs-params">(Versailles versailles)</span> </span>&#123;<br>        System.out.println(versailles.getInterpretation1());<br>        System.out.println(versailles.getInterpretation2());<br>        System.out.println(versailles.getInterpretation3());<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 弱智狗哥</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFriend</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Visitor</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">visit</span><span class="hljs-params">(Versailles versailles)</span> </span>&#123;<br>        System.out.println(versailles.getInterpretation5());<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 网络达人</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">You</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Visitor</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">visit</span><span class="hljs-params">(Versailles versailles)</span> </span>&#123;<br>        System.out.println(versailles.getInterpretation4());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后我们在模拟一下运行起来的情况</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VisitorTest</span> </span>&#123;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">visit</span><span class="hljs-params">()</span> </span>&#123;<br>        Versailles versailles = <span class="hljs-keyword">new</span> Versailles();<br><br>        System.out.println(<span class="hljs-string">&quot;lvgo 你知道凡尔赛吗？&quot;</span>);<br>        versailles.accept(<span class="hljs-keyword">new</span> I());<br><br>        System.out.println(<span class="hljs-string">&quot;\n狗哥 你知道凡尔赛吗？&quot;</span>);<br>        versailles.accept(<span class="hljs-keyword">new</span> MyFriend());<br>        <br>        System.out.println(<span class="hljs-string">&quot;\n你知道凡尔赛吗？&quot;</span>);<br>        versailles.accept(<span class="hljs-keyword">new</span> You());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果，狗哥拉胯</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">lvgo 你知道凡尔赛吗？<br>凡尔赛是法国巴黎的卫星城以及伊夫林省省会，曾是法兰西王朝的行政中心。<br>《凡尔赛》是皮埃尔·苏勒执导的剧情片。<br>以法国路易十四为时代背景的电视剧。<br><br>狗哥 你知道凡尔赛吗？<br>啥？？？<br><br>你知道凡尔赛吗？<br>凡尔赛文学，网络热词，指通过先抑后扬、自问自答或第三人称视角，不经意间露出<span class="hljs-string">&quot;贵族生活的线索&quot;</span>。<br></code></pre></td></tr></table></figure>
+
+<p>不同的访问者，看到数据结构中的结果不同。再来看下访问者的定义</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">在不改变集合元素的前提下，为一个集合中的每个元素提供多种访问方式，即每个元素有多个访问者对象访问。<br></code></pre></td></tr></table></figure>
+
+<p>虽然我们这里用的是一个对象，试着将它变成集合（多个网络语而已）吧。使用循环把每个元素都“送”给访问者，这个就留着给你动手试试吧，也留给自己以后回来看的时候能被逼动动脑😂。实在不想动，关注回复 “源码” 吧！😀</p>
+<h2 id="访问者模式类图-📌"><a href="#访问者模式类图-📌" class="headerlink" title="访问者模式类图 📌"></a>访问者模式类图 📌</h2><p>最后，我们来看下标准的访问者模式结构图</p>
+<p><img src="https://i.loli.net/2020/12/03/mKRj7h6eZVp2gt8.png" alt="visitor-UML.png"></p>
+<p>这个结构比较复杂</p>
+<ol>
+<li>客户端高层模块 <code>Client</code>；</li>
+<li>访问者接口，依赖倒置接口 <code>Visitor</code>；</li>
+<li>被访问的元素，<code>Element</code>；</li>
+<li>最后一个，<code>ObjectStructure</code> 对象结构；</li>
+</ol>
+<p>这里唯一可能需要解释的就是这个 <code>ObjectStructure</code> 了，他即用于来定义管理 <code>Element</code> 的对象载体。它可以是我们业务场景中任何需要被访问元素的载体对象，比如上述例子中，我们想把这个结构放进去那我就可以定义一个词语类 <code>Word</code> ，里面可以有 <code>NetWordLanguage</code>，<code>Professional vocabulary</code> 等等对象。如下所示</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Word</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 网络语</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;NetWordLanguage&gt; netWordLanguages = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addWord</span><span class="hljs-params">(NetWordLanguage netWordLanguage)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (!netWordLanguages.contains(netWordLanguage))&#123;<br>            netWordLanguages.add(netWordLanguage);   <br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>访问者全部源代码关注回复 “源码” 获取</p>
+</blockquote>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>访问者模式适合在<strong>数据结构稳定</strong>的系统中，即很少或不变的数据结构场景；</p>
+<p>当你想要对一个数据集合增加一些不同的使用规则，或者是“权限”控制时，可以考虑使用访问者模式，并要一同考虑数据结构是否稳定（是否会在增加类），因为这会导致访问者需要“重构”。</p>
+<p><strong>解决的问题：</strong></p>
+<ol>
+<li>访问者模式使数据结构与数据访问分离</li>
+<li>可以很灵活的增加不同的访问规则</li>
+</ol>
+<p><strong>自身的问题：</strong></p>
+<ol>
+<li>一旦出现数据结构变更（新增类型），将会使访问者发生较大的修改，因为需要调整访问者接口！严重违反了开闭原则</li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-mediator.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（二十一）行为型之中介者模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-interpreter.html">
+        
+          和 lvgo 一起学设计模式（二十三）行为型之解释器模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '1a0f17bfa8fe27a745e1c18a32a88504',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">访问者模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BC%80%E9%97%A8%E8%A7%81%E5%B1%B1"><span class="toc-nav-text">开门见山</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BD%91%E7%BB%9C%E7%94%A8%E8%AF%AD"><span class="toc-nav-text">网络用语</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%87%A1%E5%B0%94%E8%B5%9B%E6%96%87%E5%AD%A6"><span class="toc-nav-text">凡尔赛文学</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">访问者模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-visitor.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

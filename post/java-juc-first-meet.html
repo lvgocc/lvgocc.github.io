@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      初识并发编程 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>初识并发编程</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-07-31</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="初识并发编程"><a href="#初识并发编程" class="headerlink" title="初识并发编程"></a>初识并发编程</h1><blockquote>
+<p>用了将近半年的碎片时间, 共计40个小时, 终于读完了这本阿里大佬方腾飞编写的《Java并发编程的艺术》现在将书中内容理解并消化，现在用自己的理解将书中内容‘倒出来’。后续将会更新这一系列的读书笔记。内容随笔作为自我知识学习的沉淀积累。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>我一般讲什么东西都喜欢用简单的理解去讲，而不是去按部就班。教材中有明确的字样对某些知识点的概况，但你去理解要理解很多新的内容，如果是具体的内容还好，如果是抽象的内容，可能会打消你学习的积极性或者让你对要理解的内容更难以理解接收。我总在试图用最简单的办法去传播知识，去学习接收知识。当然事实总会给你一记无情的巴掌，但我仍坚持用已知事务类比的方法去传播知识，让更多的人能够接收到更容易学而且更深的知识，当然这显然是一件很困难的事情（复杂度守恒定律），不过我愿意尽力的去坚持去做。</p>
+<h2 id="什么是并发"><a href="#什么是并发" class="headerlink" title="什么是并发"></a>什么是并发</h2><blockquote>
+<p>公交车的前门上车，后面下车其实就是一种并发。</p>
+</blockquote>
+<p>根据具体的业务场景不同，使用的并发形态也不同。但其中的原理都是一样，那就是<strong>同时进行皆并发</strong></p>
+<ul>
+<li>世界上所有生物同时呼吸就是并发</li>
+<li>你现在听着歌看我的文章你也是在并发</li>
+<li>你边走路边打电话是在并发</li>
+<li>灯泡并联也是并发</li>
+<li>~</li>
+</ul>
+<p>如果以上的例子中的同时进行改成按序执行即串行，非并发。在某些情况下可能会导致‘灾难’</p>
+<ul>
+<li>每个生物按序呼吸</li>
+<li>你听歌的时候看不见东西，看得见东西听不了歌</li>
+<li>你只能一动不动的打电话（而且你说话的时候什么都听不见）</li>
+<li>灯泡串联</li>
+<li>~</li>
+</ul>
+<h2 id="并发的应用"><a href="#并发的应用" class="headerlink" title="并发的应用"></a>并发的应用</h2><blockquote>
+<p>上面是根据<strong>同时进行皆并发</strong>举了几个生活的例子，那并发如果将其应用到具体的程序中是什么呢？同时也说了一些串行的内容，在某些情况可能会导致‘灾难’。</p>
+</blockquote>
+<p>要知道并发的应用要知道两个计算机上的概念进程和线程。</p>
+<ul>
+<li>进程是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位，是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>结构的基础。</li>
+<li>线程是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>能够进行运算<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%B0%83%E5%BA%A6">调度</a>的最小单位</li>
+</ul>
+<p>用我的方法学习什么是进程什么是线程</p>
+<ul>
+<li>进程是我们每个人的一心一意，当你三心二意的时候就开启了多进程</li>
+<li>线程就是你一心一意中的每个动作，包括你的思想。这就一定是多线程</li>
+</ul>
+<p><strong>举例</strong></p>
+<p>张三今天在专心的写作业  - 启动了写作业进程</p>
+<p>在写作业的时候张三用脑子思考，用手写，用眼睛看 - 张三开了3条线程来完成写作业这个进程的调度</p>
+<p>张三边唱歌边吃饭边玩滑板 - 启动了玩滑板进程，吃饭进程，唱歌进程</p>
+<p>他的脑子接到了很多指令，开始运行，啪！最后张三的腿脚线程一直阻塞着没机会执行，最后抛出异常张三没能完成这个作业。</p>
+<hr>
+<h2 id="并发程序"><a href="#并发程序" class="headerlink" title="并发程序"></a>并发程序</h2><blockquote>
+<p>通过上面的内容我们知道了线程和进程的区别，线程是运行在进程中的 ，线程可以有多线程，进程也可以有多进程</p>
+</blockquote>
+<p>说了这么多，那我们并发编程到底是什么呢。</p>
+<p><strong>需求一</strong></p>
+<p>有100个人来参加一个宴会，需要在海报上签上自己的名字。大会需要大家在10分钟完成这个任务。假入只有一个笔，而且每个人签字的平均速度是7秒，签完名的时间大概是11分钟，我们要怎么解决这个问题？</p>
+<p><strong>需求二</strong></p>
+<p>我们有一个10TB的文件需要解析，我们假设需要3天完成这个任务，但是你设计个程序把文件从头读到为就需要4天，看似不可完成的任务该怎么做？</p>
+<p><strong>解决方案</strong></p>
+<p>针对需求一，我们可以再买一支笔，那大概6分钟就可以写完，3支笔4分钟， 4支笔3分钟 。。。100支笔 10秒钟？</p>
+<p>需求二我们可以将文件分成两部分，让两个程序一起读，这样2天就看完了，拆成4部分1天拆成8部分半天，拆成100部分文件给你就看完了？</p>
+<h2 id="并发遇到的问题"><a href="#并发遇到的问题" class="headerlink" title="并发遇到的问题"></a>并发遇到的问题</h2><p>在并发场景我们需要考虑几个问题</p>
+<ol>
+<li>数据一致性（安全性）</li>
+<li>系统资源（性能，可用性）</li>
+</ol>
+<p><code>那什么是数据一致性问题？</code></p>
+<p><strong>第一种情况</strong></p>
+<p>在签到过程中，张三看见还有5支笔摆在那，但是张三却看不见他前面刚过去了5个人（多线程情况下各线程间隔离，共享进程资源）等张三过去的时候发现没有笔了，这个时候张三就会抛出来一个没有笔异常（NullPointException） 这里说明的就是张三看到的笔数量和实际的笔数量不相同（数据一致性问题）</p>
+<p><strong>第二种情况</strong></p>
+<p>将文件分开两部分后，两个程序过来读，恰好两个程序读的都是第一部分，等到程序执行完发现还有一部分没读，这个时候显然时间已经来不及了，这里说明两个程序看到的都是两部分数据，所有从第一部分开始读，但是当一个程序已经读了第一部分第二个程序不知道，所以它也读了第一部分（数据一致性问题）</p>
+<p><code>那什么是系统资源问题呢？</code></p>
+<p><strong>第一种情况</strong></p>
+<p>你提供了100支笔给大家签到,100个人都会过去签到 , 假设100个人都拿到了笔,( 这里同样会有数据一致性的安全问题) 当他们过去海报签字的时候, 发现根本站不下, 不过好在当时海报边上设计的空地还有很大的位置, 大家可以站边上等一等. 你写完我在写(实际程序可不是这样, 实际程序的话有可能是你写一笔我写一笔, 上下文切换), (但实际情况可能更糟, 两个人写在了同一块地方, 张三名字写在了李四的上面, 只能看到张三的名字, 根本看不到李四的名字了(同样的数据一致性问题)) 如果海报设计的位置不够, 这个时候就会出现一个问题, 内存溢出</p>
+<p>第二种情况类似</p>
+<hr>
+<h2 id="并发问题的引申问题"><a href="#并发问题的引申问题" class="headerlink" title="并发问题的引申问题"></a>并发问题的引申问题</h2><p>在上面我们发现了一些并发时的问题, 那问题清楚后, 我们就想办法去解决出现的问题. </p>
+<ol>
+<li>数据一致性（安全性）</li>
+<li>系统资源（性能，可用性）</li>
+<li>·····</li>
+</ol>
+<p>不同的问题我们有不同的解决方案, 如数据一致性的问题, 我们可以通过加锁来实现.</p>
+<p>加锁以后我们会迎来另一系列的新的问题(性能问题, 死锁)</p>
+<p>对于系统资源的问题我们也有对应的解决方案, 即分配合理的内存(这里不关注这个) 和 分配合理的线程数(笔的支数)</p>
+<blockquote>
+<p>这里引申的几个问题我们后面逐个从书中寻找答案, 带着问题去慢慢读享受这个过程, 加锁, 什么是锁, 怎么用锁. 分配资源, 分多少刚好合适?</p>
+</blockquote>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/java-juc-blockingqueue.html">
+        <span class="nav-arrow">← </span>
+        
+          7个阻塞队列
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/java-juc-twooldproblem.html">
+        
+          并发的两个&#39;老&#39;问题
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '32701a2d6ac8eabfe1e3ff13d432821c',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%88%9D%E8%AF%86%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B"><span class="toc-nav-text">初识并发编程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B9%B6%E5%8F%91"><span class="toc-nav-text">什么是并发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-nav-text">并发的应用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B9%B6%E5%8F%91%E7%A8%8B%E5%BA%8F"><span class="toc-nav-text">并发程序</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B9%B6%E5%8F%91%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-nav-text">并发遇到的问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E5%BC%95%E7%94%B3%E9%97%AE%E9%A2%98"><span class="toc-nav-text">并发问题的引申问题</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-juc-first-meet.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

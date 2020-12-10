@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+    <h2>亦或繁星、亦或尘埃。不要抱怨，坚持下去</h2>
+    <p class="post-date">专注 Java 技术、并发编程、网络编程、大数据方向相关内容研究。</p>
+</div>
+<main class="app-body">
+    <div class="index-posts">
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/course-spring-quartz.html">Spring中Quartz2.2.2的使用</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <p>本文介绍的内容为, 在spring管理的项目中使用Quartz2.2.2版本进行任务调度</p>
+<h4 id="quartz-非教学介绍"><a href="#quartz-非教学介绍" class="headerlink" title="quartz 非教学介绍"></a>quartz 非教学介绍</h4><p>quartz是一款基于java timer开发的一个轻量级任务调度框架, 可以帮助我们快速实现定时/周期任务处理工具组件</p>
+<p> Quartz中有任务组, 任务, 触发器组, 触发器 cron expression 等概念.<br> JOB_GROUP 、JOB 、TRIGGER_GROUP 、TRIGGER 、CRON</p>
+<p>顾名思义任务组对应任务, 触发器组对应触发器, 目前实战项目中的用法比较特殊.</p>
+<p>我们使用一个任务, 对应多个触发器来达到任务调度的实现.当前Quartz支持两种任务配置, 这里使用的是以任务为单位来进行定时执行的概念, 还有一种指定service方法来执行, 具体大家可以参考其他博主的文章自行了解.</p>
+                    
+                </div>
+                <span class="article-date">2019年9月30日</span>
+                
+                    
+  <a href="/tags#教程" >
+    <span class="tag-code">教程</span>
+  </a>
+
+                
+                <a class="more" href="/post/course-spring-quartz.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/try-catch-right-operation.html">try catch 中的异常怎么处理</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在我们日常开发中, 经常会遇到一些异常需要去手动处理, 或者说是一些可能出现的异常去处理, 又或者说你不知道的异常, 等着暴露出来发现后去处理, 无论哪种异常, 当它出现的时候都是头疼的. </p>
+<h3 id="实况"><a href="#实况" class="headerlink" title="实况"></a>实况</h3><p>在我们开发过程中对一些可能出现异常的地方, 也就是非检查型异常, 需要我们自己凭经验去做异常处理, 当然你也可以大手一挥任其随意抛出.(佛系异常, 道系领导). 下面我们把镜头转向正在加班开发需求的几位选手, 看看他们是如何对待异常处理逻辑的;</p>
+                    
+                </div>
+                <span class="article-date">2019年6月26日</span>
+                
+                    
+  <a href="/tags#编码技巧" >
+    <span class="tag-code">编码技巧</span>
+  </a>
+
+                
+                <a class="more" href="/post/try-catch-right-operation.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/course-oracle-import-export.html">Oracle 利用数据泵导入导出数据</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <p>目的：使用数据泵，将一台电脑上的数据库导出，导入到另一台电脑上的数据库。</p>
+                    
+                </div>
+                <span class="article-date">2019年3月12日</span>
+                
+                    
+  <a href="/tags#Oracle" >
+    <span class="tag-code">Oracle</span>
+  </a>
+
+                
+                <a class="more" href="/post/course-oracle-import-export.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/problem-plsql-garbled.html">解决 PLSQL Developer 中文乱码</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <h1 id="当前中文显示"><a href="#当前中文显示" class="headerlink" title="当前中文显示"></a>当前中文显示</h1><p><img src="/images/posts/problem-plsql-garbled/20190308101902235.png"></p>
+<h1 id="解决后"><a href="#解决后" class="headerlink" title="解决后"></a>解决后</h1><p><img src="/images/posts/problem-plsql-garbled/20190308101925588.png"></p>
+                    
+                </div>
+                <span class="article-date">2019年3月8日</span>
+                
+                    
+  <a href="/tags#教程" >
+    <span class="tag-code">教程</span>
+  </a>
+
+                
+                <a class="more" href="/post/problem-plsql-garbled.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/note-production-dead-lock.html">多线程事务死锁问题分析总结(生产问题)</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <h3 id="实战回顾"><a href="#实战回顾" class="headerlink" title="实战回顾"></a>实战回顾</h3><p>2018年11月28日 有两个客户在两个渠道购买了同一产品每人各买2笔<br>系统应在29日做成交处理, 成交结束后, 更新一张记录表, 记录表根据产品代码和渠道代码作为Unique.<br>成交使用已客户为维度的多线程成交.<br>// 方法名为虚拟捏造, 并非实际使用方法名<br>成交方法 chengjiao() 为独立事务;<br>chengjiao() 方法内使用多线程的嵌套事务 NESTED doChengjiao()</p>
+                    
+                </div>
+                <span class="article-date">2018年12月26日</span>
+                
+                    
+  <a href="/tags#Spring" >
+    <span class="tag-code">Spring</span>
+  </a>
+
+                
+                <a class="more" href="/post/note-production-dead-lock.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/problem-spring-destroying-singletons.html">Spring Destroying singletons ... root of factory hierarchy 问题【已解决】</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@<span class="hljs-number">13d</span>740f: <br>defining beans [dataSource,sessionFactory,dccDAO,groupueDAO,groupbasDAO,olcsDAO,hibernateTemplate,dccService,<br>groupueService,groupbasService,olcsService]; root of factory hierarchy<br></code></pre></td></tr></table></figure>
+                    
+                </div>
+                <span class="article-date">2018年9月21日</span>
+                
+                    
+  <a href="/tags#Spring" >
+    <span class="tag-code">Spring</span>
+  </a>
+
+                
+                <a class="more" href="/post/problem-spring-destroying-singletons.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/jvm-theory-concept.html">（概念总结）快速了解JVM结构和工作原理</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <blockquote>
+<p>以下内容为阅读由周志明编著的《深入理解Java虚拟机JVM高级特性与最佳实战》（第二版）自行总结记录，算不上完全解读了大神的意思，但也没有瞎写。如果写的不清楚的地方，还望能够自行阅读原著。这里写记只为巩固学习。</p>
+</blockquote>
+                    
+                </div>
+                <span class="article-date">2018年9月5日</span>
+                
+                    
+  <a href="/tags#JVM" >
+    <span class="tag-code">JVM</span>
+  </a>
+
+                
+                <a class="more" href="/post/jvm-theory-concept.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/data-structure-concept.html">了解一下，什么是数据结构</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        原来这就是数据结构，赞
+                    
+                </div>
+                <span class="article-date">2018年8月27日</span>
+                
+                    
+  <a href="/tags#数据结构" >
+    <span class="tag-code">数据结构</span>
+  </a>
+
+                
+                <a class="more" href="/post/data-structure-concept.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/jdk8-consumer-supplier.html">JDK8 Consumer & Supplier 什么意思</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        JDK1.8 函数式接口 Consumer &amp;amp;amp;amp; Supplier 以及 JAVA新纪元 λ表达式的到来
+                    
+                </div>
+                <span class="article-date">2018年8月24日</span>
+                
+                    
+  <a href="/tags#JDK8" >
+    <span class="tag-code">JDK8</span>
+  </a>
+
+                
+                <a class="more" href="/post/jdk8-consumer-supplier.html"></a>
+            </article>
+        
+            <article class="article-card">
+                <h2 class="article-head">
+                    <a href="/post/java-basic-innerclass.html">一篇文章让你彻底了解Java内部类</a>
+                </h2>
+                <div class="article-summary">
+                    
+                        <h4 id="内容整理自《Thinking-in-Java》-第四版-第10章-PDF下载地址"><a href="#内容整理自《Thinking-in-Java》-第四版-第10章-PDF下载地址" class="headerlink" title="内容整理自《Thinking in Java》(第四版) 第10章 PDF下载地址 "></a>内容整理自《Thinking in Java》(第四版) 第10章<a target="_blank" rel="noopener" href="https://download.csdn.net/download/sinat_34344123/10206155"> PDF下载地址 </a></h4><hr>
+<h1 id="什么是内部类"><a href="#什么是内部类" class="headerlink" title="什么是内部类?"></a>什么是内部类?</h1><blockquote>
+<p>将一个类的定义，放在另一个类的定义内部，那这个类，就是内部类</p>
+</blockquote>
+                    
+                </div>
+                <span class="article-date">2018年8月22日</span>
+                
+                    
+  <a href="/tags#Java基础" >
+    <span class="tag-code">Java基础</span>
+  </a>
+
+                
+                <a class="more" href="/post/java-basic-innerclass.html"></a>
+            </article>
+        
+
+        
+            <div class="guide-pager">
+  
+    <a href="/page/4/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/6/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+        
+    </div>
+    <div align="center" class="index-right">
+        <div id="gzh_qrcode">
+    <h3> 星尘的一个朋友 </h3>
+    <p> 亦或繁星、亦或尘埃。不要抱怨，坚持下去 </p>
+    <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+    <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+</div>
+<!--<div class="project-app">-->
+    <!--<div class="card-container">-->
+        <!--<section class="project-card">-->
+            <!--<a class="card-wrap" href="#" target="_blank">-->
+                <!--<div class="card-header"></div>-->
+                <!--<h3 class="card-title"> 星尘的一个朋友 </h3>-->
+                <!--<p class="card-description"> 亦或繁星、亦或尘埃。不要抱怨，坚持下去 </p>-->
+            <!--</a>-->
+        <!--</section>-->
+    <!--</div>-->
+<!--</div>-->
+<script>
+    (function () {
+        $('.card-header').each(function () {
+            var name = $(this).data('name');
+            $(this).geopattern(name);
+        })
+    })()
+</script>
+    </div>
+</main>
+<script>
+    (function () {
+        <!--var url = 'http://lvgo.org/page/5/index.html'-->
+        $('#article-banner').geopattern('lvgo' + Math.random())
+        $('.header').removeClass('fixed-header')
+    })();
+</script>
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      并发机制的底层实现原理 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>并发机制的底层实现原理</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-08-10</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Java-并发机制的底层实现原理"><a href="#Java-并发机制的底层实现原理" class="headerlink" title="Java 并发机制的底层实现原理"></a>Java 并发机制的底层实现原理</h1><blockquote>
+<p>Java 代码在编译后会变成 Java 字节码, 字节码被类加载器加载到 JVM 里, JVM 执行字节码, 最终需要转化成为汇编指令在 CPU 上执行, Java中所使用的并发机制依赖于 JVM 的实现和 CPU 的指令 . </p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="volatile-的应用"><a href="#volatile-的应用" class="headerlink" title="volatile 的应用"></a>volatile 的应用</h2><p>volatile 是轻量级的 synchronize , 它可以保证变量在多线程环境的”可见性”,  “可见性”是指当一个线程修改了共享变量, 另一个线程能够读到这个修改的值. (根据缓存一致性实现) 和 禁止指令重排序, 但它不是并发安全的.</p>
+<p>在多线程场景下 并发的自增</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> variable = <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * variable++这样的操作不是一个原子性操作，</span><br><span class="hljs-comment"> * 它分为读、加加、写。</span><br><span class="hljs-comment"> * 以下这种情况，</span><br><span class="hljs-comment"> * 当线程1读取了variable的值，还没有修改，</span><br><span class="hljs-comment"> * 线程2也读取了，线程1修改完了，</span><br><span class="hljs-comment"> * 通知线程2将线程的缓存的variable的值无效需要重读，</span><br><span class="hljs-comment"> * 可这时它不需要读取variable，它仍执行写操作，</span><br><span class="hljs-comment"> * 然后赋值给主线程，这时数据就会出现问题。</span><br><span class="hljs-comment"> */</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="CPU-术语"><a href="#CPU-术语" class="headerlink" title="CPU 术语"></a>CPU 术语</h3><table>
+<thead>
+<tr>
+<th align="center">术语</th>
+<th align="center">英文</th>
+<th align="left">术语描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">内存屏障</td>
+<td align="center">memory barriers</td>
+<td align="left">是一组处理器指令, 用于实现对内存操作的顺序限制</td>
+</tr>
+<tr>
+<td align="center">缓冲行</td>
+<td align="center">cache line</td>
+<td align="left">缓存中可以分配的最小存储单位. 处理器填写缓存线时会加载整个缓存线, <br />需要使用多个主内存读周期</td>
+</tr>
+<tr>
+<td align="center">原子操作</td>
+<td align="center">atomic operations</td>
+<td align="left">不可中断的一个或一系列操作</td>
+</tr>
+<tr>
+<td align="center">缓存行填充</td>
+<td align="center">cache line fill</td>
+<td align="left">当处理器识别到从内存中读取操作数是可缓存的, <br />处理器读取整个缓存行到适当的缓存(L1,L2,L3的或所有)</td>
+</tr>
+<tr>
+<td align="center">缓存命中</td>
+<td align="center">cache hit</td>
+<td align="left">如果进行告诉缓存行填充操作的内存地址仍然是下次处理器访问的地址时, <br />处理器从缓存中读取操作数, 而不是从内存读取</td>
+</tr>
+<tr>
+<td align="center">写命中</td>
+<td align="center">write hit</td>
+<td align="left">当处理器将操作数协会到一个内存缓存的区域时, <br />它首先会检查这个缓存的内存地址是否在缓存行中, 如果存在一个有效的缓存行<br />则处理器将这个操作数写回到缓存, 而不是写回到内存, 这个操作被称为写命中</td>
+</tr>
+<tr>
+<td align="center">写缺失</td>
+<td align="center">write misses the cache</td>
+<td align="left">一个有效的缓存行被写入一个不存在的内存区域.</td>
+</tr>
+</tbody></table>
+<h3 id="volatile-的底层实现"><a href="#volatile-的底层实现" class="headerlink" title="volatile 的底层实现"></a>volatile 的底层实现</h3><p>书中作者记录了实际操作后到汇编指令阶段的代码, 可以发现使用 volatile 修饰的变量在转变成汇编指令时 , 多了一个前缀 <code>lock</code>,  关于lock指令, 在多核处理器中会引发两个事情</p>
+<ol>
+<li>将当前处理器缓存行的数据写回到系统内存(在这一步操作时, 会锁定这块内存的缓存区域)</li>
+<li>写回内存的操作会使其他CPU里缓存了该内存地址的数据无效</li>
+</ol>
+<p>这样就保证了 volatile 修饰的变量的”可见性” , 缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据.</p>
+<blockquote>
+<p>扩展内容 : 对于 volatile 的底层实现, 在不同的硬件上实现不同, 在 intel486 和 pentium 处理器上会在总线上声明 lock# 信号, 相反在P6处理器中, 如果访问的数据已经缓存在处理器内部, 再不会声明 lock# 信号, 它会锁定这块区域的缓存.</p>
+</blockquote>
+<h2 id="synchronized-的应用和原理"><a href="#synchronized-的应用和原理" class="headerlink" title="synchronized 的应用和原理"></a>synchronized 的应用和原理</h2><p>synchronized 的三种使用场景</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 普通方法 , 锁是当前类的实例对象</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">syncMethod</span><span class="hljs-params">()</span></span>&#123;<br><br>&#125;<br><br><span class="hljs-comment">// 静态方法, 锁是当前类的 Class 对象</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">staticSyncMethod</span><span class="hljs-params">()</span></span>&#123;<br><br>&#125;<br><br><span class="hljs-comment">// 代码块 , 锁是括号内对象</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">innerSyncMethod</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>以下摘自书中内容:</strong></p>
+<p>当一个线程视图访问同步代码块时, 它首先必须得到锁. 退出或抛出异常必须释放锁, JVM基于进入和退出 Monitor 对象来实现方法同步和代码块同步.</p>
+<p>代码块和方法都可以使用的 monitor enter 指令和 monitor exit 指令实现 . </p>
+<p>在代码编译后, 会在同步方法或同步方法块前插入 monitor enter , 将 monitor exit 插入异常或方法结束处, 一个 monitor enter 必须有一个 monitor exit 对应.</p>
+<p>每一个对象都会有一个 monitor 与其关联,  线程执行到 monitor enter 指令时, 将会尝试获得 monitor 的所有权, 即尝试获取锁, 当 monitor 被持有后, 它将处于锁定状态 . </p>
+<p><strong>锁在哪里?</strong></p>
+<p>synchronized 的锁是保存在 Java 对象头里面的, 那对象头里都存了什么呢?</p>
+<h3 id="Java-对象头"><a href="#Java-对象头" class="headerlink" title="Java 对象头"></a>Java 对象头</h3><p>Java 中每个对象都有一个对象头, 数组比较特殊, 会有单独的一块区域(ArrayLength)保存数组的长度, 需要 4个字节 32bit 的长度空间来保存, 普通对象则需要 2 个字宽来保存 对象类型数据指针, hashcode , 锁, 分代年龄 (MarkDown)</p>
+<p>markdown的分布示意图</p>
+<p><img src="/images/posts/java-juc-theory/20200810203529454.jpg" alt="对象头"></p>
+<h2 id="锁升级"><a href="#锁升级" class="headerlink" title="锁升级"></a>锁升级</h2><p>在JDK 1.6 对锁的获取和释放做了优化调整, 增加了 “偏向锁” 和 “轻量级锁” , 而锁一共有 4 种状态 </p>
+<ul>
+<li>无锁</li>
+<li>偏向锁</li>
+<li>轻量级锁</li>
+<li>重量级锁</li>
+</ul>
+<p>锁只能升级不能降级, 目的是为了提高获得和释放锁的效率</p>
+<h3 id="1-偏向锁"><a href="#1-偏向锁" class="headerlink" title="1. 偏向锁"></a>1. 偏向锁</h3><p>当一个线程访问同步代码块并获取到锁后, 会在对象头和栈帧(<em>栈帧</em>是一个内存区块,是一个数据集,是一个有关方法(Method)和运行期数据的数据集)中的锁记录存储锁偏向的线程ID, 以后该线程在进入和退出同步块时不需要进行CAS操作来加锁和解锁 , 只需要判断一下锁记录里面保存的锁偏向线程ID, 与当前线程相同即得到锁, 否则根据对象头中 MarkDown 是否设置了偏向锁标识(1) , 使用CAS将锁偏向线程ID指向当前线程, 否则使用 CAS 来竞争锁.</p>
+<p>**偏向锁的撤销(释放)是在等到其他线程在做锁竞争的时候才会去做. **</p>
+<p>一旦发生了锁竞争, 首先等待安全点, 将暂停持有锁的线程, 在判断该线程是否存活, 如果不活动, 直接释放, 将对象头改为无所状态.</p>
+<p>如果当前线程没执行完, 还在执行, 另一个线程来尝试获取偏向锁, 此时一定是失败. 接下来会继续执行, 首先将正在进行中的线程暂停, 然后将对象头标记为不适用偏向锁, 将偏向锁撤销, 此时锁升级为轻量级锁, 恢复暂停线程.</p>
+<p><strong>总结:</strong>  适用在低级锁竞争</p>
+<h3 id="2-轻量级锁"><a href="#2-轻量级锁" class="headerlink" title="2. 轻量级锁"></a>2. 轻量级锁</h3><p>线程在执行到同步代码块时,  JVM首先会在当前线程的栈帧中创建用于保存锁记录的空间, 并将对象头 MarkDown 复制到锁记录中(官方称为Displaced Mark Word), 然后线程尝试使用 CAS 将对象头中的 MarkDown 替换为指向锁记录的指针, 如果成功, 获的锁. 如果失败, 使用 自旋锁 获取锁.</p>
+<p><strong>轻量级锁的释放</strong></p>
+<p>将复制出来的 Displaced Mark Word 替换回对象头的 MarkDown 如果成功, 锁释放成功, 如果失败, 说明当前锁存在竞争, 升级为重量级锁.</p>
+<h3 id="3-重量级锁"><a href="#3-重量级锁" class="headerlink" title="3. 重量级锁"></a>3. 重量级锁</h3><p>当升级为重量级锁, 其他线程想要获取锁时, 只有被阻塞. 等待锁释放, 唤醒等待的线程, 进行新一轮的锁竞争.</p>
+<h2 id="锁比较"><a href="#锁比较" class="headerlink" title="锁比较"></a>锁比较</h2><table>
+<thead>
+<tr>
+<th>锁</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>偏向锁</td>
+<td>加锁解锁不需要额外的消耗,<br />和无锁状态差距纳秒级别</td>
+<td>线程存在竞争会带来额外消耗</td>
+<td>只有一个线程访问同步代码块</td>
+</tr>
+<tr>
+<td>轻量级锁</td>
+<td>竞争的线程不会阻塞, 提高了性能</td>
+<td>始终得不到锁的线程会自旋浪费CPU</td>
+<td>追求响应速度, 代码块执行速度快</td>
+</tr>
+<tr>
+<td>重量级锁</td>
+<td>线程不会自旋, 不会浪费CPU</td>
+<td>线程阻塞, 响应时间慢</td>
+<td>追求吞吐量, 同步代码块执行时间长</td>
+</tr>
+</tbody></table>
+<p><strong>小结:</strong></p>
+<p>除了偏向锁, JVM实现锁的方式都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁。</p>
+<p>java 中的原子性通过锁和CAS来实现.</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/java-juc-twooldproblem.html">
+        <span class="nav-arrow">← </span>
+        
+          并发的两个&#39;老&#39;问题
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/informal-volatile.html">
+        
+          关于 Java volatile 的随笔记
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '9e75d6914c41328ab8eb920077ec440d',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Java-%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-nav-text">Java 并发机制的底层实现原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#volatile-%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-nav-text">volatile 的应用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#CPU-%E6%9C%AF%E8%AF%AD"><span class="toc-nav-text">CPU 术语</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#volatile-%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">volatile 的底层实现</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#synchronized-%E7%9A%84%E5%BA%94%E7%94%A8%E5%92%8C%E5%8E%9F%E7%90%86"><span class="toc-nav-text">synchronized 的应用和原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Java-%E5%AF%B9%E8%B1%A1%E5%A4%B4"><span class="toc-nav-text">Java 对象头</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%94%81%E5%8D%87%E7%BA%A7"><span class="toc-nav-text">锁升级</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-%E5%81%8F%E5%90%91%E9%94%81"><span class="toc-nav-text">1. 偏向锁</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81"><span class="toc-nav-text">2. 轻量级锁</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81"><span class="toc-nav-text">3. 重量级锁</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%94%81%E6%AF%94%E8%BE%83"><span class="toc-nav-text">锁比较</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-juc-theory.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

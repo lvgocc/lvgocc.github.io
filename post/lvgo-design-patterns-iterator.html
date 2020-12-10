@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（十八）行为型之迭代器模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（十八）行为型之迭代器模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-02</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://img-blog.csdnimg.cn/img_convert/ef7aed4c24f3d2f219e4ea4451a2e3c9.png#pic_center" alt="海尔"></p>
+<h1 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h1><blockquote>
+<p>提供一种方法来顺序访问聚合对象中的一系列数据，而不暴露聚合对象的内部表示。</p>
+</blockquote>
+<p>在看迭代器模式之前，我觉得应该来研究一段代码开开胃先。</p>
+<h2 id="Java-中的-List-集合遍历"><a href="#Java-中的-List-集合遍历" class="headerlink" title="Java 中的 List 集合遍历"></a>Java 中的 List 集合遍历</h2><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Appetizer</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        ArrayList&lt;String&gt; strings = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; i++) &#123;<br>            strings.add(<span class="hljs-string">&quot;第&quot;</span> + i + <span class="hljs-string">&quot;个元素&quot;</span>);<br>        &#125;<br>        Iterator&lt;String&gt; iterator = strings.iterator();<br>        <span class="hljs-keyword">while</span>(iterator.hasNext()) &#123;<br>         	iterator.next();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段代码很简单，我们在日常开发中可能也是经常使用到。有的人可能会说了，啊不对，我用的都是</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; strings.size(); i++)<br></code></pre></td></tr></table></figure>
+
+<p>还有的朋友说了，我直接用增强<code>for</code>循环啊</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span>(String s : Strings)<br></code></pre></td></tr></table></figure>
+
+<p>是的，没错。在日常开发中，或多或少的人会用以上两种方式来进行一个列表的遍历。那这两者有什么区别呢？让我们通过编译出来的 <code>class</code>  文件来一探究竟吧。</p>
+<p>这里使用三种不同的写法来遍历一个 list</p>
+<p><strong>java 源码文件</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 1. 使用迭代器遍历</span><br>Iterator&lt;String&gt; iterator = strings.iterator();<br><span class="hljs-keyword">while</span>(iterator.hasNext())<br>	iterator.next()<br><br><span class="hljs-comment">// 2. jdk 8 提供的 lambda 写法</span><br>strings.forEach(System.out::println);<br><br><span class="hljs-comment">// 3. 增强 for 循环写法</span><br><span class="hljs-keyword">for</span> (String string : strings) &#123;<br>    System.out.println(string);<br>&#125;<br><br><span class="hljs-comment">// 4. 下标遍历</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; strings.size(); i++) &#123;<br>    System.out.println(strings.get(i));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>class 反编译的 java 文件内容</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 1. 使用迭代器遍历</span><br>Iterator&lt;String&gt; iterator = strings.iterator();<br><span class="hljs-keyword">while</span>(iterator.hasNext()) &#123;<br>    iterator.next();<br>&#125;<br><br><span class="hljs-comment">// 2. jdk 8 提供的 lambda 写法</span><br>var10001 = System.out;<br>strings.forEach(var10001::println);<br>Iterator var3 = strings.iterator();<br><br><span class="hljs-comment">// 3. 增强 for 循环写法</span><br><span class="hljs-keyword">while</span>(var3.hasNext()) &#123;<br>    String string = (String)var3.next();<br>    System.out.println(string);<br>&#125;<br><br><span class="hljs-comment">// 4. 下标遍历</span><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; strings.size(); ++i) &#123;<br>    System.out.println((String)strings.get(i));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一种和第三种可以算为同一种，所以就只剩下三种迭代方式</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 1. 增强 for 循环（迭代器）</span><br><span class="hljs-keyword">for</span>(String s : Strings)<br><span class="hljs-comment">// 2. JDK8 的 forEach 方法</span><br>Strings.forEach()<br><span class="hljs-comment">// 3. 下标遍历</span><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; strings.size(); i++)<br></code></pre></td></tr></table></figure>
+
+<p>接下来我们用数据来看一下这几种方式的表现情况</p>
+<p><strong>第一次</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">测试方法：iterator<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">21</span><br>-----------------------------<br>测试方法：forEach<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">132</span><br>-----------------------------<br>测试方法：增强 <span class="hljs-keyword">for</span> 循环<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">18</span><br>-----------------------------<br>测试方法：下标遍历<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">1</span><br>-----------------------------<br></code></pre></td></tr></table></figure>
+
+<p><strong>第二次</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">测试方法：iterator<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">17</span><br>-----------------------------<br>测试方法：forEach<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">123</span><br>-----------------------------<br>测试方法：增强 <span class="hljs-keyword">for</span> 循环<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">12</span><br>-----------------------------<br>测试方法：下标遍历<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">3</span><br>-----------------------------<br></code></pre></td></tr></table></figure>
+
+<p><strong>第三次</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">测试方法：iterator<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">18</span><br>-----------------------------<br>测试方法：forEach<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">119</span><br>-----------------------------<br>测试方法：增强 <span class="hljs-keyword">for</span> 循环<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">14</span><br>-----------------------------<br>测试方法：下标遍历<br>测试数据量：<span class="hljs-number">1000000</span><br>花费时长（ms）：<span class="hljs-number">2</span><br>-----------------------------<br></code></pre></td></tr></table></figure>
+
+<p>为了更直观的展示，我整理了一张统计图</p>
+<p><img src="https://i.loli.net/2020/11/28/VR5IWpXJtTPgKAB.png" alt="10万-1250万数据量4种方式遍历list统计图"></p>
+<p>通过数据也证实了 迭代器 和 增强 for 循环的写法效果相同。</p>
+<h2 id="List-集合到底该如何遍历"><a href="#List-集合到底该如何遍历" class="headerlink" title="List 集合到底该如何遍历"></a>List 集合到底该如何遍历</h2><p>其实乍一看数据，应该用下标遍历这种方式啊，当然，正常是这样的，这是因数组的下标索引决定的它的访问时间复杂度O(1)，同时 JDK 也为 <code>ArrayList</code> 增加了</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RandomAccess</span> </span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>标记。标记其为随机访问集合。</p>
+<p><img src="https://i.loli.net/2020/11/28/XqV1x3iUp5YCQjk.png" alt="run-faster-than"></p>
+<p>Java 官方给出的遍历说明：根据经验，下标要比迭代器更快。</p>
+<p>当然，根据我们对数据的测试表现情况来看，当你的数据量低于30w时，这个时间差基本是没有任何影响的，我想，这一切应该得益于当下处理器的计算能力以及内存更高的数据交互速度吧。所以你用以上的 4 种方式都是没有问题的。但是如果你遍历的数据量大于100w时，一定要使用下标遍历了。</p>
+<p>关于 List 集合的遍历，我们就讨论这么多，更主要的是我们要讨论一下上面提到的一个东西，“迭代器”</p>
+<blockquote>
+<p>文末关注回复“源码”获取本文测试使用代码及图表数据</p>
+</blockquote>
+<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><p>我通过上面的开胃菜知道，迭代器是用来遍历集合的，或者说它是用来遍历的。</p>
+<p>这个时候我们就想了，那刚刚的列表不用这个迭代器速度反而更快，用它还慢还麻烦，为什么要用它呢？</p>
+<p>我们可以想象一下，如果此时的数据结构不是数组，而是链表、是树、是图呢？</p>
+<p>集合本身的目的是存取，目的明确，但如果我们在集合本身增加了遍历操作的话，我们可以看看下图。</p>
+<p><img src="iterator-collection.png" alt="iterator-collection.png"></p>
+<blockquote>
+<p>图片来源：<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/iterator">https://refactoringguru.cn/design-patterns/iterator</a></p>
+</blockquote>
+<p>假如对于一个链表，我们开始想要以 DFS 方式遍历，写好了一个算法在集合类中，后面发现有需要 BFS 方式遍历这个集合，以目前这种方式，就只能去修改集合类，再加一个方法。如果哪天发现这两个都不合适，又要加一个呢，慢慢的，集合本身的存取目的开始变得不明确，这其实是因为违反了<code>单一职责</code>原则。</p>
+<p>致使遍历访问的问题需要被单独解决。于是迭代器就出现了，它要解决的问题就是用来遍历集合，同时它并不需要去关注具体要遍历的集合是什么样的数据结构。这里我们可以回想一下刚刚测试遍历列表的操作，迭代器在迭代的时候，它知道遍历的具体的数据结构是什么吗？不知道，对于一个迭代器来讲，它只需要关注如何将集合的数据完整无缺的取出来就好了。</p>
+<p>这样，迭代器的概念就捋清了，再看看迭代器模式的定义</p>
+<blockquote>
+<p>提供一种方法来顺序访问聚合对象中的一系列数据，而不暴露聚合对象的内部表示。</p>
+</blockquote>
+<p>接下来我们就看看 JDK 中是怎么样用这个迭代器模式来设计集合遍历程序的。go！</p>
+<h2 id="迭代器模式类图-📌"><a href="#迭代器模式类图-📌" class="headerlink" title="迭代器模式类图 📌"></a>迭代器模式类图 📌</h2><p><img src="https://i.loli.net/2020/11/28/4doaxqQrbWgUhvM.png" alt="iterator-JDK-UML"></p>
+<p>下面是根据 JDK 的类直接生成的 UML 类图</p>
+<blockquote>
+<p>注意：并非全部类生成的 UML 类图，这里去掉了一些无关类。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/11/28/LSbEmXAoFpGnN8U.png" alt="iterator-idea-UML.png"></p>
+<h2 id="代码-📃"><a href="#代码-📃" class="headerlink" title="代码 📃"></a>代码 📃</h2><p>因为迭代器模式是围绕 JDK 的 iterator 来学习的，所以这里具体的迭代器模式的实现代码就没有自己实现，不过这里学习了 JDK 的代码。我就简单记录一下 JDK 的实现思路。</p>
+<ol>
+<li>定义一个可被迭代的约束类，表示其子类可以被迭代器迭代，这里用的是 <code>Iterable</code>接口。</li>
+<li>定义迭代器接口，其子类为具体的迭代器实现。这里说的是<code>Iterator</code> 接口。</li>
+<li>可被遍历的集合实现<code>Iterable</code> 接口，比如 <code>ArrayList</code>。</li>
+<li>具体迭代器的实现<code>Iterator</code>接口，JDK 使用的 ArrayList 的内部类 Itr 来实现的这个接口。</li>
+<li>迭代器中的提供一个顺序访问的规则，然后通过顺位标识调用集合的“get”方法。</li>
+</ol>
+<p>为了直观表示这个”get”方法，我贴几个迭代器的 next() 实现关键部分代码。</p>
+<p><strong>ArrayList</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">next</span><span class="hljs-params">()</span> </span>&#123;<br>     <span class="hljs-comment">// 这里的 elementData[i] 就是我上面说的 “get” 方法</span><br>    <span class="hljs-keyword">return</span> (E) elementData[lastRet = i];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>LinkedList</strong>(使用的是 AbstractList 的迭代器)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">next</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 这里的 get 就是我上面说的 “get” 方法</span><br>    E next = get(i);<br>    <span class="hljs-keyword">return</span> next;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>HashSet/HashMap</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> K <span class="hljs-title">next</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 这里的 nextNode() 就是我上面说的 “get” 方法</span><br>    <span class="hljs-keyword">return</span> nextNode().key;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">final</span> Node&lt;K,V&gt; <span class="hljs-title">nextNode</span><span class="hljs-params">()</span> </span>&#123;<br>    Node&lt;K,V&gt;[] t;<br>    Node&lt;K,V&gt; e = next;<br>    <span class="hljs-keyword">if</span> ((next = (current = e).next) == <span class="hljs-keyword">null</span> &amp;&amp; (t = table) != <span class="hljs-keyword">null</span>) &#123;<br>        <span class="hljs-keyword">do</span> &#123;&#125; <span class="hljs-keyword">while</span> (index &lt; t.length &amp;&amp; (next = t[index++]) == <span class="hljs-keyword">null</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> e;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>以上内容可以配合 JDK 源码了解，下面列一些涉及类或方法位置</p>
+<ol>
+<li><code>Iterable.java</code></li>
+<li><code>Iterator.java</code></li>
+<li><code>ArrayList.java</code></li>
+<li><code>java/util/ArrayList.java:846</code> （jdk8）</li>
+</ol>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><ol>
+<li>迭代器模式主要解决的问题就是集合的遍历与集合访问要进行合理的划分职责，这满足了<strong>单一职责</strong>原则。集合类本身专注集合的存取，迭代器专注集合的遍历。</li>
+<li>同时迭代器在实现的过程中不需要关注待遍历集合的数据结构，因为它会使用目标集合的“get”方法来按序读取集合元素。所以这使得了同一个迭代器可以遍历不同的集合，同样的同一个集合也可以用不同的迭代器来进行遍历。</li>
+<li>因为有了迭代器接口和可被迭代的集合接口两个接口的设计方式可以在集合或迭代器的扩展上提供很好的支持，这也满足了<strong>开闭原则。</strong></li>
+<li><strong>这个模式基本不会使用。除非你有自己的数据结构和对他们的遍历规则时。</strong></li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-memento.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（十七）行为型之备忘录模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-command.html">
+        
+          和 lvgo 一起学设计模式（十九）行为型命令之模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '44af84a0f774082e446e4037a5e36c09',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">迭代器模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Java-%E4%B8%AD%E7%9A%84-List-%E9%9B%86%E5%90%88%E9%81%8D%E5%8E%86"><span class="toc-nav-text">Java 中的 List 集合遍历</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#List-%E9%9B%86%E5%90%88%E5%88%B0%E5%BA%95%E8%AF%A5%E5%A6%82%E4%BD%95%E9%81%8D%E5%8E%86"><span class="toc-nav-text">List 集合到底该如何遍历</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-nav-text">迭代器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">迭代器模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">代码 📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-iterator.html';
+    var banner = 'https://img-blog.csdnimg.cn/img_convert/ef7aed4c24f3d2f219e4ea4451a2e3c9.png#pic_center'
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

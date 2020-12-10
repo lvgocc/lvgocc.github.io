@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      HTTP1.1协议状态码[翻译] | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>HTTP1.1协议状态码[翻译]</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-06-11</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#翻译" >
+    <span class="tag-code">翻译</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="阅读建议"><a href="#阅读建议" class="headerlink" title="阅读建议"></a>阅读建议</h1><ul>
+<li>篇幅较长，建议收藏，可以当做手册来查询使用</li>
+<li>善用目录索引，快速定位你想知道的状态码</li>
+<li>点赞、关注、收藏，一键三连支持（抱拳）</li>
+</ul>
+<p><strong>从此妈妈再也不用担心我的 http 状态码问题了。</strong></p>
+<blockquote>
+<p><strong>转载请注明出处，谢谢</strong></p>
+</blockquote>
+<hr>
+<p>节选 <strong>RFC 2616</strong>  sec 10  <a target="_blank" rel="noopener" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10">超文本传输协议状态码</a></p>
+<p>翻译+诠释（个人见解部分）</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Hypertext Transfer Protocol – HTTP/1.1</p>
+<hr>
+<h1 id="状态码定义"><a href="#状态码定义" class="headerlink" title="状态码定义"></a>状态码定义</h1><p>每个状态码的说明如下, 包括对每个响应状态的说明 </p>
+<h1 id="信息类状态-1xx"><a href="#信息类状态-1xx" class="headerlink" title="信息类状态 1xx"></a>信息类状态 1xx</h1><p>此类状态码仅由 <em>状态行</em> 和可选响应头组成的<strong>临时</strong>响应, 并以空行终止。此类状态码没有必需的标题。由于HTTP / 1.0没有定义任何1xx状态代码，因此服务器必须禁止向HTTP / 1.0客户端发送1xx响应。</p>
+<p>即使客户不希望收到100（继续）状态消息，也必须准备在常规响应之前接受一个或多个1xx状态响应。用户代理可能会忽略意外的1xx状态响应。</p>
+<p>如果是代理必须转发1xx, 除非代理与客户端连接关闭, 或者代理自己本身生成1xx（例如，如果代理在转发请求时会添加“hope：100-Continue”字段，则无需转发相应的100（Continue）响应。）</p>
+<p><strong>诠释:</strong></p>
+<ol>
+<li><p>状态行: 由http协议版本 状态码 状态码描述组成的一个包含在响应头中的一段字符串</p>
+</li>
+<li><p>1xx状态码是 HTTP/1.1协议新增的状态码, HTTP/1.0中不存在, 我们不应该向HTTP/1.0协议的客户端响应 1xx 状态码</p>
+</li>
+<li><p>如果是代理必须转发1xx状态码 , 除非你的代理本身就会响应1xx状态码</p>
+</li>
+<li><p>临时响应, 即这个状态是一个中间状态, 不是最终状态.</p>
+</li>
+</ol>
+<hr>
+<h2 id="100-Continue-继续"><a href="#100-Continue-继续" class="headerlink" title="100 Continue (继续)"></a>100 Continue (继续)</h2><p>客户应继续其请求。此临时响应用于通知客户端请求的初始部分已被接收并且尚未被服务器拒绝。客户端应该继续发送剩余的请求，或者，如果请求已经完成，则忽略该响应。请求完成后，服务器必须发送最终响应。</p>
+<p>100 的目的是允许正在发送带有请求正文的请求消息的客户端确定源服务器是否愿意接受请求（基于请求标头）在客户端发送请求正文之前。在某些情况下，如果服务器在不查看正文的情况下拒绝邮件，则客户端发送正文可能是不合适的，或者效率很低。</p>
+<p><strong>诠释:</strong></p>
+<blockquote>
+<p>期望在 14.20 章节也有描述, <a target="_blank" rel="noopener" href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.20">https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.20</a></p>
+</blockquote>
+<p>100 的作用相当于敲门. “请进”, 继续发送后续内容, 无人应答(拒绝)无需在发送后续内容, 提高效率</p>
+<hr>
+<h2 id="101-Switching-Protocols-交换协议"><a href="#101-Switching-Protocols-交换协议" class="headerlink" title="101 Switching Protocols (交换协议)"></a>101 Switching Protocols (交换协议)</h2><p>服务器理解并愿意通过“升级消息头”字段（第14.42节）来满足客户端对在此连接上使用的应用协议进行更改的请求。服务器将在终止101响应的空行之后立即将协议切换到响应的“升级”标头字段所定义的协议。</p>
+<p>仅在有利的情况下才应切换协议。例如，切换到新版本的HTTP优于旧版本，并且在传递使用此类功能的资源时，切换到实时同步协议可能是有利的。</p>
+<p>升级通用标头允许客户端指定其支持的其他通信协议，并在服务器认为适合切换协议时使用。服务器必须使用101（交换协议）响应中的Upgrade标头字段来指示正在交换的协议。</p>
+<p><strong>诠释:</strong></p>
+<p>这个过程是由客户端主动发起升级指令, 在请求头 Upgrade 字段中标注出, 服务端响应成功后会返回 101 表示协议转换</p>
+<hr>
+<h1 id="响应成功-2xx"><a href="#响应成功-2xx" class="headerlink" title="响应成功 2xx"></a>响应成功 2xx</h1><p>此类状态码表示已成功接收并处理了客户的请求。</p>
+<h2 id="200-ok-成功"><a href="#200-ok-成功" class="headerlink" title="200 ok (成功)"></a>200 ok (成功)</h2><p>该请求已成功。响应返回的信息取决于请求中使用的方法</p>
+<p>GET 在响应中发送与请求的资源相对应的实体;</p>
+<p>HEAD 与请求的资源相对应的实体头字段在响应中发送，不带任何消息正文;</p>
+<p>POST 描述或包含行动结果的实体;</p>
+<p>TRACE 包含最终服务器接收到的请求消息的实体.</p>
+<p><strong>诠释:</strong></p>
+<p>在浏览器接收到响应状态为 200 的时候, 代表服务端接收并处理了请求, 但服务端响应的内容是取决于我们所使用的请求方法, 常见的我们使用 get &amp; post 方法</p>
+<p>这里扩展知识到 REST 接口规范, 可以自行前往阮一峰的一篇文章查看 <a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html">http://www.ruanyifeng.com/blog/2014/05/restful_api.html</a></p>
+<hr>
+<h2 id="201-Created-已创建"><a href="#201-Created-已创建" class="headerlink" title="201 Created (已创建)"></a>201 Created (已创建)</h2><p>该请求已完成，并导致创建了新资源。可以通过响应实体中返回的URI引用新创建的资源，其中最具体的URI由Location头字段给出。响应应包括一个实体，其中包含资源特征和位置的列表，用户或用户代理可以从中选择最合适的一个。实体格式由Content-Type标头字段中提供的媒体类型指定。源服务器必须在返回201状态代码之前创建资源。如果不能立即执行该操作，则服务器应以202（已接受）响应代替。</p>
+<p>201响应可能包含ETag响应标头字段，该字段指示刚刚创建的所请求变量的实体标签的当前值，请参见14.19节。</p>
+<p><strong>诠释:</strong></p>
+<p>201响应一般用在 REST api规范中的 POST 请求响应状态码, 标识对提交的资源已保存.</p>
+<p>这里提到了一个如果对资源不能够创建, 也就是在响应之前不能够完成这个动作, 这种场景可能会出现在我们的异步数据处理中, 那此时需要返回 202 状态码, 代表你接收了这次请求, 但还未完成对资源的操作.</p>
+<hr>
+<h2 id="202-Accepted-接受"><a href="#202-Accepted-接受" class="headerlink" title="202 Accepted (接受)"></a>202 Accepted (接受)</h2><p>该请求已被接受进行处理，但是处理尚未完成。该请求最终可能会执行，也可能不会最终执行，因为在实际进行处理时可能会不允许该请求。没有从这种异步操作中重新发送状态代码的功能。</p>
+<p>202响应是有意拒绝的。其目的是允许服务器接受对其他进程的请求（也许是每天仅运行一次的面向批处理的进程），而无需用户代理与服务器的连接一直持续到该进程完成为止。随此响应返回的实体应包括请求当前状态的指示，以及指向状态监视器的指针或用户何时可以期望完成请求的一些估计。</p>
+<p><strong>诠释:</strong></p>
+<p>接收到了客户端的请求, 正在异步处理, 客户端可以继续进行其他操作, 意义同 201 场景返回该状态码</p>
+<hr>
+<h2 id="203-Non-Authoritative-Information-非权威信息"><a href="#203-Non-Authoritative-Information-非权威信息" class="headerlink" title="203 Non-Authoritative Information (非权威信息)"></a>203 Non-Authoritative Information (非权威信息)</h2><p>实体标头中返回的元信息不是原始服务器可用的权威集，而是从本地或第三方副本收集的。呈现的集合可以是原始版本的子集或超集。例如，包括有关资源的本地注释信息可能会导致原始服务器已知的元信息的超集。不需要使用此响应代码，并且仅当响应为200（确定）时才适用。</p>
+<p><strong>诠释:</strong></p>
+<p>仍旧适用在代理服务器, 它在获取到原始内容后, 原始服务器给他响应了200, 然后代理服务器对内容进行了修改. 再返回给客户端, 在响应状态行中就会用 203 状态码注释, 此信息非权威信息, 非原信息.</p>
+<hr>
+<h2 id="204-No-Content-无内容"><a href="#204-No-Content-无内容" class="headerlink" title="204 No Content (无内容)"></a>204 No Content (无内容)</h2><p>服务器已满足请求，但不需要返回实体，可能要返回更新的元信息。响应可以包括实体标题形式的新的或更新的元信息，如果存在，则应与所请求的变量相关联。</p>
+<p>如果客户端是用户代理，则不应更改导致发送请求的文档视图。尽管任何新的或更新的元信息都应该应用于当前在用户代理的活动视图中的文档，但该响应主要旨在允许输入操作而不会导致更改用户代理的活动文档视图。</p>
+<p>204响应必须不包含消息正文，因此始终由标头字段之后的第一个空行终止。</p>
+<p><strong>诠释:</strong> </p>
+<p>请求无响应报文, 这种操作相当于只需要看状态码就知道结果. 例如你对服务器的资源进行删除操作. 那服务器就不需要告诉你响应报文, 只需要告诉你删除的结果, 成功or失败, 所以这个结果可以直接通过状态码知道.</p>
+<hr>
+<h2 id="205-Reset-Content-重置内容"><a href="#205-Reset-Content-重置内容" class="headerlink" title="205 Reset Content (重置内容)"></a>205 Reset Content (重置内容)</h2><p>服务器已经完成了请求，并且用户代理应该重置导致请求被发送的文档视图。该响应主要旨在允许通过用户输入进行操作的输入，然后清除给出输入的形式，以便用户可以轻松地发起另一个输入操作。响应中不得包含实体。</p>
+<p><strong>诠释:</strong></p>
+<p>当你在一个带有表单提交的页面, 输入了表单信息, 点击了提交按钮. 服务器处理成功, 但是希望这次提交之后表单页数据重置, 即抹掉输入的信息, 保持初始状态, 那么服务端就会返回一个 205 状态码.</p>
+<hr>
+<h2 id="206-Partial-Content-部分内容"><a href="#206-Partial-Content-部分内容" class="headerlink" title="206 Partial Content (部分内容)"></a>206 Partial Content (部分内容)</h2><p>服务器已完成对资源的部分GET请求。该请求必须包含指示所需范围的Range标头字段（第14.35节），并且可能包含If-Range标头字段（第14.27节）以使请求成为条件请求。</p>
+<p>响应必须包括以下头域：</p>
+<pre><code> - Either a Content-Range header field (section 14.16) indicating
+    the range included with this response, or a multipart/byteranges
+    Content-Type including Content-Range fields for each part. If a
+    Content-Length header field is present in the response, its
+    value MUST match the actual number of OCTETs transmitted in the
+    message-body.
+  - Date
+  - ETag and/or Content-Location, if the header would have been sent
+    in a 200 response to the same request
+  - Expires, Cache-Control, and/or Vary, if the field-value might
+    differ from that sent in any previous response for the same
+    variant</code></pre>
+<p>如果206响应是使用强缓存验证器的If-Range请求的结果（请参阅第13.3.3节），则该响应不应包含其他实体标头。如果响应是使用弱验证器的If-Range请求的结果，则响应必须不包括其他实体头；这样可以避免缓存的实体与更新的标头之间的不一致。否则，响应必须包括所有对同一请求返回200（确定）响应的实体头。</p>
+<p>如果ETag或Last-Modified头不完全匹配，则缓存不得将206响应与其他先前缓存的内容组合在一起，请参见13.5.4。</p>
+<p>不支持Range和Content-Range头的缓存必须不缓存206（部分）响应。</p>
+<p><strong>诠释:</strong></p>
+<p>鄙人拙见: 断点续传</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/simonbaker/p/5190675.html">https://www.cnblogs.com/simonbaker/p/5190675.html</a></p>
+<hr>
+<h1 id="Redirection-3xx-重定向"><a href="#Redirection-3xx-重定向" class="headerlink" title="Redirection 3xx 重定向"></a>Redirection 3xx 重定向</h1><p>此类状态码表示用户代理需要采取进一步的措施才能满足请求。当且仅当第二个请求中使用的方法是GET或HEAD时，才可以由用户代理执行所需的操作，而无需与用户进行交互。客户端应该检测到无限重定向循环，因为这样的循环会为每个重定向生成网络流量。</p>
+<pre><code>注意：本规范的先前版本建议使用,最多五个重定向。内容开发人员应注意
+  可能会有客户实施这样的固定局限性。</code></pre>
+<p><strong>诠释:</strong></p>
+<p>使用300作为响应码时, 一般在 get或head请求时, 才可以, 因为这两部分都属于资源访问, 而这部分资源在代理服务器不能够解决是, 推荐客户到目标资源地址访问, 但要由客户端检测,是不是<strong>无限重定向.</strong></p>
+<hr>
+<h2 id="300-Multiple-Choices"><a href="#300-Multiple-Choices" class="headerlink" title="300 Multiple Choices"></a>300 Multiple Choices</h2><p>所请求的资源与一组表示中的任何一个相对应，每个都有自己的特定位置，并且提供了代理驱动的协商信息（第12节），以便用户（或用户代理）可以选择首选的表示并重定向其请求到该位置。</p>
+<p>除非它是HEAD请求，否则响应应包括一个实体，其中包含资源特征和位置的列表，用户或用户代理可以从中选择最合适的一个。实体格式由“内容类型”标头字段中提供的媒体类型指定。取决于格式和功能</p>
+<p>用户代理，可以自动执行最合适的选择。但是，该规范没有为这种自动选择定义任何标准。</p>
+<p>如果服务器具有首选的表示形式，则应在“位置”字段中包含该表示形式的特定URI；用户代理可以使用“位置”字段值进行自动重定向。除非另有说明，否则此响应是可缓存的。</p>
+<p><strong>诠释:</strong> </p>
+<p>我没找到, 但是找到了类似的资源, 或者找到了很多资源, 打开开发者工具, 点击下面链接, 观察响应状态</p>
+<p><a target="_blank" rel="noopener" href="https://www.w3.org/Style/Examples/007/figures.ht">https://www.w3.org/Style/Examples/007/figures.ht</a></p>
+<hr>
+<h2 id="301-Moved-Permanently-永久移动"><a href="#301-Moved-Permanently-永久移动" class="headerlink" title="301 Moved Permanently (永久移动)"></a>301 Moved Permanently (永久移动)</h2><p>所请求的资源已被分配了一个新的永久URI，以后对该资源的任何引用都应使用返回的URI之一。具有链接编辑功能的客户端应该在可能的情况下自动将对Request-URI的引用重新链接到服务器返回的一个或多个新引用。除非另有说明，否则此响应是可缓存的。</p>
+<p>新的永久URI应该由响应中的Location字段给出。除非请求方法是HEAD，否则响应的实体应该包含简短的超文本注释，并带有指向新URI的超链接。</p>
+<p>如果接收到响应GET或HEAD以外的请求的301状态代码，则用户代理不得自动重定向该请求，除非用户可以确认，因为这可能会更改发出该请求的条件。</p>
+<pre><code>  注意：在之后自动重定向POST请求时
+  收到301状态代码，一些现有的HTTP / 1.0用户代理
+  会错误地将其更改为GET请求。</code></pre>
+<p><strong>诠释:</strong></p>
+<p>资源在其他位置 Location 字段给出.</p>
+<hr>
+<h2 id="302-Found-找到"><a href="#302-Found-找到" class="headerlink" title="302 Found (找到)"></a>302 Found (找到)</h2><p>所请求的资源临时位于其他URI下。由于重定向有时可能会更改，因此客户端应继续将Request-URI用于将来的请求。仅当由Cache-Control或Expires标头字段指示时，此响应才可缓存。</p>
+<p>临时URI应该由响应中的Location字段给出。除非请求方法是HEAD，否则响应的实体应该包含简短的超文本注释，并带有指向新URI的超链接。</p>
+<p>如果响应GET或HEAD以外的请求而收到302状态码，则用户代理不得自动重定向请求，除非用户可以确认，因为这可能会更改发出请求的条件。</p>
+<pre><code>  注意：RFC 1945和RFC 2068指定不允许客户端
+  更改重定向请求的方法。但是，大多数
+  现有的用户代理实现将302视为303
+  响应，无论位置字段值如何执行GET
+  原始请求方法。状态码303和307具有
+  为希望明确指出哪个服务器添加了
+  期望客户有种反应。</code></pre>
+<p><strong>诠释:</strong></p>
+<p>同 301 .客户端会使用Location中给出的URL，重新发送新的HTTP request     </p>
+<hr>
+<h2 id="303-See-Other-查看其它"><a href="#303-See-Other-查看其它" class="headerlink" title="303 See Other (查看其它)"></a>303 See Other (查看其它)</h2><p>可以在不同的URI下找到对请求的响应，并且应该使用该资源上的GET方法来检索。存在此方法主要是为了允许POST激活的脚本的输出将用户代理重定向到所选资源。新URI不能替代原始请求的资源。303响应一定不能被缓存，但是对第二个（重定向的）请求的响应可能是可缓存的。</p>
+<p>响应中的Location字段应提供不同的URI。除非请求方法是HEAD，否则响应的实体应该包含简短的超文本注释，并带有指向新URI的超链接。</p>
+<blockquote>
+<p>注意：许多HTTP / 1.1之前的用户代理不了解303状态。当需要考虑与此类客户端的互操作性时，因为大多数用户代理都会做出反应，所以可以改用302状态代码，02响应，如此处针对303所述。</p>
+</blockquote>
+<p><strong>诠释:</strong></p>
+<p>同 302</p>
+<hr>
+<h2 id="304-Not-Modified-无改变"><a href="#304-Not-Modified-无改变" class="headerlink" title="304 Not Modified (无改变)"></a>304 Not Modified (无改变)</h2><p>如果客户端已经执行了有条件的GET请求，并且允许访问，但是文档没有被修改，则服务器应该以该状态码响应。304响应必须不包含消息正文，因此始终由标头字段之后的第一个空行终止。</p>
+<p>响应必须包括以下头域：</p>
+<pre><code>  -日期，除非第14.18.1节要求省略</code></pre>
+<p>如果无时钟源服务器遵守这些规则，并且代理和客户端将自己的日期添加到没有响应的任何响应中（如[RFC 2068]第14.19节所指定的），缓存将正常运行。</p>
+<pre><code>  -ETag和/或Content-Location（如果标头已发送）
+    在对同一请求的200条回复中
+  -如果字段值可能会过期，缓存控制和/或变化
+    与先前的任何回复中发送的相同
+    变体</code></pre>
+<p>如果条件GET使用了强缓存验证器（请参阅第13.3.3节），则响应不应包含其他实体头。否则（即，条件GET使用弱验证器），响应中不得包含其他实体标头；这样可以避免缓存的实体与更新的标头之间的不一致。</p>
+<p>如果304响应指示当前未缓存的实体，则缓存必须忽略该响应，并在没有条件的情况下重复该请求。</p>
+<p>如果缓存使用接收到的304响应来更新缓存条目，则缓存必须更新该条目以反映响应中给定的任何新字段值。</p>
+<p><strong>诠释:</strong></p>
+<p>当服务器返回304状态码是即表示资源服务器未发生改变, 要求客户端使用缓存资源.</p>
+<hr>
+<h2 id="305-Use-Proxy-使用代理"><a href="#305-Use-Proxy-使用代理" class="headerlink" title="305 Use Proxy (使用代理)"></a>305 Use Proxy (使用代理)</h2><p>所请求的资源必须通过位置字段给出的代理来访问。位置字段提供代理的URI。预计收件人将通过代理重复此单个请求。305个响应必须仅由原始服务器生成。</p>
+<pre><code>  注意：RFC 2068尚不清楚305是否旨在重定向
+  单个请求，并且仅由原始服务器生成。不
+  遵守这些限制会带来重大的安全后果。</code></pre>
+<p><strong>诠释:</strong><br>你好, 有事请联系我的律师(代理服务器), 叫他来找我, 这是他的号码(location字段内容)</p>
+<hr>
+<h2 id="306-Unused-未使用"><a href="#306-Unused-未使用" class="headerlink" title="306 (Unused) (未使用)"></a>306 (Unused) (未使用)</h2><p>306状态代码在规范的先前版本中使用，不再使用，并且保留该代码。</p>
+<hr>
+<h2 id="307-Temporary-Redirect-临时重定向"><a href="#307-Temporary-Redirect-临时重定向" class="headerlink" title="307 Temporary Redirect (临时重定向)"></a>307 Temporary Redirect (临时重定向)</h2><p>所请求的资源临时位于其他URI下。由于重定向有时可能会改变，所以客户端应该继续使用Request-URI来处理以后的请求。仅当由Cache-Control或Expires标头字段指示时，此响应才可缓存。</p>
+<p>临时URI应该由响应中的Location字段给出。除非请求方法是HEAD，否则响应的实体应包含简短的超文本注释，并带有指向新URI的超链接，因为许多HTTP / 1.1之前的用户代理不了解307状态。因此，注释应该包含用户在新URI上重复原始请求所必需的信息。</p>
+<p>如果响应GET或HEAD以外的请求而收到307状态码，则用户代理不得自动重定向请求，除非用户可以确认，因为这可能会更改发出请求的条件。</p>
+<hr>
+<h1 id="Client-Error-4xx-客户端错误"><a href="#Client-Error-4xx-客户端错误" class="headerlink" title="Client Error 4xx 客户端错误"></a>Client Error 4xx 客户端错误</h1><p>状态码4xx类用于客户端似乎已出错的情况。除响应HEAD请求外，服务器应包含一个实体，该实体包含错误情况的说明，以及它是暂时还是永久的情况。这些状态代码适用于任何请求方法。用户代理应该向用户显示任何包含的实体。</p>
+<p>如果客户端正在发送数据，则在服务器关闭输入连接之前，使用TCP的服务器实现应小心确保客户端确认包含响应的数据包的接收。如果关闭后客户端继续向服务器发送数据，则服务器的TCP堆栈将向客户端发送重置数据包，这可能会擦除客户端的未确认输入缓冲区，然后HTTP应用程序才能读取和解释它们。</p>
+<hr>
+<h2 id="400-Bad-Request-错误的请求"><a href="#400-Bad-Request-错误的请求" class="headerlink" title="400 Bad Request (错误的请求)"></a>400 Bad Request (错误的请求)</h2><p>由于语法格式错误，服务器无法理解该请求。客户不应在没有修改的情况下重复请求。</p>
+<hr>
+<h2 id="401-Unauthorized-未授权"><a href="#401-Unauthorized-未授权" class="headerlink" title="401 Unauthorized (未授权)"></a>401 Unauthorized (未授权)</h2><p>该请求需要用户认证。响应必须包括一个WWW-Authenticate头域（第14.47节），该头域包含适用于所请求资源的质询。客户端可以使用合适的Authorization标头字段重复请求（第14.8节））。如果请求已包含授权凭证，则401响应指示已拒绝这些凭证的授权。如果401响应包含与先前响应相同的质询，并且用户代理已经尝试了至少一次身份验证，则应该向用户提供响应中给定的实体，因为该实体可能包括相关的诊断信息。HTTP访问身份验证在“ HTTP身份验证：基本和摘要访问身份验证”</p>
+<hr>
+<h2 id="402-Payment-Required-需要付款"><a href="#402-Payment-Required-需要付款" class="headerlink" title="402 Payment Required (需要付款)"></a>402 Payment Required (需要付款)</h2><p>该代码保留供将来使用。</p>
+<hr>
+<h2 id="403-Forbidden-禁止"><a href="#403-Forbidden-禁止" class="headerlink" title="403 Forbidden (禁止)"></a>403 Forbidden (禁止)</h2><p>服务器理解了该请求，但拒绝执行该请求。授权将无济于事，不应重复该请求。如果请求方法不是HEAD，并且服务器希望公开为什么未满足请求，则应在实体中描述拒绝原因。如果服务器不希望将此信息提供给客户端，则可以改用状态代码404（未找到）。</p>
+<p><strong>诠释:</strong> </p>
+<p>不想让你访问资源, 比如你在做爬虫程序, 在爬取同一个网络资源时, 对应的站点就可以给你返回 403 来禁止你的资源请求. </p>
+<hr>
+<h2 id="404-Not-Found"><a href="#404-Not-Found" class="headerlink" title="404 Not Found"></a>404 Not Found</h2><p>服务器未找到与请求URI匹配的任何内容。没有迹象表明这种情况是暂时的还是永久的。如果服务器通过某种内部可配置的机制得知旧资源永久不可用并且没有转发地址，则应使用410（已消失）状态代码。如果服务器不希望确切显示请求被拒绝的原因，或者没有其他响应可应用时，通常使用此状态代码。</p>
+<hr>
+<h2 id="405-Method-Not-Allowed-方法不允许"><a href="#405-Method-Not-Allowed-方法不允许" class="headerlink" title="405 Method Not Allowed (方法不允许)"></a>405 Method Not Allowed (方法不允许)</h2><p>Request-URI所标识的资源不允许使用Request-Line中指定的方法。响应必须包括一个Allow标头，其中包含所请求资源的有效方法列表。</p>
+<hr>
+<h2 id="406-Not-Acceptable-不可接受"><a href="#406-Not-Acceptable-不可接受" class="headerlink" title="406 Not Acceptable (不可接受)"></a>406 Not Acceptable (不可接受)</h2><p>由请求标识的资源仅能够生成响应实体，该响应实体具有根据请求中发送的接受标头不可接受的内容特征。</p>
+<p>除非它是HEAD请求，否则响应应包括一个实体，其中包含可用实体特征和位置的列表，用户或用户代理可以从中选择最合适的一个。实体格式由Content-Type标头字段中提供的媒体类型指定。根据用户代理的格式和功能，可以自动执行最合适的选择。但是，该规范没有为这种自动选择定义任何标准。</p>
+<pre><code>  注意：允许HTTP / 1.1服务器返回以下响应：
+  根据在
+  请求。在某些情况下，这甚至可能比发送
+  406回应。鼓励用户代理检查的标题
+  确定是否可接受的传入响应。</code></pre>
+<p>如果响应是不可接受的，则用户代理应暂时停止接收更多数据，并向用户查询有关进一步操作的决定。</p>
+<hr>
+<h2 id="407-Proxy-Authentication-Required-需要代理身份验证"><a href="#407-Proxy-Authentication-Required-需要代理身份验证" class="headerlink" title="407 Proxy Authentication Required (需要代理身份验证)"></a>407 Proxy Authentication Required (需要代理身份验证)</h2><p>此代码类似于401（未经授权），但表示客户端必须首先使用代理对其进行身份验证。代理务必返回一个Proxy-Authenticate头域（第14.33节），其中包含适用于所请求资源的代理的质询。客户可以用合适的代理授权头域（第14.34节）重复请求。HTTP访问身份验证在“ HTTP身份验证：基本和摘要访问身份验证”</p>
+<hr>
+<h2 id="408-Request-Timeout-请求超时"><a href="#408-Request-Timeout-请求超时" class="headerlink" title="408 Request Timeout (请求超时)"></a>408 Request Timeout (请求超时)</h2><p>客户端在服务器准备等待的时间内未产生请求。客户端可以在以后的任何时间重复请求而无需修改。</p>
+<hr>
+<h2 id="409-Conflict"><a href="#409-Conflict" class="headerlink" title="409 Conflict"></a>409 Conflict</h2><p>由于与资源的当前状态存在冲突，因此无法完成请求。仅在预期用户可能能够解决冲突并重新提交请求的情况下才允许使用此代码。响应正文应包含足够的内容</p>
+<p>供用户识别冲突源的信息。理想情况下，响应实体应包括足够的信息供用户或用户代理解决问题。但是，这可能是不可能的，也不是必需的。</p>
+<p>响应PUT请求最有可能发生冲突。例如，如果正在使用版本控制，并且正在PUT的实体包括对资源的更改，该更改与先前的（第三方）请求所做的更改冲突，则服务器可能会使用409响应来指示它无法完成请求。在这种情况下，响应实体可能会以响应Content-Type定义的格式包含两个版本之间差异的列表。</p>
+<hr>
+<h2 id="410-Gone-资源不可用"><a href="#410-Gone-资源不可用" class="headerlink" title="410 Gone (资源不可用)"></a>410 Gone (资源不可用)</h2><p>请求的资源在服务器上不再可用，并且未知转发地址。可以认为这种情况是永久的。具有链接编辑功能的客户端应在用户批准后删除对Request-URI的引用。如果服务器不知道或没有确定条件是否为永久性的条件，则应改用状态代码404（未找到）。除非另有说明，否则此响应是可缓存的。</p>
+<p>410响应主要用于通过通知接收者资源有意不可用以及服务器所有者希望删除指向该资源的远程链接来辅助Web维护任务。对于限时促销服务和属于不再在服务器站点工作的个人的资源来说，这种事件很常见。不必将所有永久不可用的资源标记为“已消失”，也不必将标记保留任何时间-服务器所有者可以自行决定。</p>
+<hr>
+<h2 id="411-Length-Required-所需长度"><a href="#411-Length-Required-所需长度" class="headerlink" title="411 Length Required (所需长度)"></a>411 Length Required (所需长度)</h2><p>服务器拒绝接受没有定义Content-Length的请求。如果客户端在请求消息中添加了包含消息主体长度的有效Content-Length头字段，则客户端可以重复该请求。</p>
+<hr>
+<h2 id="412-Precondition-Failed"><a href="#412-Precondition-Failed" class="headerlink" title="412 Precondition Failed"></a>412 Precondition Failed</h2><p>在服务器上测试时，在一个或多个请求标头字段中给出的前提条件被评估为false。此响应代码允许客户端在当前资源元信息（标头字段数据）上放置先决条件，从而防止将请求的方法应用于除预定资源以外的其他资源。</p>
+<hr>
+<h2 id="413-Request-Entity-Too-Large"><a href="#413-Request-Entity-Too-Large" class="headerlink" title="413 Request Entity Too Large"></a>413 Request Entity Too Large</h2><p>服务器拒绝处理请求，因为请求实体大于服务器愿意或能够处理的实体。服务器可以关闭连接，以防止客户端继续请求。</p>
+<p>如果条件是暂时的，则服务器应包括Retry- After标头字段以指示它是暂时的，并且客户端可以在什么时间之后重试。</p>
+<hr>
+<h2 id="414-Request-URI-Too-Long"><a href="#414-Request-URI-Too-Long" class="headerlink" title="414 Request-URI Too Long"></a>414 Request-URI Too Long</h2><p>服务器拒绝处理请求，因为Request-URI的长度比服务器愿意解释的时间长。仅当客户端将不正确的POST请求转换为带有长查询信息的GET请求，客户端下降到重定向的URI“黑洞”（例如，指向URI的重定向URI前缀）时，才会发生这种罕见情况后缀），或者当服务器受到客户端的攻击时，客户端试图使用固定长度的缓冲区来读取或操纵Request-URI来利用某些服务器中存在的安全漏洞。</p>
+<hr>
+<h2 id="415-Unsupported-Media-Type"><a href="#415-Unsupported-Media-Type" class="headerlink" title="415 Unsupported Media Type"></a>415 Unsupported Media Type</h2><p>服务器拒绝为请求提供服务，因为请求的实体的格式不受请求的方法所请求的资源支持。</p>
+<hr>
+<h2 id="416-Requested-Range-Not-Satisfiable"><a href="#416-Requested-Range-Not-Satisfiable" class="headerlink" title="416 Requested Range Not Satisfiable"></a>416 Requested Range Not Satisfiable</h2><p>如果请求中包含Range请求标头字段（第14.35节），并且该字段中的range-specifier值均不与所选资源的当前范围重叠，则服务器应返回带有此状态代码的响应。包含If-Range请求标头字段。（对于字节范围，这意味着所有字节范围规范值的第一个字节位置大于所选资源的当前长度。）</p>
+<p>当针对字节范围请求返回此状态代码时，响应应包含指定所选择资源的当前长度的Content-Range实体标头字段（请参见14.16节 ）。此响应绝对不能使用multipart / byteranges内容类型。</p>
+<hr>
+<h2 id="417-Expectation-Failed"><a href="#417-Expectation-Failed" class="headerlink" title="417 Expectation Failed"></a>417 Expectation Failed</h2><p>此服务器无法满足在Expect请求标头字段（请参阅第14.20节）中给出的期望，或者，如果该服务器是代理服务器，则该服务器有明确的证据表明下一跳服务器无法满足该请求。</p>
+<hr>
+<h1 id="Server-Error-5xx-服务端错误"><a href="#Server-Error-5xx-服务端错误" class="headerlink" title="Server Error 5xx (服务端错误)"></a>Server Error 5xx (服务端错误)</h1><p>以数字“ 5”开头的响应状态代码表示服务器知道服务器已出错或无法执行请求的情况。除响应HEAD请求外，服务器应包含一个实体，该实体包含错误情况的说明，以及它是暂时还是永久的情况。用户代理应该向用户显示任何包含的实体。这些响应代码适用于任何请求方法。</p>
+<hr>
+<h2 id="500-Internal-Server-Error"><a href="#500-Internal-Server-Error" class="headerlink" title="500 Internal Server Error"></a>500 Internal Server Error</h2><p>服务器遇到意外情况，阻止其满足请求。</p>
+<hr>
+<h2 id="501-Not-Implemented"><a href="#501-Not-Implemented" class="headerlink" title="501 Not Implemented"></a>501 Not Implemented</h2><p>服务器不支持满足请求所需的功能。当服务器无法识别请求方法并且不支持任何资源时，这是适当的响应。</p>
+<hr>
+<h2 id="502-Bad-Gateway"><a href="#502-Bad-Gateway" class="headerlink" title="502 Bad Gateway"></a>502 Bad Gateway</h2><p>该服务器在充当网关或代理的同时，从尝试访问该请求的上游服务器接收到无效响应。</p>
+<hr>
+<h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>由于暂时的服务器过载或维护，服务器当前无法处理该请求。这意味着这是一个暂时性状况，经过一段时间的延迟后会缓解。如果知道的话，延迟的长度可以在Retry-After头中指出。如果没有给出Retry-After，则客户端应该像处理500响应那样处理响应。</p>
+<pre><code>  注意：503状态代码的存在并不意味着
+  服务器过载时必须使用它。一些服务器可能希望
+  简单地拒绝连接。</code></pre>
+<hr>
+<h2 id="504-Gateway-Timeout"><a href="#504-Gateway-Timeout" class="headerlink" title="504 Gateway Timeout"></a>504 Gateway Timeout</h2><p>该服务器虽然充当网关或代理，但没有收到来自URI指定的上游服务器（例如HTTP，FTP，LDAP）或尝试完成访问所需访问的某些其他辅助服务器的及时响应。请求。</p>
+<pre><code>  注意：实施者注意：已知一些已部署的代理
+  DNS查找超时时返回400或500。</code></pre>
+<hr>
+<h2 id="505-HTTP-Version-Not-Supported"><a href="#505-HTTP-Version-Not-Supported" class="headerlink" title="505 HTTP Version Not Supported"></a>505 HTTP Version Not Supported</h2><p>服务器不支持或拒绝支持请求消息中使用的HTTP协议版本。如第3.1节所述，服务器会使用该客户端的主版本指示其无法或不愿意完成该请求 ，但该错误消息除外。响应应该包含一个实体，描述为什么不支持该版本以及该服务器支持哪些其他协议。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#翻译" >
+    <span class="tag-code">翻译</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/precipitate.html">
+        <span class="nav-arrow">← </span>
+        
+          开启人生的沉淀篇章
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/opportunity.html">
+        
+          机遇，奇遇
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '1655f2c6b7e73bc63d1b1beb298174ba',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E9%98%85%E8%AF%BB%E5%BB%BA%E8%AE%AE"><span class="toc-nav-text">阅读建议</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-nav-text">正文</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81%E5%AE%9A%E4%B9%89"><span class="toc-nav-text">状态码定义</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%BF%A1%E6%81%AF%E7%B1%BB%E7%8A%B6%E6%80%81-1xx"><span class="toc-nav-text">信息类状态 1xx</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#100-Continue-%E7%BB%A7%E7%BB%AD"><span class="toc-nav-text">100 Continue (继续)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#101-Switching-Protocols-%E4%BA%A4%E6%8D%A2%E5%8D%8F%E8%AE%AE"><span class="toc-nav-text">101 Switching Protocols (交换协议)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%93%8D%E5%BA%94%E6%88%90%E5%8A%9F-2xx"><span class="toc-nav-text">响应成功 2xx</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#200-ok-%E6%88%90%E5%8A%9F"><span class="toc-nav-text">200 ok (成功)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#201-Created-%E5%B7%B2%E5%88%9B%E5%BB%BA"><span class="toc-nav-text">201 Created (已创建)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#202-Accepted-%E6%8E%A5%E5%8F%97"><span class="toc-nav-text">202 Accepted (接受)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#203-Non-Authoritative-Information-%E9%9D%9E%E6%9D%83%E5%A8%81%E4%BF%A1%E6%81%AF"><span class="toc-nav-text">203 Non-Authoritative Information (非权威信息)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#204-No-Content-%E6%97%A0%E5%86%85%E5%AE%B9"><span class="toc-nav-text">204 No Content (无内容)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#205-Reset-Content-%E9%87%8D%E7%BD%AE%E5%86%85%E5%AE%B9"><span class="toc-nav-text">205 Reset Content (重置内容)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#206-Partial-Content-%E9%83%A8%E5%88%86%E5%86%85%E5%AE%B9"><span class="toc-nav-text">206 Partial Content (部分内容)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Redirection-3xx-%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-nav-text">Redirection 3xx 重定向</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#300-Multiple-Choices"><span class="toc-nav-text">300 Multiple Choices</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#301-Moved-Permanently-%E6%B0%B8%E4%B9%85%E7%A7%BB%E5%8A%A8"><span class="toc-nav-text">301 Moved Permanently (永久移动)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#302-Found-%E6%89%BE%E5%88%B0"><span class="toc-nav-text">302 Found (找到)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#303-See-Other-%E6%9F%A5%E7%9C%8B%E5%85%B6%E5%AE%83"><span class="toc-nav-text">303 See Other (查看其它)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#304-Not-Modified-%E6%97%A0%E6%94%B9%E5%8F%98"><span class="toc-nav-text">304 Not Modified (无改变)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#305-Use-Proxy-%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86"><span class="toc-nav-text">305 Use Proxy (使用代理)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#306-Unused-%E6%9C%AA%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">306 (Unused) (未使用)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#307-Temporary-Redirect-%E4%B8%B4%E6%97%B6%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-nav-text">307 Temporary Redirect (临时重定向)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Client-Error-4xx-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%94%99%E8%AF%AF"><span class="toc-nav-text">Client Error 4xx 客户端错误</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#400-Bad-Request-%E9%94%99%E8%AF%AF%E7%9A%84%E8%AF%B7%E6%B1%82"><span class="toc-nav-text">400 Bad Request (错误的请求)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#401-Unauthorized-%E6%9C%AA%E6%8E%88%E6%9D%83"><span class="toc-nav-text">401 Unauthorized (未授权)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#402-Payment-Required-%E9%9C%80%E8%A6%81%E4%BB%98%E6%AC%BE"><span class="toc-nav-text">402 Payment Required (需要付款)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#403-Forbidden-%E7%A6%81%E6%AD%A2"><span class="toc-nav-text">403 Forbidden (禁止)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#404-Not-Found"><span class="toc-nav-text">404 Not Found</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#405-Method-Not-Allowed-%E6%96%B9%E6%B3%95%E4%B8%8D%E5%85%81%E8%AE%B8"><span class="toc-nav-text">405 Method Not Allowed (方法不允许)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#406-Not-Acceptable-%E4%B8%8D%E5%8F%AF%E6%8E%A5%E5%8F%97"><span class="toc-nav-text">406 Not Acceptable (不可接受)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#407-Proxy-Authentication-Required-%E9%9C%80%E8%A6%81%E4%BB%A3%E7%90%86%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81"><span class="toc-nav-text">407 Proxy Authentication Required (需要代理身份验证)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#408-Request-Timeout-%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6"><span class="toc-nav-text">408 Request Timeout (请求超时)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#409-Conflict"><span class="toc-nav-text">409 Conflict</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#410-Gone-%E8%B5%84%E6%BA%90%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="toc-nav-text">410 Gone (资源不可用)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#411-Length-Required-%E6%89%80%E9%9C%80%E9%95%BF%E5%BA%A6"><span class="toc-nav-text">411 Length Required (所需长度)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#412-Precondition-Failed"><span class="toc-nav-text">412 Precondition Failed</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#413-Request-Entity-Too-Large"><span class="toc-nav-text">413 Request Entity Too Large</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#414-Request-URI-Too-Long"><span class="toc-nav-text">414 Request-URI Too Long</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#415-Unsupported-Media-Type"><span class="toc-nav-text">415 Unsupported Media Type</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#416-Requested-Range-Not-Satisfiable"><span class="toc-nav-text">416 Requested Range Not Satisfiable</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#417-Expectation-Failed"><span class="toc-nav-text">417 Expectation Failed</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Server-Error-5xx-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%94%99%E8%AF%AF"><span class="toc-nav-text">Server Error 5xx (服务端错误)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#500-Internal-Server-Error"><span class="toc-nav-text">500 Internal Server Error</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#501-Not-Implemented"><span class="toc-nav-text">501 Not Implemented</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#502-Bad-Gateway"><span class="toc-nav-text">502 Bad Gateway</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#503-Service-Unavailable"><span class="toc-nav-text">503 Service Unavailable</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#504-Gateway-Timeout"><span class="toc-nav-text">504 Gateway Timeout</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#505-HTTP-Version-Not-Supported"><span class="toc-nav-text">505 HTTP Version Not Supported</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/translate-http-protocol.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

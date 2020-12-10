@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      AQS及相关内容 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>AQS及相关内容</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-09-18</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h1><p>源码位置 : java.util.concurrent.locks.AbstractQueuedSynchronizer</p>
+<p>AQS 意为队列同步器, 实际它就是 locks 包下的一个工具组件, 它出现的目的即为所有出现的自定义锁服务的.</p>
+<a id="more"></a>
+
+<p><img src="/images/posts/java-juc-aqs/20200918221401665.png" alt="AQS所涉及的一些类"></p>
+<h2 id="AQS所涉及的一些类"><a href="#AQS所涉及的一些类" class="headerlink" title="AQS所涉及的一些类"></a>AQS所涉及的一些类</h2><ul>
+<li>AQS本身, AbstractQueuedSynchronizer.class</li>
+<li>AQS的队列元素 Node.class</li>
+<li>java的锁接口, Lock.class</li>
+<li>自定义锁的监视器 Condition.class</li>
+<li>自定义锁的实现基于 LockSupport</li>
+</ul>
+<h2 id="AbstractQueuedSynchronizer-class"><a href="#AbstractQueuedSynchronizer-class" class="headerlink" title="AbstractQueuedSynchronizer.class"></a>AbstractQueuedSynchronizer.class</h2><p>AQS中主要维护了一个由内部类Node组成的一个队列</p>
+<p>同时有3个重要的变量 volatile Node head; volatile Node tail; volatile int state; 都是用 volatile 修饰保证其可见</p>
+<p><img src="/images/posts/java-juc-aqs/20200918221415153.png"></p>
+<h2 id="Node-class"><a href="#Node-class" class="headerlink" title="Node.class"></a>Node.class</h2><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>&#123;<br><br>		<span class="hljs-comment">// 如果是共享节点, 等待队列后继节点为此常量</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> AbstractQueuedSynchronizer.Node SHARED = <span class="hljs-keyword">new</span> AbstractQueuedSynchronizer.Node();<br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> AbstractQueuedSynchronizer.Node EXCLUSIVE = <span class="hljs-keyword">null</span>;<br>        <span class="hljs-comment">// 标识为已取消</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CANCELLED = <span class="hljs-number">1</span>;<br>        <span class="hljs-comment">// 后继节点为等待状态, 可被唤醒, 同时也标识该状态下节点的后继节点应该被阻塞, 处于同步队列中</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> SIGNAL = -<span class="hljs-number">1</span>;<br>        <span class="hljs-comment">// 调用了 condition 的 awaite 方法, 使当前线程处在等待队列中</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CONDITION = -<span class="hljs-number">2</span>;<br>        <span class="hljs-comment">// 共享锁</span><br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> PROPAGATE = -<span class="hljs-number">3</span>;<br>        <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> waitStatus;<br>        <span class="hljs-comment">// 前驱</span><br>        <span class="hljs-keyword">volatile</span> AbstractQueuedSynchronizer.Node prev;<br>        <span class="hljs-comment">// 同步队列后继</span><br>        <span class="hljs-keyword">volatile</span> AbstractQueuedSynchronizer.Node next;<br>        <span class="hljs-comment">// 同步状态线程</span><br>        <span class="hljs-keyword">volatile</span> Thread thread;<br>        <span class="hljs-comment">// 等待队列后继</span><br>        AbstractQueuedSynchronizer.Node nextWaiter;<br><br>        <span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isShared</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.nextWaiter == SHARED;<br>        &#125;<br><br>        <span class="hljs-keyword">final</span> AbstractQueuedSynchronizer.<span class="hljs-function">Node <span class="hljs-title">predecessor</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> NullPointerException </span>&#123;<br>            AbstractQueuedSynchronizer.Node var1 = <span class="hljs-keyword">this</span>.prev;<br>            <span class="hljs-keyword">if</span> (var1 == <span class="hljs-keyword">null</span>) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException();<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">return</span> var1;<br>            &#125;<br>        &#125;<br><br>        Node() &#123;<br>        &#125;<br><br>        Node(Thread var1, AbstractQueuedSynchronizer.Node var2) &#123;<br>            <span class="hljs-keyword">this</span>.nextWaiter = var2;<br>            <span class="hljs-keyword">this</span>.thread = var1;<br>        &#125;<br><br>        Node(Thread var1, <span class="hljs-keyword">int</span> var2) &#123;<br>            <span class="hljs-keyword">this</span>.waitStatus = var2;<br>            <span class="hljs-keyword">this</span>.thread = var1;<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="AQS的工作原理"><a href="#AQS的工作原理" class="headerlink" title="AQS的工作原理"></a>AQS的工作原理</h2><p>AQS中的三个关键变量</p>
+<figure class="highlight aspectj"><table><tr><td class="code"><pre><code class="hljs aspectj"><span class="hljs-comment">// 队列的头节点</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> Node head;<br><br><span class="hljs-comment">// 队列的尾结点</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> Node tail;<br><br><span class="hljs-comment">// 同步状态</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> state;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>当一条线程执行到一个同步代码块时, 会进行如下几步操作</p>
+<h3 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h3><ol>
+<li>成功获取锁</li>
+<li>执行代码</li>
+<li>释放锁</li>
+<li>唤醒队首节点的下一个状态小于0的节点</li>
+</ol>
+<h3 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h3><ol>
+<li>获取锁失败</li>
+<li>当前线程包装成Node对象, 将AQS中tail节点通过CAS指向自己</li>
+<li>死循环判断自己的前驱节点是否为头结点, 并且尝试获取锁, 如果前驱为头结点, 同时获取锁成功<ol>
+<li>将自己设置为头结点</li>
+<li>将原头节点后继节点设置为null</li>
+<li>执行代码</li>
+<li>释放锁</li>
+</ol>
+</li>
+<li>如果获取锁失败 (进行以下两件事, 同时返回boolean值. 条件为 1&amp;&amp; 2<ol>
+<li>将队列中状态为 1(超时等待或中断线程)移除队列 并将自身前驱节点状态改为 -1, 如果为 -1 返回 true 代表需要将当前线程阻塞(停留在同步队列中)</li>
+<li>阻塞当前线程并判断当前线程是否被中断</li>
+</ol>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>获取锁成功 -&gt; 执行代码 -&gt; 结束</p>
+<p>获取锁失败 -&gt; 进入同步队列 (在次获取锁条件: 等待前驱节点释放锁后唤醒自己) 同时在尝试获取锁失败的时候会做两件事</p>
+<ol>
+<li>将状态为 1 的Node节点从队列移除, 将自己的前驱节点状态改为 -1 .</li>
+<li>将当前线程通过自身线程阻塞, 同时判断自申是否被中断 (如果被中断, AQS 还会调用线程的 interrupte 方法</li>
+</ol>
+<p>以上即非公平锁的处理过程, 在获取锁失败之后进行自循环的时候, 仍然会新线程去尝试通过 CAS 获取锁, 如果新线程获取成功, 那么同步队列的队首元素将不会被唤醒. 即非公平, 先来不一定先得. 但在队列中的线程, 是满足 FIFO 的. 即先到先得锁.</p>
+<p>同时, 如果释放锁的线程, 再次尝试获取锁的概率, 会非常高.</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><code class="hljs angelscript">sync = [Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-1</span><br>Thread<span class="hljs-number">-0</span><br><br>sync = [Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-1</span><br>Thread<span class="hljs-number">-2</span><br><br>sync = [Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main]]<br>Thread<span class="hljs-number">-2</span><br>Thread<span class="hljs-number">-1</span><br><br><br><br><br>sync = [Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-3</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-2</span><br>Thread<span class="hljs-number">-1</span><br><br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-1</span><br>Thread<span class="hljs-number">-3</span><br><br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-1</span><br>Thread<span class="hljs-number">-3</span><br><br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-1</span><br>Thread<span class="hljs-number">-3</span><br><br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-4</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-1</span><br>Thread<span class="hljs-number">-3</span><br><br>sync = [Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-1</span>,<span class="hljs-number">5</span>,main]]<br>sync = [Thread[Thread<span class="hljs-number">-5</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-6</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-7</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-8</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-9</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-0</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>,main], Thread[Thread<span class="hljs-number">-1</span>,<span class="hljs-number">5</span>,main]]<br><br>Thread<span class="hljs-number">-3</span><br>Thread<span class="hljs-number">-4</span><br><br><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="非公平锁"><a href="#非公平锁" class="headerlink" title="非公平锁"></a>非公平锁</h2><p>在新获取锁线程与, 同步队列中的线程对锁的竞争是不公平的, 即后来的可以先获取到锁. </p>
+<p>加锁方法先cas获取锁, 失败后进入队列, 锁释放之后去唤醒队首节点争抢锁的时候, 锁可能已经被新到线程获取到了.</p>
+<h2 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h2><p>绝对时间基础上的公平</p>
+<p>与非公平锁不同, 首先进行的一步操作是</p>
+<figure class="highlight aspectj"><table><tr><td class="code"><pre><code class="hljs aspectj"><span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">tryAcquireShared</span><span class="hljs-params">(<span class="hljs-keyword">int</span> acquires)</span> </span>&#123;<br>            <span class="hljs-keyword">for</span> (;;) &#123;<br>            <span class="hljs-comment">// 当前线程非队首节点的下一个节点 返回失败, 加入同步队列</span><br>                <span class="hljs-keyword">if</span> (hasQueuedPredecessors())<br>                    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>                ...<br>                ..<br>            &#125;<br>        &#125;<br>        <br>        <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">hasQueuedPredecessors</span><span class="hljs-params">()</span> </span>&#123;<br><br>        Node t = tail; <span class="hljs-comment">// Read fields in reverse initialization order</span><br>        Node h = head;<br>        Node s;<br>        <span class="hljs-keyword">return</span> h != t &amp;&amp;<br>            ((s = h.next) == <span class="hljs-keyword">null</span> || s.thread != Thread.currentThread());<br>        <br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>完全遵循FIFO, 获取锁时先判断自己是不是下一个应该得到锁的线程.</p>
+<h2 id="重入锁"><a href="#重入锁" class="headerlink" title="重入锁"></a>重入锁</h2><p>通过保存线程的引用地址来判断是否可以重入.</p>
+<h2 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a>共享锁</h2><p>通过定义信号量来做控制. 即同时可以有多少线程可以共享这把锁</p>
+<h2 id="锁降级"><a href="#锁降级" class="headerlink" title="锁降级"></a>锁降级</h2><p>获取读锁 -&gt; 获取写锁 -&gt; 释放读锁 -&gt; 获取读锁 -&gt; 释放写锁 -&gt; 释放读锁</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/java-juc-first-concept.html">
+        <span class="nav-arrow">← </span>
+        
+          Java并发编程
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/learn-design-patterns-with-lvgo.html">
+        
+          和 lvgo 一起学设计模式（零）序
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '0c80a17a78c9242f0f79a21312bfed58',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#AQS"><span class="toc-nav-text">AQS</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#AQS%E6%89%80%E6%B6%89%E5%8F%8A%E7%9A%84%E4%B8%80%E4%BA%9B%E7%B1%BB"><span class="toc-nav-text">AQS所涉及的一些类</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#AbstractQueuedSynchronizer-class"><span class="toc-nav-text">AbstractQueuedSynchronizer.class</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Node-class"><span class="toc-nav-text">Node.class</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#AQS%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-nav-text">AQS的工作原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text"></span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E6%83%85%E5%86%B5"><span class="toc-nav-text">第一种情况</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%83%85%E5%86%B5"><span class="toc-nav-text">第二种情况</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81"><span class="toc-nav-text">非公平锁</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%AC%E5%B9%B3%E9%94%81"><span class="toc-nav-text">公平锁</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%87%8D%E5%85%A5%E9%94%81"><span class="toc-nav-text">重入锁</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B1%E4%BA%AB%E9%94%81"><span class="toc-nav-text">共享锁</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%94%81%E9%99%8D%E7%BA%A7"><span class="toc-nav-text">锁降级</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-juc-aqs.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

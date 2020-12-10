@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      一篇文章让你彻底了解Java内部类 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>一篇文章让你彻底了解Java内部类</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-08-22</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#Java基础" >
+    <span class="tag-code">Java基础</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h4 id="内容整理自《Thinking-in-Java》-第四版-第10章-PDF下载地址"><a href="#内容整理自《Thinking-in-Java》-第四版-第10章-PDF下载地址" class="headerlink" title="内容整理自《Thinking in Java》(第四版) 第10章 PDF下载地址 "></a>内容整理自《Thinking in Java》(第四版) 第10章<a target="_blank" rel="noopener" href="https://download.csdn.net/download/sinat_34344123/10206155"> PDF下载地址 </a></h4><hr>
+<h1 id="什么是内部类"><a href="#什么是内部类" class="headerlink" title="什么是内部类?"></a>什么是内部类?</h1><blockquote>
+<p>将一个类的定义，放在另一个类的定义内部，那这个类，就是内部类</p>
+</blockquote>
+<a id="more"></a>
+
+<hr>
+<h1 id="为什么需要内部类？"><a href="#为什么需要内部类？" class="headerlink" title="为什么需要内部类？"></a>为什么需要内部类？</h1><p>　　一般来说，内部类继承自某个类或实现某个接口，内部类的代码操作创建其的外围类的对象。所以你可以认为内部类提供了某种进入其外围类的窗口。</p>
+<hr>
+<h1 id="内部类的优雅之处："><a href="#内部类的优雅之处：" class="headerlink" title="内部类的优雅之处："></a>内部类的优雅之处：</h1><blockquote>
+<p>每个内部类都能独立的继承一个（接口的）实现，无论外部类是否已经继承了一个（接口的）实现，对内部类都没有影响。</p>
+</blockquote>
+<h1 id="内部类主要有以下几类："><a href="#内部类主要有以下几类：" class="headerlink" title="内部类主要有以下几类："></a><div id='TOP_TYPE'>内部类主要有以下几类：</div></h1><ul>
+<li><a href="#A">A:成员内部类</a></li>
+<li><a href="#B">B:局部内部类</a></li>
+<li><a href="#C">C:静态内部类</a></li>
+<li><a href="#D">D:匿名内部类</a></li>
+</ul>
+<p>注意:</p>
+<ol>
+<li>定义了成员内部类后，必须使用外部类对象来创建内部类对象，而不能直接去 new 一个内部类对象，<br> 即：<code>内部类 对象名 = 外部类对象.new 内部类( );</code></li>
+<li>外部类是不能直接使用内部类的成员和方法滴，可先创建内部类的对象，然后通过内部类的对象来访问其成员变量和方法。</li>
+<li>可先创建内部类的对象，然后通过内部类的对象来访问其成员变量和方法。HelloWorld.this.name</li>
+</ol>
+<hr>
+<h2 id="A：成员内部类"><a href="#A：成员内部类" class="headerlink" title="A：成员内部类"></a><div id='A'>A：成员内部类</div></h2><p> <a href="#TOP_TYPE">返回分类</a></p>
+<blockquote>
+<p>作为外部类的一个成员存在，与外部类的属性、方法并列。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Outer</span> </span>&#123;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> j = <span class="hljs-number">10</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> k = <span class="hljs-number">20</span>;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF1</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 外部类的静态方法访问成员内部类，与在外部类外部访问成员内部类一样</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF4</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-comment">//step1 建立外部类对象</span><br>        Outer out = <span class="hljs-keyword">new</span> Outer();<br>        <span class="hljs-comment">//step2 根据外部类对象建立内部类对象</span><br>        Inner inner = out.<span class="hljs-function">new <span class="hljs-title">Inner</span><span class="hljs-params">()</span></span>;<br>        <span class="hljs-comment">//step3 访问内部类的方法</span><br>        inner.innerF1();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * outerF4();该语句的输出结果和下面三条语句的输出结果一样</span><br><span class="hljs-comment">         *如果要直接创建内部类的对象，不能想当然地认为只需加上外围类Outer的名字，</span><br><span class="hljs-comment">         *就可以按照通常的样子生成内部类的对象，而是必须使用此外围类的一个对象来</span><br><span class="hljs-comment">         *创建其内部类的一个对象：</span><br><span class="hljs-comment">         *Outer.Inner outin = out.new Inner()</span><br><span class="hljs-comment">         *因此，除非你已经有了外围类的一个对象，否则不可能生成内部类的对象。因为此</span><br><span class="hljs-comment">         *内部类的对象会悄悄地链接到创建它的外围类的对象。如果你用的是静态的内部类，</span><br><span class="hljs-comment">         *那就不需要对其外围类对象的引用。</span><br><span class="hljs-comment">         */</span><br>        Outer out = <span class="hljs-keyword">new</span> Outer();<br>        Outer.Inner outin = out.n<span class="hljs-function">ew <span class="hljs-title">Inner</span><span class="hljs-params">()</span></span>;<br>        outin.innerF1();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF2</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 外部类的非静态方法访问成员内部类</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF3</span><span class="hljs-params">()</span> </span>&#123;<br>        Inner inner = <span class="hljs-keyword">new</span> Inner();<br>        inner.innerF1();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 成员内部类中，不能定义静态成员</span><br><span class="hljs-comment">     * 成员内部类中，可以访问外部类的所有成员</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Inner</span> </span>&#123;<br>        <span class="hljs-comment">// static int innerI = 100;内部类中不允许定义静态变量</span><br>        <span class="hljs-comment">// 内部类和外部类的实例变量可以共存</span><br>        <span class="hljs-keyword">int</span> j = <span class="hljs-number">100</span>;<br>        <span class="hljs-keyword">int</span> innerI = <span class="hljs-number">1</span>;<br><br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">innerF1</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(i);<br>            <span class="hljs-comment">//在内部类中访问内部类自己的变量直接用变量名</span><br>            System.out.println(j);<br>            <span class="hljs-comment">//在内部类中访问内部类自己的变量也可以用this.变量名</span><br>            System.out.println(<span class="hljs-keyword">this</span>.j);<br>            <span class="hljs-comment">//在内部类中访问外部类中与内部类同名的实例变量用外部类名.this.变量名</span><br>            System.out.println(Outer.<span class="hljs-keyword">this</span>.j);<br>            <span class="hljs-comment">//如果内部类中没有与外部类同名的变量，则可以直接用变量名访问外部类变量</span><br>            System.out.println(k);<br>            outerF1();<br>            outerF2();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="注意：内部类是一个编译时的概念，一旦编译成功，就会成为完全不同的两类。"><a href="#注意：内部类是一个编译时的概念，一旦编译成功，就会成为完全不同的两类。" class="headerlink" title="注意：内部类是一个编译时的概念，一旦编译成功，就会成为完全不同的两类。"></a><font color=red>注意：内部类是一个编译时的概念，一旦编译成功，就会成为完全不同的两类。</font></h4><p><strong>对于一个名为outer的外部类和其内部定义的名为inner的内部类。编译完成后出现outer.class和outer$inner.class两类。</strong></p>
+<hr>
+<h2 id="B-局部内部类"><a href="#B-局部内部类" class="headerlink" title="B:局部内部类"></a><div id='B'>B:局部内部类</div></h2><p> <a href="#TOP_TYPE">返回分类</a></p>
+<blockquote>
+<p>在方法中定义的内部类称为局部内部类。与局部变量类似，局部内部类不能有访问说明符，因为它不是外围类的一部分，但是它可以访问当前代码块内的常量，和此外围类所有的成员。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Outer</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> s = <span class="hljs-number">100</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> outI = <span class="hljs-number">1</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-comment">// 访问局部内部类必须先有外部类对象</span><br>        Outer out = <span class="hljs-keyword">new</span> Outer();<br>        out.f(<span class="hljs-number">3</span>);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> k)</span> </span>&#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> s = <span class="hljs-number">200</span>;<br>        <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> j = <span class="hljs-number">10</span>;<br><br><br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 定义在方法内部</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Inner</span> </span>&#123;<br>            <span class="hljs-comment">// 可以定义与外部类同名的变量</span><br>            <span class="hljs-keyword">int</span> s = <span class="hljs-number">300</span>;<br>            <span class="hljs-keyword">int</span> innerI = <span class="hljs-number">100</span>;<br><br>            <span class="hljs-comment">// static int m = 20; 不可以定义静态变量</span><br>            Inner(<span class="hljs-keyword">int</span> k) &#123;<br>                innerF(k);<br>            &#125;<br>            <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">innerF</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k)</span> </span>&#123;<br>                <span class="hljs-comment">// java如果内部类没有与外部类同名的变量，在内部类中可以直接访问外部类的实例变量</span><br>                System.out.println(outI);<br>                <span class="hljs-comment">// 可以访问外部类的局部变量(即方法内的变量)，但是变量必须是final的</span><br>                System.out.println(j);<br>                <span class="hljs-comment">//System.out.println(i);</span><br>                <span class="hljs-comment">// 如果内部类中有与外部类同名的变量，直接用变量名访问的是内部类的变量</span><br>                System.out.println(s);<br>                <span class="hljs-comment">// 用this.变量名访问的也是内部类变量</span><br>                System.out.println(<span class="hljs-keyword">this</span>.s);<br>                <span class="hljs-comment">// 用外部类名.this.内部类变量名访问的是外部类变量</span><br>                System.out.println(Outer.<span class="hljs-keyword">this</span>.s);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">new</span> Inner(k);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="C：静态内部类-嵌套类-："><a href="#C：静态内部类-嵌套类-：" class="headerlink" title="C：静态内部类(嵌套类)："></a><div id='C'>C：静态内部类(嵌套类)：</div></h2><p> <a href="#TOP_TYPE">返回分类</a></p>
+<p><code>注意：前两种内部类与变量类似，所以可以对照参考变量</code></p>
+<blockquote>
+<p>如果你不需要内部类对象与其外围类对象之间有联系，那你可以将内部类声明为static。这通常称为嵌套类（nested class）。想要理解static应用于内部类时的含义，你就必须记住，普通的内部类对象隐含地保存了一个引用，指向创建它的外围类对象。然而，当内部类是static的时，就不是这样了。嵌套类意味着：</p>
+</blockquote>
+<ol>
+<li>要创建嵌套类的对象，并不需要其外围类的对象。</li>
+<li>不能从嵌套类的对象中访问非静态的外围类对象。</li>
+</ol>
+<p><font color=red>单例模式:由于静态内部类的加载机制,决定了他可以使用来处理单例模式,而且性能客观</font>单例模式相关内容&gt;&gt;<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_34344123/article/details/81943772">点我</a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Outer</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> j = <span class="hljs-number">10</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF1</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-keyword">new</span> Outer().outerF3();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF2</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outerF3</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-comment">// 外部类访问内部类的静态成员：内部类.静态成员</span><br>        System.out.println(Inner.inner_i);<br>        Inner.innerF1();<br>        <span class="hljs-comment">// 外部类访问内部类的非静态成员:实例化内部类即可</span><br>        Inner inner = <span class="hljs-keyword">new</span> Inner();<br>        inner.innerF2();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 静态内部类可以用public,protected,private修饰</span><br><span class="hljs-comment">     * 静态内部类中可以定义静态或者非静态的成员</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Inner</span> </span>&#123;<br>        <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> inner_i = <span class="hljs-number">100</span>;<br>        <span class="hljs-keyword">int</span> innerJ = <span class="hljs-number">200</span>;<br><br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">innerF1</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-comment">// 静态内部类只能访问外部类的静态成员(包括静态变量和静态方法)</span><br>            System.out.println(<span class="hljs-string">&quot;Outer.i&quot;</span> + i);<br>            outerF1();<br>        &#125;<br><br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">innerF2</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-comment">// 静态内部类不能访问外部类的非静态成员(包括非静态变量和非静态方法)</span><br>            <span class="hljs-comment">// System.out.println(&quot;Outer.i&quot;+j);</span><br>            <span class="hljs-comment">// outerF2();</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="静态内部类和成员内部类的区别"><a href="#静态内部类和成员内部类的区别" class="headerlink" title="静态内部类和成员内部类的区别"></a>静态内部类和成员内部类的区别</h3><blockquote>
+<p>生成一个静态内部类不需要外部类成员<br>静态内部类的对象可以直接生成：<br><code>Outer.Inner in = new Outer.Inner(); </code><br>而不需要通过生成外部类对象来生成。这样实际上使静态内部类成为了一个顶级类<br>(正常情况下，你不能在接口内部放置任何代码，但嵌套类可以作为接口的一部分，因为它是static 的。只是将嵌套类置于接口的命名空间内，这并不违反接口的规则）</p>
+</blockquote>
+<hr>
+<h2 id="D：匿名内部类-from-thinking-in-java-3th"><a href="#D：匿名内部类-from-thinking-in-java-3th" class="headerlink" title="D：匿名内部类(from thinking in java 3th)"></a><div id='D'>D：匿名内部类(from thinking in java 3th)</div></h2><p> <a href="#TOP_TYPE">返回分类</a></p>
+<blockquote>
+<p>匿名内部类就是没有名字的内部类。</p>
+</blockquote>
+<h3 id="什么情况下需要使用匿名内部类？"><a href="#什么情况下需要使用匿名内部类？" class="headerlink" title="什么情况下需要使用匿名内部类？"></a>什么情况下需要使用匿名内部类？</h3><p><strong>如果满足下面的一些条件，使用匿名内部类是比较合适的：</strong></p>
+<ul>
+<li>只用到类的一个实例。</li>
+<li>类在定义后马上用到。</li>
+<li>类非常小（SUN推荐是在4行代码以下）</li>
+<li>给类命名并不会导致你的代码更容易被理解。</li>
+</ul>
+<p><strong>在使用匿名内部类时，要记住以下几个原则：</strong></p>
+<ol>
+<li>匿名内部类一般不能有构造方法。</li>
+<li>匿名内部类不能定义任何静态成员、方法和类。</li>
+<li>匿名内部类不能是public,protected,private,static。</li>
+<li>只能创建匿名内部类的一个实例。</li>
+<li>一个匿名内部类一定是在new的后面，用其隐含实现一个接口或实现一个类。</li>
+<li>因匿名内部类为局部内部类，所以局部内部类的所有限制都对其生效。</li>
+</ol>
+<p><em>下面的例子看起来有点奇怪：</em></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 在方法中返回一个匿名内部类</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Parcel6</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Parcel6 p = <span class="hljs-keyword">new</span> Parcel6();<br>        Contents c = p.cont();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Contents <span class="hljs-title">cont</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Contents() &#123;<br>            <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">11</span>;<br><br><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">value</span><span class="hljs-params">()</span> </span>&#123;<br>                <span class="hljs-keyword">return</span> i;<br>            &#125;<br>        &#125;; <span class="hljs-comment">// 在这里需要一个分号</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　<code>cont()</code>方法将下面两个动作合并在一起：返回值的生成，与表示这个返回值的类的定义！<br>　　进一步说，这个类是匿名的，它没有名字。更糟的是，看起来是你正要创建一个Contents对象：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Contents()<br></code></pre></td></tr></table></figure>
+
+<p>　　但是，在到达语句结束的分号之前，你却说：“等一等，我想在这里插入一个类的定义”:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Contents() &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">11</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">value</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> i;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>　　这种奇怪的语法指的是：“创建一个继承自Contents的匿名类的对象。”通过new 表达式返回的引用被自动向上转型为对Contents的引用。匿名内部类的语法是下面例子的简略形式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyContents</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Contents</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">11</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">value</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> i;<br>    &#125;<br>&#125;<br><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyContents();<br></code></pre></td></tr></table></figure>
+
+
+<p>　　在这个匿名内部类中，使用了缺省的构造器来生成Contents。下面的代码展示的是，如果你的基类需要一个有参数的构造器，应该怎么办：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Parcel7</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Parcel7 p = <span class="hljs-keyword">new</span> Parcel7();<br>        Wrapping w = p.wrap(<span class="hljs-number">10</span>);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Wrapping <span class="hljs-title">wrap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>        <span class="hljs-comment">// Base constructor call:</span><br>        <span class="hljs-comment">// Pass constructor argument.</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Wrapping(x) &#123; <br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">value</span><span class="hljs-params">()</span> </span>&#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.value() * <span class="hljs-number">47</span>;<br>            &#125;<br>        &#125;; <span class="hljs-comment">// Semicolon required</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　只需简单地传递合适的参数给基类的构造器即可，这里是将x 传进new Wrapping(x)。在匿名内部类末尾的分号，并不是用来标记此内部类结束（C++中是那样）。实际上，它标记的是表达式的结束，只不过这个表达式正巧包含了内部类罢了。因此，这与别的地方使用的分号是一致的。</p>
+<p>　　如果在匿名类中定义成员变量，你同样能够对其执行初始化操作：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Parcel8</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Parcel8 p = <span class="hljs-keyword">new</span> Parcel8();<br>        Destination d = p.dest(<span class="hljs-string">&quot;Tanzania&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// Argument must be final to use inside</span><br>    <span class="hljs-comment">// anonymous inner class:</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Destination <span class="hljs-title">dest</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String dest)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Destination() &#123;<br>            <span class="hljs-keyword">private</span> String label = dest;<br><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">readLabel</span><span class="hljs-params">()</span> </span>&#123;<br>                <span class="hljs-keyword">return</span> label;<br>            &#125;<br>        &#125;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>　　如果你有一个匿名内部类，它要使用一个在它的外部定义的对象，编译器会要求其参数引用是final 型的，就像<code>dest()</code>中的参数。如果你忘记了，会得到一个编译期错误信息。如果只是简单地给一个成员变量赋值，那么此例中的方法就可以了。但是，如果你想做一些类似构造器的行为，该怎么办呢？在匿名类中不可能有已命名的构造器（因为它根本没名字！），但通过实例初始化，你就能够达到为匿名内部类“制作”一个构造器的效果。像这样做：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Base</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;Base constructor, i = &quot;</span> + i);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>;<br>&#125;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AnonymousConstructor</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Base <span class="hljs-title">getBase</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Base(i) &#123;<br>            &#123;<br>                System.out.println(<span class="hljs-string">&quot;Inside instance initializer&quot;</span>);<br>            &#125;<br><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>                System.out.println(<span class="hljs-string">&quot;In anonymous f()&quot;</span>);<br>            &#125;<br>        &#125;;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Base base = getBase(<span class="hljs-number">47</span>);<br>        base.f();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　在此例中，不要求变量i 一定是final 的。因为i 被传递给匿名类的基类的构造器，它并不会在匿名类内部被直接使用。下例是带实例初始化的“parcel”形式。注意dest()的参数必须是final，因为它们是在匿名类内被使用的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Parcel9</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Destinationdest</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String dest, <span class="hljs-keyword">final</span> <span class="hljs-keyword">float</span> price)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Destination() &#123;<br>            <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> cost;<br>            <span class="hljs-keyword">private</span> String label = dest;<br><br>            <span class="hljs-comment">// Instance initialization for each object:</span><br>            &#123;<br>                cost = Math.round(price);<br>                <span class="hljs-keyword">if</span> (cost &gt; <span class="hljs-number">100</span>)<br>                    System.out.println(<span class="hljs-string">&quot;Over budget!&quot;</span>);<br>            &#125;<br><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">readLabel</span><span class="hljs-params">()</span> </span>&#123;<br>                <span class="hljs-keyword">return</span> label;<br>            &#125;<br>        &#125;;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Parcel9 p = <span class="hljs-keyword">new</span> Parcel9();<br>        Destination d = p.dest(<span class="hljs-string">&quot;Tanzania&quot;</span>, <span class="hljs-number">101.395F</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　在实例初始化的部分，你可以看到有一段代码，那原本是不能作为成员变量初始化的一部分而执行的（就是if 语句）。所以对于匿名类而言，实例初始化的实际效果就是构造器。当然它受到了限制：你不能重载实例初始化，所以你只能有一个构造器。</p>
+<hr>
+<h3 id="从多层嵌套类中访问外部"><a href="#从多层嵌套类中访问外部" class="headerlink" title="从多层嵌套类中访问外部"></a>从多层嵌套类中访问外部</h3><p>　　一个内部类被嵌套多少层并不重要，它能透明地访问所有它所嵌入的外围类的所有成员，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MNA</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">g</span><span class="hljs-params">()</span> </span>&#123;<br>        &#125;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> </span>&#123;<br>            <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">h</span><span class="hljs-params">()</span> </span>&#123;<br>                g();<br>                f();<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MultiNestingAccess</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        MNA mna = <span class="hljs-keyword">new</span> MNA();<br>        MNA.A mnaa = mna.n<span class="hljs-function">ew <span class="hljs-title">A</span><span class="hljs-params">()</span></span>;<br>        MNA.A.B mnaab = mnaa.n<span class="hljs-function">ew <span class="hljs-title">B</span><span class="hljs-params">()</span></span>;<br>        mnaab.h();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>　　可以看到在MNA.A.B中，调用方法g()和f()不需要任何条件（即使它们被定义为private）。这个例子同时展示了如何从不同的类里面创建多层嵌套的内部类对象的基本语法。“.new”语法能产生正确的作用域，所以你不必在调用构造器时限定类名。</p>
+<hr>
+<h3 id="内部类的重载问题"><a href="#内部类的重载问题" class="headerlink" title="内部类的重载问题"></a>内部类的重载问题</h3><blockquote>
+<p>如果你创建了一个内部类，然后继承其外围类并重新定义此内部类时，会发生什么呢？也就是说，内部类可以被重载吗？这看起来似乎是个很有用的点子，但是“重载”内部类就好像它是外围类的一个方法，其实并不起什么作用：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Egg</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> Yolk y;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Egg</span><span class="hljs-params">()</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;New Egg()&quot;</span>);<br>        y = <span class="hljs-keyword">new</span> Yolk();<br>    &#125;<br><br>    <span class="hljs-keyword">protected</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Yolk</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Yolk</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;Egg.Yolk()&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BigEgg</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Egg</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-keyword">new</span> BigEgg();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Yolk</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Yolk</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;BigEgg.Yolk()&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function">New <span class="hljs-title">Egg</span><span class="hljs-params">()</span></span><br><span class="hljs-function">Egg.<span class="hljs-title">Yolk</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
+
+<p>　　缺省的构造器是编译器自动生成的，这里是调用基类的缺省构造器。你可能认为既然创建了BigEgg 的对象，那么所使用的应该是被“重载”过的Yolk，但你可以从输出中看到实际情况并不是这样的。</p>
+<p>　　这个例子说明，当你继承了某个外围类的时候，内部类并没有发生什么特别神奇的变化。这两个内部类是完全独立的两个实体，各自在自己的命名空间内。当然，明确地继承某个内部类也是可以的：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Egg2</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> Yolk y = <span class="hljs-keyword">new</span> Yolk();<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Egg2</span><span class="hljs-params">()</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;New Egg2()&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insertYolk</span><span class="hljs-params">(Yolk yy)</span> </span>&#123;<br>        y = yy;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">g</span><span class="hljs-params">()</span> </span>&#123;<br>        y.f();<br>    &#125;<br><br>    <span class="hljs-keyword">protected</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Yolk</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Yolk</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;Egg2.Yolk()&quot;</span>);<br>        &#125;<br><br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;Egg2.Yolk.f()&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BigEgg2</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Egg2</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BigEgg2</span><span class="hljs-params">()</span> </span>&#123;<br>        insertYolk(<span class="hljs-keyword">new</span> Yolk());<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Egg2 e2 = <span class="hljs-keyword">new</span> BigEgg2();<br>        e2.g();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Yolk</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Egg2</span>.<span class="hljs-title">Yolk</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Yolk</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;BigEgg2.Yolk()&quot;</span>);<br>        &#125;<br><br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>            System.out.println(<span class="hljs-string">&quot;BigEgg2.Yolk.f()&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">Egg2.Yolk()<br><span class="hljs-function">New <span class="hljs-title">Egg2</span><span class="hljs-params">()</span></span><br><span class="hljs-function">Egg2.<span class="hljs-title">Yolk</span><span class="hljs-params">()</span></span><br><span class="hljs-function">BigEgg2.<span class="hljs-title">Yolk</span><span class="hljs-params">()</span></span><br><span class="hljs-function">BigEgg2.Yolk.<span class="hljs-title">f</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
+
+<p>　　现在<code>BigEgg2.Yolk</code> 通过<code>extends Egg2.Yolk</code> 明确地继承了此内部类，并且重载了其中的方法。<code>Egg2</code> 的<code>insertYolk()</code>方法使得<code>BigEgg2</code> 将它自己的<code>Yolk</code> 对象向上转型，然后传递给引用y。所以当<code>g()</code>调用<code>y.f()</code>时，重载后的新版的f()被执行。第二次调用<code>Egg2.Yolk()</code>是<code>BigEgg2.Yolk</code> 的构造器调用了其基类的构造器。可以看到在调用<code>g()</code>的时候，新版的<code>f()</code>被调用了。</p>
+<hr>
+<h3 id="内部类的继承问题（thinking-in-java-3th-p294）"><a href="#内部类的继承问题（thinking-in-java-3th-p294）" class="headerlink" title="内部类的继承问题（thinking in java 3th p294）"></a>内部类的继承问题（thinking in java 3th p294）</h3><blockquote>
+<p>因为内部类的构造器要用到其外围类对象的引用，所以在你继承一个内部类的时候，事情变得有点复杂。问题在于，那个“秘密的”外围类对象的引用必须被初始化，而在被继承的类中并不存在要联接的缺省对象。要解决这个问题，需使用专门的语法来明确说清它们之间的关联：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WithInner</span> </span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Inner</span> </span>&#123;<br>        Inner() &#123;<br>            System.out.println(<span class="hljs-string">&quot;this is a constructor in WithInner.Inner&quot;</span>);<br>        &#125;<br><br>        ;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InheritInner</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WithInner</span>.<span class="hljs-title">Inner</span> </span>&#123;<br>    <span class="hljs-comment">// ! InheritInner() &#123;&#125; // Won&#x27;t compile</span><br>    InheritInner(WithInner wi) &#123;<br>        wi.<span class="hljs-keyword">super</span>();<br>        System.out.println(<span class="hljs-string">&quot;this is a constructor in InheritInner&quot;</span>);<br>    &#125;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        WithInner wi = <span class="hljs-keyword">new</span> WithInner();<br>        InheritInner ii = <span class="hljs-keyword">new</span> InheritInner(wi);<br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+<p>　输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">this</span> is a constructor in WithInner.Inner<br><span class="hljs-keyword">this</span> is a constructor in InheritInner<br></code></pre></td></tr></table></figure>
+
+<p>　　可以看到，InheritInner 只继承自内部类，而不是外围类。但是当要生成一个构造器时，缺省的构造器并不算好，而且你不能只是传递一个指向外围类对象的引用。此外，你必须在构造器内使用如下语法：</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><code class="hljs abnf">enclosingClassReference.super()<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<h2 id="关于Java回调函数"><a href="#关于Java回调函数" class="headerlink" title="关于Java回调函数"></a>关于Java回调函数</h2><blockquote>
+<p>在Java中，通常就是编写另外一个类或类库的人规定一个接口，然后你来实现这个接口，然后把这个接口的一个对象作为参数传给别人的程序，别人的程序必要时就会通过那个接口来调用你编写的函数,执行后续的一些方法,。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CallBack</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        CallBack callBack = <span class="hljs-keyword">new</span> CallBack();<br>        callBack.toDoSomethings(<span class="hljs-number">100</span>, <span class="hljs-keyword">new</span> CallBackInterface() &#123;<br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">execute</span><span class="hljs-params">()</span> </span>&#123;<br>                System.out.println(<span class="hljs-string">&quot;我的请求处理成功了&quot;</span>);<br>            &#125;<br>        &#125;);<br><br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">toDoSomethings</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, CallBackInterface callBackInterface)</span> </span>&#123;<br>        <span class="hljs-keyword">long</span> start = System.currentTimeMillis();<br>        <span class="hljs-keyword">if</span> (a &gt; <span class="hljs-number">100</span>) &#123;<br>            callBackInterface.execute();<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            System.out.println(<span class="hljs-string">&quot;a &lt; 100 不需要执行回调方法&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">long</span> end = System.currentTimeMillis();<br>        System.out.println(<span class="hljs-string">&quot;该接口回调时间 : &quot;</span> + (end - start));<br>    &#125;<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">CallBackInterface</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">execute</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>Java回调的实现,是不是就是基于匿名内部类实现的呢?答案是肯定的.</p>
+<p>Java里的回调,可以说是匿名内部类精彩表演,优美的编码风格,真是让人陶醉~</p>
+<hr>
+<p>参考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://download.csdn.net/download/sinat_34344123/10206155">Thinking in Java</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hikvision_java_gyh/article/details/8964155">https://blog.csdn.net/hikvision_java_gyh/article/details/8964155</a> 《JAVA内部类 （吐血之作）</li>
+</ul>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Java基础" >
+    <span class="tag-code">Java基础</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/spring-structure-concept.html">
+        <span class="nav-arrow">← </span>
+        
+          《Spring的设计理念和整体架构》
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/jdk8-consumer-supplier.html">
+        
+          JDK8 Consumer &amp; Supplier 什么意思
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '41c9f4ef3c9071a73bf55e62e4c6b75e',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86%E8%87%AA%E3%80%8AThinking-in-Java%E3%80%8B-%E7%AC%AC%E5%9B%9B%E7%89%88-%E7%AC%AC10%E7%AB%A0-PDF%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80"><span class="toc-nav-text">内容整理自《Thinking in Java》(第四版) 第10章 PDF下载地址 </span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-nav-text">什么是内部类?</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%9F"><span class="toc-nav-text">为什么需要内部类？</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E4%BC%98%E9%9B%85%E4%B9%8B%E5%A4%84%EF%BC%9A"><span class="toc-nav-text">内部类的优雅之处：</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%BB%E8%A6%81%E6%9C%89%E4%BB%A5%E4%B8%8B%E5%87%A0%E7%B1%BB%EF%BC%9A"><span class="toc-nav-text">内部类主要有以下几类：</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A%EF%BC%9A%E6%88%90%E5%91%98%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-nav-text">A：成员内部类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A%E5%86%85%E9%83%A8%E7%B1%BB%E6%98%AF%E4%B8%80%E4%B8%AA%E7%BC%96%E8%AF%91%E6%97%B6%E7%9A%84%E6%A6%82%E5%BF%B5%EF%BC%8C%E4%B8%80%E6%97%A6%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%9F%EF%BC%8C%E5%B0%B1%E4%BC%9A%E6%88%90%E4%B8%BA%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E4%B8%A4%E7%B1%BB%E3%80%82"><span class="toc-nav-text">注意：内部类是一个编译时的概念，一旦编译成功，就会成为完全不同的两类。</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#B-%E5%B1%80%E9%83%A8%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-nav-text">B:局部内部类</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#C%EF%BC%9A%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB-%E5%B5%8C%E5%A5%97%E7%B1%BB-%EF%BC%9A"><span class="toc-nav-text">C：静态内部类(嵌套类)：</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB%E5%92%8C%E6%88%90%E5%91%98%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-nav-text">静态内部类和成员内部类的区别</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#D%EF%BC%9A%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB-from-thinking-in-java-3th"><span class="toc-nav-text">D：匿名内部类(from thinking in java 3th)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%9F"><span class="toc-nav-text">什么情况下需要使用匿名内部类？</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%8E%E5%A4%9A%E5%B1%82%E5%B5%8C%E5%A5%97%E7%B1%BB%E4%B8%AD%E8%AE%BF%E9%97%AE%E5%A4%96%E9%83%A8"><span class="toc-nav-text">从多层嵌套类中访问外部</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E9%87%8D%E8%BD%BD%E9%97%AE%E9%A2%98"><span class="toc-nav-text">内部类的重载问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%86%85%E9%83%A8%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF%E9%97%AE%E9%A2%98%EF%BC%88thinking-in-java-3th-p294%EF%BC%89"><span class="toc-nav-text">内部类的继承问题（thinking in java 3th p294）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B3%E4%BA%8EJava%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-nav-text">关于Java回调函数</span></a>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-basic-innerclass.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

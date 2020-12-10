@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（五）创建型之建造者模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（五）创建型之建造者模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-10-18</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/10/17/8NsSJTuzyraGeOV.png" alt="build"></p>
+<h1 id="建造者模式-🔨"><a href="#建造者模式-🔨" class="headerlink" title="建造者模式 🔨"></a>建造者模式 🔨</h1><blockquote>
+<p>指将一个复杂对象的构造与它的表示分离，使同样的构建过程可以创建不同的表示</p>
+</blockquote>
+<p>根据建造者模式的定义，我们可以先简单的了解一下建造者模式要解决的问题，它是指将一个复杂对象的构建与它的表示分离，这句话的意思是指一个对象的构建过程与表示不再绝对。即一个构建过程对应多个结果，这取决于客户端如果指挥构建者进行对象的构建。这里的构建者就是我们接下来要讲的建造者模式内容。</p>
+<h2 id="理解程序中的建造-🗯"><a href="#理解程序中的建造-🗯" class="headerlink" title="理解程序中的建造 🗯"></a>理解程序中的建造 🗯</h2><p>对于建造这个词语没什么好说的，在软件程序中建造是什么呢？我相信看到下面这个例子你应该就已经掌握了什么是建造者模式，当然这还不够，让我们慢慢来。</p>
+<h3 id="JDK-中的-StringBuilder"><a href="#JDK-中的-StringBuilder" class="headerlink" title="JDK 中的 StringBuilder"></a>JDK 中的 StringBuilder</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringBuilderTest</span> </span>&#123;<br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>&#123;<br>        StringBuilder stringBuilder = <span class="hljs-keyword">new</span> StringBuilder();<br>        stringBuilder.append(<span class="hljs-number">1</span>).append(<span class="hljs-string">&quot;个张三，和&quot;</span>).append(<span class="hljs-number">4</span>).append(<span class="hljs-string">&quot;个李四&quot;</span>);<br>        System.out.println(stringBuilder.toString());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">1个张三，和4个李四<br>Process finished with exit code 0<br></code></pre></td></tr></table></figure>
+
+<p>上面的例子是妇孺皆知的 JDK 中提供的一个为了解决复杂 String 对象的 String 对象生成器。它还有个孪生姐夫<code>StringBuffer</code>用在并发环境下。</p>
+<h3 id="Netty-中的-ServerBootstrap"><a href="#Netty-中的-ServerBootstrap" class="headerlink" title="Netty 中的 ServerBootstrap"></a>Netty 中的 ServerBootstrap</h3><p>再比如这个，netty 的启动器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">ServerBootstrap bootstrap = <span class="hljs-keyword">new</span> ServerBootstrap();<br>bootstrap.group(parentGroup, childGroup)<br>        .channel(NioServerSocketChannel.class)<br>        .option(ChannelOption.SO_BACKLOG, <span class="hljs-number">128</span>)<br>        .childHandler(<span class="hljs-keyword">new</span> NettyProtobufChannelInitializer());<br><br><span class="hljs-keyword">try</span> &#123;<br>    ChannelFuture sync = bootstrap.bind(<span class="hljs-number">2333</span>).sync();<br>    sync.channel().closeFuture().sync();<br>&#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>    e.printStackTrace();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过建造者 <code>ServerBootstrap</code> 来完成一个启动器的构建，同一个构造过程，却有着千差万别的结果。</p>
+<h3 id="lvgo-的-Slient-并发任务处理器"><a href="#lvgo-的-Slient-并发任务处理器" class="headerlink" title="lvgo 的 Slient 并发任务处理器"></a>lvgo 的 Slient 并发任务处理器</h3><p>如果建造者被我们自己应用的话，我个人将它使用到了程序插拔配置上了，就像 netty 的启动器一样。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">new</span> TaskHandler&lt;String&gt;(testData) &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">(String s)</span> </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            Thread.sleep(<span class="hljs-number">1000L</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>        log.info(<span class="hljs-string">&quot;第&quot;</span> + s + <span class="hljs-string">&quot;个任务&quot;</span> + Thread.currentThread());<br>    &#125;<br>&#125;.sync(<span class="hljs-keyword">false</span>).overRun(() -&gt; &#123;<br>    log.debug(<span class="hljs-string">&quot;我所有的任务执行结束了&quot;</span>);<br>&#125;).execute(<span class="hljs-number">10</span>);<br></code></pre></td></tr></table></figure>
+
+<p>上面我写的这个组件已发布到 maven 仓库，源码仓库：<a target="_blank" rel="noopener" href="https://github.com/lvgocc/silent">https://github.com/lvgocc/silent</a></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.lvgo<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>silent<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>通过上面的几个例子我们大概知道什么是建造者模式了，它可以通过同一个构造过程来创建出不同的表示对象，比如</p>
+<ul>
+<li>StringBuilder 通过不同的参数传入 append 方法，得到结果是不一样的；</li>
+<li>ServerBootstrap 的不同参数设置，启动出来的 netty 服务端有着不同作用；</li>
+<li>TaskHandler 通过指定不同的参数，可以使任务的执行效果产生不同的变化；</li>
+</ul>
+<h2 id="建造者模式类图-📌"><a href="#建造者模式类图-📌" class="headerlink" title="建造者模式类图 📌"></a>建造者模式类图 📌</h2><blockquote>
+<p>注：在 GOF 的原著中对建造模式的理解与本篇差别较大。所以类图看起来会和很多资料中有所差异，望读者知悉。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/10/17/Aqzo6p4f1FPlasD.png" alt="build-UML"></p>
+<p>GOF 中定义的建造者类图</p>
+<p><img src="https://i.loli.net/2020/10/17/jVEaygYQd7rOscR.png" alt="gof-build-UML"></p>
+<p>这里说明一下，GOF 的建造者模式中体现的是将要构建的对象、构建者、具体构建者、指挥者4部分独立开来，可以做很好的水平扩展。而 lvgo 将建造者的抽象类与具体的构建者合成一个，通过参数的方式将具体的构建者体现出来。将指挥者的角色延迟到了客户端，直接由客户端 client 来代替 Director 的工作。</p>
+<h2 id="代码-📄"><a href="#代码-📄" class="headerlink" title="代码 📄"></a>代码 📄</h2><blockquote>
+<p>避免篇幅过长，完整代码及单元测试结果点击查看 <a target="_blank" rel="noopener" href="https://github.com/lvgocc/java-design-patterns/tree/main/build">https://github.com/lvgocc/java-design-patterns/tree/main/build</a></p>
+</blockquote>
+<p>为了能够更好的去理解 lvgo 与 GOF 中类图的差异，这里准备了两种写法，以诠释上面的说明。</p>
+<p><strong>GOF 类图的实现</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Builder</span> </span>&#123;<br><br>    <span class="hljs-keyword">protected</span> PlayerRole playerRole = <span class="hljs-keyword">new</span> PlayerRole();<br><br>    <span class="hljs-function"><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setHairColor</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setShape</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSkinColour</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-function">PlayerRole <span class="hljs-title">build</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> playerRole;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Director</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Builder builder;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Director</span><span class="hljs-params">(Builder builder)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.builder = builder;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> PlayerRole <span class="hljs-title">construct</span><span class="hljs-params">()</span> </span>&#123;<br>        builder.setHairColor();<br>        builder.setShape();<br>        builder.setSkinColour();<br>        <span class="hljs-keyword">return</span> builder.build();<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> PlayerRole <span class="hljs-title">construct2</span><span class="hljs-params">()</span> </span>&#123;<br>        builder.setHairColor();<br>        <span class="hljs-keyword">return</span> builder.build();<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> PlayerRole <span class="hljs-title">construct3</span><span class="hljs-params">()</span> </span>&#123;<br>        builder.setSkinColour();<br>        <span class="hljs-keyword">return</span> builder.build();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PlayerRoleBuilder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Builder</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setHairColor</span><span class="hljs-params">()</span> </span>&#123;<br>        playerRole.setHairColor(<span class="hljs-string">&quot;褐色&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setShape</span><span class="hljs-params">()</span> </span>&#123;<br>        playerRole.setShape(<span class="hljs-string">&quot;健硕&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setSkinColour</span><span class="hljs-params">()</span> </span>&#123;<br>        playerRole.setSkinColour(<span class="hljs-string">&quot;古铜色&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PlayerRole</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> String hairColor;<br>    <span class="hljs-keyword">private</span> String shape;<br>    <span class="hljs-keyword">private</span> String skinColour;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">build</span><span class="hljs-params">()</span> </span>&#123;<br>    Builder playerRoleBuilder = <span class="hljs-keyword">new</span> PlayerRoleBuilder();<br>    Director playerRoleBuildDirector = <span class="hljs-keyword">new</span> Director(playerRoleBuilder);<br>    PlayerRole construct = playerRoleBuildDirector.construct();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">construct = PlayerRole&#123;hairColor=<span class="hljs-string">&#x27;褐色&#x27;</span>, shape=<span class="hljs-string">&#x27;健硕&#x27;</span>, skinColour=<span class="hljs-string">&#x27;古铜色&#x27;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>个人觉得这种写法稍为复杂，不过他的水平扩展性和隔离性都比较好。</p>
+<p><strong>lvgo 整理的写法如下</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PlayerRole</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> String hairColor;<br>    <span class="hljs-keyword">private</span> String shape;<br>    <span class="hljs-keyword">private</span> String skinColour;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PlayerRoleBuilder</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> PlayerRole playerRole = <span class="hljs-keyword">new</span> PlayerRole();<br><br>    <span class="hljs-function">PlayerRoleBuilder <span class="hljs-title">hairColor</span><span class="hljs-params">(String color)</span> </span>&#123;<br>        playerRole.setHairColor(color);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>    &#125;<br><br>    <span class="hljs-function">PlayerRoleBuilder <span class="hljs-title">shape</span><span class="hljs-params">(String shape)</span> </span>&#123;<br>        playerRole.setShape(shape);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>    &#125;<br><br>    <span class="hljs-function">PlayerRoleBuilder <span class="hljs-title">skinColour</span><span class="hljs-params">(String skinColour)</span> </span>&#123;<br>        playerRole.setSkinColour(skinColour);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>    &#125;<br><br>    <span class="hljs-function">PlayerRole <span class="hljs-title">build</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> playerRole;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>&#123;<br>    PlayerRoleBuilder playerRoleBuilder = <span class="hljs-keyword">new</span> PlayerRoleBuilder();<br>    playerRoleBuilder.hairColor(<span class="hljs-string">&quot;红色&quot;</span>).shape(<span class="hljs-string">&quot;健硕&quot;</span>).skinColour(<span class="hljs-string">&quot;古铜色&quot;</span>);<br>    PlayerRole build = playerRoleBuilder.build();<br>    System.out.println(<span class="hljs-string">&quot;build = &quot;</span> + build);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">build = PlayerRole&#123;hairColor=<span class="hljs-string">&#x27;红色&#x27;</span>, shape=<span class="hljs-string">&#x27;健硕&#x27;</span>, skinColour=<span class="hljs-string">&#x27;古铜色&#x27;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结-🐱‍💻"><a href="#总结-🐱‍💻" class="headerlink" title="总结 🐱‍💻"></a>总结 🐱‍💻</h2><p><strong>相同的资源，不同的结果</strong>是我对建造者模式创建对象的理解。就像建造我们的人生，提供了相同的世界，相同的空气，每个个体的表现均不同。</p>
+<p>通过使用建造者模式，我们可以更加灵活的去处理一个构建过程复杂的对象。将它的构建过程与表示分离开。例如如果你正在为<strong>一长串的 set 方法</strong>苦恼的时候可以考虑一下建造者模式。它使代码更整洁，可读性更好。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">xxx.setA();<br>xxx.setB();<br>xxx.setC();<br>xxx.setD();<br>xxx.setE();<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">xxx.A().B().C().D().E().build();<br></code></pre></td></tr></table></figure>
+<p>当你想要给一个对象组装一个特有的结果的时候，不妨试试 GOF 的思路，很不错的。</p>
+<p><strong>缺点：</strong></p>
+<p>建造者模式因为需要维护一个单独的建造者类，同时要为每个属性单独维护一个方法，当类中有属性调整的时候，要一起调整对应建造者中的方法，这也是随它的优势而带来的一些副作用。<strong>但如果有需要它的地方尽管去用。没有什么比混沌的代码更糟糕的事情了。</strong></p>
+<h2 id="案例应用"><a href="#案例应用" class="headerlink" title="案例应用"></a>案例应用</h2><p>这里为了应读者要求，想有对应的案例可以参考，不然不清楚设计模式到底在什么地方用。</p>
+<ol>
+<li>餐饮系统有23道素材、18道荤菜，老板今天推出 8 种 2素 1 荤套餐，你如何实现？</li>
+<li>试想一下在我的世界（mc）中，提供了各种不同的道具，相同的道具组合，你做出来的房子和我做出来的房子看起来不那么一样。</li>
+<li>在塔防类游戏中，同一个射手，每次攒钱给他升级，最终有的变成了单体攻击高的神射手，有的变成散射群里攻击低的散箭手。</li>
+</ol>
+<h2 id="返璞归真"><a href="#返璞归真" class="headerlink" title="返璞归真"></a>返璞归真</h2><p>我认为学习设计模式的过程就像拿到一台游戏机，玩到最后，我都会拆开看看里面是什么，而早已不关心游戏好不好玩了。</p>
+<p>知识也是一样，知其然而知其所以然。</p>
+<p><strong>我们为了学会使用某种东西看他的操作手册就可以了；</strong></p>
+<p><strong>我们如果想要学会修某种东西就需要看他的设计手册；</strong></p>
+<p><strong>当我们想要创造某种东西，你就需要掌握很多很多设计手册，将他们的经验进行吸收、消化、提炼。才能有更好的结果。</strong></p>
+<p><em>当然，如果你只想会用，有一份差不多的操作指南也就够了。</em></p>
+<p>抱歉这一篇说了一些题外话。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-prototype.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（四）创建型之原型模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-proxy.html">
+        
+          和 lvgo 一起学设计模式（六）结构型之代理模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '6448bf9db2db8da65102bce410fe8ee5',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F-%F0%9F%94%A8"><span class="toc-nav-text">建造者模式 🔨</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%90%86%E8%A7%A3%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84%E5%BB%BA%E9%80%A0-%F0%9F%97%AF"><span class="toc-nav-text">理解程序中的建造 🗯</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#JDK-%E4%B8%AD%E7%9A%84-StringBuilder"><span class="toc-nav-text">JDK 中的 StringBuilder</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Netty-%E4%B8%AD%E7%9A%84-ServerBootstrap"><span class="toc-nav-text">Netty 中的 ServerBootstrap</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#lvgo-%E7%9A%84-Slient-%E5%B9%B6%E5%8F%91%E4%BB%BB%E5%8A%A1%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-nav-text">lvgo 的 Slient 并发任务处理器</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">建造者模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%84"><span class="toc-nav-text">代码 📄</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%90%B1%E2%80%8D%F0%9F%92%BB"><span class="toc-nav-text">总结 🐱‍💻</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A1%88%E4%BE%8B%E5%BA%94%E7%94%A8"><span class="toc-nav-text">案例应用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BF%94%E7%92%9E%E5%BD%92%E7%9C%9F"><span class="toc-nav-text">返璞归真</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-build.html';
+    var banner = 'https://i.loli.net/2020/10/17/8NsSJTuzyraGeOV.png'
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

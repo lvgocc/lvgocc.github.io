@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（二十三）行为型之解释器模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（二十三）行为型之解释器模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-07</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>这篇是<strong>《和 lvgo 一起学设计模式》</strong>系列的最后一个设计模式了，这篇就轻松一些吧。</p>
+<h1 id="解释器模式"><a href="#解释器模式" class="headerlink" title="解释器模式"></a>解释器模式</h1><blockquote>
+<p>给定一个语言，定义它的文法的一种表示，并定义一个解释器，这个解释器使用该表示来解释语言中的句子。</p>
+</blockquote>
+<p>因为时代的发展、技术的更替等等原因（你想做的解释器都有人做好了，且开源）吧，可能这个是我们很长一段时间都用不到的一种设计模式了。</p>
+<h2 id="你能看懂TA的“眼色”吗？"><a href="#你能看懂TA的“眼色”吗？" class="headerlink" title="你能看懂TA的“眼色”吗？"></a>你能看懂TA的“眼色”吗？</h2><p>还记得那些年看过的影视剧吗？或是表情包吗？</p>
+<p><img src="https://i.loli.net/2020/12/03/dFSRYxU9AEDji4v.jpg" alt="interpreter-1.jpg"></p>
+<p><img src="https://i.loli.net/2020/12/03/pazvAJuBRKZhkco.jpg" alt="interpreter-2.jpg"></p>
+<p>你能看懂柯镇恶和“老婆”的眼色吗？</p>
+<p>反正我是看不懂，单是看这情况，完全看不懂是什么意思。</p>
+<p>但如果我提前给你说下规则呢？</p>
+<p><strong>柯镇恶图</strong></p>
+<ol>
+<li>柯镇恶往左摆头，冲！</li>
+<li>柯镇恶往右摆头，撤！</li>
+</ol>
+<p><strong>“老婆”图</strong></p>
+<ol>
+<li>“老婆”坐在坐垫上，生气！</li>
+<li>“老婆”坐在摩的后面架子上，开心！</li>
+</ol>
+<p>那这个时候再看他们的“眼色”，你能看懂了吗？如果有了上面的定义，我便知道了：</p>
+<ul>
+<li>柯镇恶的意思是冲！（假设是往左摆头了）</li>
+<li>“老婆”很开心！</li>
+</ul>
+<h2 id="再谈解释器模式"><a href="#再谈解释器模式" class="headerlink" title="再谈解释器模式"></a>再谈解释器模式</h2><p><u>给定一个语言，定义它的文法的一种表示，并定义一个解释器，这个解释器使用该表示来解释语言中的句子。</u></p>
+<p>定义一个语言：“眼色”</p>
+<p>定义他的文法表示：“摆头”、“坐的位置”</p>
+<p>定义解释器：“规则”</p>
+<p>这样我们就可以通过这个解释器来了解TA了。</p>
+<p><strong>给定一个”眼色“，定义”摆头“或”坐的位置“，并定义一个规则，这样就可以解释图中的柯镇恶和”老婆“了。</strong></p>
+<h2 id="解释器模式类图-📌"><a href="#解释器模式类图-📌" class="headerlink" title="解释器模式类图 📌"></a>解释器模式类图 📌</h2><p><img src="https://i.loli.net/2020/12/03/IrtOF8hdjB3PDnG.png" alt="interpreter-UML.png"></p>
+<p>这个结构比较简单，定义一个解释接口，然后就是两个具体的解释器</p>
+<ol>
+<li>最终解释器</li>
+<li>非最终解释器</li>
+<li>环境</li>
+</ol>
+<p>这两个有点像组合模式中的子节点和叶节点的意思。这里的 <code>NonTerminalExpression </code> 是可以有多个的；</p>
+<p>这里最麻烦的其实是 <code>Context</code> 环境。</p>
+<h2 id="代码-📃"><a href="#代码-📃" class="headerlink" title="代码 📃"></a>代码 📃</h2><p>我们来看看代码来实现上面的”眼色“</p>
+<blockquote>
+<p>完整代码关注回复“源码”获取。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getType</span><span class="hljs-params">()</span> </span>&#123;<br>    EyeColor eyeColor = <span class="hljs-keyword">null</span>;<br>    Context context = <span class="hljs-keyword">new</span> Context(<span class="hljs-string">&quot;柯镇恶往左摆头 | 老婆坐在了架子上&quot;</span>);<br>    String content = context.getContent();<br>    String[] strings = content.split(<span class="hljs-string">&quot;\\|&quot;</span>);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; strings.length; i++) &#123;<br>        String string = strings[i];<br>        context.setContent(string);<br>        <span class="hljs-keyword">if</span> (string.contains(<span class="hljs-string">&quot;柯镇恶&quot;</span>)) &#123;<br>            eyeColor = <span class="hljs-keyword">new</span> KeZhenE();<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (string.contains(<span class="hljs-string">&quot;老婆&quot;</span>)) &#123;<br>            eyeColor = <span class="hljs-keyword">new</span> Wife();<br>        &#125;<br>        <span class="hljs-keyword">assert</span> eyeColor != <span class="hljs-keyword">null</span>;<br>        eyeColor.interpreter(context);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeZhenE</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">EyeColor</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">interpreter</span><span class="hljs-params">(Context context)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (context.getContent().contains(<span class="hljs-string">&quot;左摆头&quot;</span>)) &#123;<br>            System.out.println(<span class="hljs-string">&quot;冲！&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (context.getContent().contains(<span class="hljs-string">&quot;右摆头&quot;</span>)) &#123;<br>            System.out.println(<span class="hljs-string">&quot;撤！&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Wife</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">EyeColor</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">interpreter</span><span class="hljs-params">(Context context)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (context.getContent().contains(<span class="hljs-string">&quot;座椅&quot;</span>)) &#123;<br>            System.out.println(<span class="hljs-string">&quot;生气！&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (context.getContent().contains(<span class="hljs-string">&quot;架子&quot;</span>)) &#123;<br>            System.out.println(<span class="hljs-string">&quot;开心！&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">冲！<br>开心！<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>通过上面的内容我们了解到，<strong>解释器可以自己定义一些规则和对应的解释规则</strong>，<strong>来完成一些复杂的事情</strong>，这样就使得可以用一个简单的“动作”来达成一件复杂的事情。你看柯镇恶一个眼色，我就知道他想冲，他省去了复杂的“张嘴”过程。</p>
+<p>其实解释器模式就像是我们现在用高级语言来开发软件程序一样，是怎么才能让计算机知道我们在说什么呢？其实这就是解释器的作用，我们按照一定规则（语法）来编写代码，然后解释器按照定义好的规则来将我们的代码翻译成机器认识的 01 代码。</p>
+<p>对于解释器，它将复杂的事自己“包揽”了，但是一旦<strong>发生新的规则</strong>，你就<strong>不得不去修改“包揽”的复杂解析过程</strong>。</p>
+<p>在今天，解释器模式应该很少会在我们的应用自己去设计了，毕竟这如同设计一门语言一样，过程很复杂，还记得我们正在用的正则表达式吗？他就是一个轻量级的语言，如果有能力有机会的时候，也可以挑战一下，开发一个自己的语言。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-visitor.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（二十二）行为型之访问者模式
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '53af728f910492d5fd61405e8613422d',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-nav-text">写在前面</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">解释器模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%A0%E8%83%BD%E7%9C%8B%E6%87%82TA%E7%9A%84%E2%80%9C%E7%9C%BC%E8%89%B2%E2%80%9D%E5%90%97%EF%BC%9F"><span class="toc-nav-text">你能看懂TA的“眼色”吗？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%8D%E8%B0%88%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">再谈解释器模式</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">解释器模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">代码 📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-interpreter.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

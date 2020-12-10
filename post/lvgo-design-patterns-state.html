@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（二十）行为型之状态模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（二十）行为型之状态模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-04</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h1><blockquote>
+<p>允许一个对象在其内部状态发生改变时改变其行为能力。</p>
+</blockquote>
+<p>我刚开始看到这个模式的时候，没啥感觉，不知道这东西要说的是个啥，后来看了个案例，渐渐清楚了，这个模式本身还是比较简单的。</p>
+<h2 id="小菜的工作状态"><a href="#小菜的工作状态" class="headerlink" title="小菜的工作状态"></a>小菜的工作状态</h2><blockquote>
+<p>这个案例出自程杰的《大话设计模式》，抽取案例模型，完整案例还请大家自行阅读</p>
+</blockquote>
+<p>案例说的是主人公“小菜”上班写代码时的各种状态，上午的时候精神饱满，中午时有点萎靡，下午状态一般，晚上状态疲惫。然后这一天各个时段的写代码状态用程序表达出来是这个样子的；</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Work</span> </span>&#123;<br><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> clock;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-comment">// 上午 9 点</span><br>        clock = <span class="hljs-number">9</span>;<br>        writeCode();<br>        <span class="hljs-comment">// 中午 12 点</span><br>        clock = <span class="hljs-number">12</span>;<br>        writeCode();<br>        <span class="hljs-comment">// 下午 15 点</span><br>        clock = <span class="hljs-number">15</span>;<br>        writeCode();<br>        <span class="hljs-comment">// 晚上 21 点</span><br>        clock = <span class="hljs-number">21</span>;<br>        writeCode();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">writeCode</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">12</span>) &#123;<br>            System.out.println(<span class="hljs-string">&quot;精神抖擞写代码&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">13</span>) &#123;<br>            System.out.println(<span class="hljs-string">&quot;饿了困了写代码&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">17</span>) &#123;<br>            System.out.println(<span class="hljs-string">&quot;状态一般写代码&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">23</span>) &#123;<br>            System.out.println(<span class="hljs-string">&quot;加班疲惫写代码&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一段典型的面向过程编程代码，之后根据面向对象的思想来改了一版变成了这样。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OOPWork</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Working working = <span class="hljs-keyword">new</span> Working();<br>        <span class="hljs-comment">// 上午 9 点</span><br>        working.clock = <span class="hljs-number">9</span>;<br>        working.writeCode();<br>        <span class="hljs-comment">// 中午 12 点</span><br>        working.clock = <span class="hljs-number">12</span>;<br>        working.writeCode();<br>        <span class="hljs-comment">// 下午 15 点</span><br>        working.clock = <span class="hljs-number">15</span>;<br>        working.writeCode();<br>        <span class="hljs-comment">// 晚上 21 点</span><br>        working.clock = <span class="hljs-number">21</span>;<br>        working.writeCode();<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Working</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> clock;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">writeCode</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">12</span>) &#123;<br>            <span class="hljs-keyword">new</span> MorningState();<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">13</span>) &#123;<br>            <span class="hljs-keyword">new</span> NoonState();<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">17</span>) &#123;<br>            <span class="hljs-keyword">new</span> AfterNoonState();<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clock &lt; <span class="hljs-number">23</span>) &#123;<br>            <span class="hljs-keyword">new</span> EveningState();<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MorningState</span> </span>&#123;<br><br>    &#123;<br>        System.out.println(<span class="hljs-string">&quot;精神抖擞写代码&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NoonState</span> </span>&#123;<br><br>    &#123;<br>        System.out.println(<span class="hljs-string">&quot;饿了困了写代码&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AfterNoonState</span> </span>&#123;<br><br>    &#123;<br>        System.out.println(<span class="hljs-string">&quot;状态一般写代码&quot;</span>);<br>    &#125;<br>&#125;<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EveningState</span> </span>&#123;<br><br>    &#123;<br>        System.out.println(<span class="hljs-string">&quot;加班疲惫写代码&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其实写到这里我相信大家就算没看过这本书也能多少发现一点端倪，就是这个 Working 类是不是有点奇怪。每新增一个状态就要去改这个类，而且这里负责了全部的工作状态，还有最关键的就是这个 <code>if else</code> 是不是有点太长了？？？没错，其实这些都可以用 <code>状态模式</code> 来规避掉，并且这些在软件设计中也都违反了一些原则或建议。</p>
+<ol>
+<li>每新增一个状态就要去改这个类（违反了 <code>开闭原则</code>）</li>
+<li>而且这里负责了全部的工作状态（违反了 <code>单一职责原则</code>）</li>
+<li>还有最关键的就是这个 <code>if else</code> 是不是有点太长了？？？（这是 <code>重构</code> 书中提到的 <code>long method</code> 的坏味道）</li>
+</ol>
+<h2 id="利用状态模式解决这-3-个问题"><a href="#利用状态模式解决这-3-个问题" class="headerlink" title="利用状态模式解决这 3 个问题"></a>利用状态模式解决这 3 个问题</h2><p>首先来看下状态模式的结构类图</p>
+<h3 id="状态模式类图-📌"><a href="#状态模式类图-📌" class="headerlink" title="状态模式类图 📌"></a>状态模式类图 📌</h3><p><img src="https://i.loli.net/2020/11/29/YWsdEVzrgFheG3A.png" alt="state-UML"></p>
+<p>这里有几个关键的角色</p>
+<ol>
+<li>运行的上下文环境 <code>Context</code> 对应到程序中就是 <code>Working</code> 类</li>
+<li>状态接口 <code>State</code> 这是为了解决单一职责和开闭原则；</li>
+<li>具体的状态，也就是 <code>State</code> 接口的实现</li>
+</ol>
+<h3 id="状态模式代码-📃"><a href="#状态模式代码-📃" class="headerlink" title="状态模式代码 📃"></a>状态模式代码 📃</h3><p>将上面的写法改成用状态模式的话就长这个样子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">writeCode</span><span class="hljs-params">()</span> </span>&#123;<br>    Working working = <span class="hljs-keyword">new</span> Working(<span class="hljs-keyword">new</span> MorningState());<br>    <span class="hljs-comment">// 手动模拟不同时刻</span><br>    working.setClock(<span class="hljs-number">9</span>);<br>    working.writeCode();<br><br>    working.setClock(<span class="hljs-number">12</span>);<br>    working.writeCode();<br><br>    working.setClock(<span class="hljs-number">15</span>);<br>    working.writeCode();<br><br>    working.setClock(<span class="hljs-number">21</span>);<br>    working.writeCode();<br><br><br>    working.setClock(<span class="hljs-number">24</span>);<br>    working.writeCode();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Working</span> </span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 当前工作状态</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> WorkState concurrentState;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 当前时刻</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> clock;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Working</span><span class="hljs-params">(WorkState concurrentState)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.concurrentState = concurrentState;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">writeCode</span><span class="hljs-params">()</span> </span>&#123;<br>        concurrentState.handle(<span class="hljs-keyword">this</span>);<br>    &#125;<br>    ....<br>    ....<br>    <span class="hljs-comment">// 篇幅原因，完整代码关注回复“源码”获取。</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">精神抖擞写代码<br>饿了困了写代码<br>状态一般写代码<br>加班疲惫写代码<br>别再写了，程序员回家了，明早再试吧😢，现在都已经<span class="hljs-number">24</span>点了。放过他吧<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>篇幅原因，完整代码关注回复“源码”获取。</p>
+</blockquote>
+<p>这样不仅消除了 <code>if else</code> 的臃肿 <code>long method</code> 坏味道代码，同时 Working 类更专注 “写代码”，同时有 <code>State</code> 接口的出现，实现了开闭原则，让程序的扩展的到了保障，并且一个关键的内容就是“在不同时刻，调用 writeCode 方法的结果是不同的。这也是状态模式的定义中提到的 <code>一个对象在其内部状态发生改变时改变其行为能力。</code> 改变对象的一个状态，使他的行为也发生了变化，这看起来就像我们对这个类的代码进行了修改一样。</p>
+<h2 id="状态模式延伸"><a href="#状态模式延伸" class="headerlink" title="状态模式延伸"></a>状态模式延伸</h2><p>如果大家有做过交易系统的订单的话，有一个东西应该不会陌生，叫做 <code>有限状态机</code> 也叫做 <code>状态机</code>。</p>
+<p><img src="https://i.loli.net/2020/11/29/ODt68sjlZchYk3M.png" alt="state-order"></p>
+<p>这是正常情况，也就是如果一个订单按照正常步骤来流转是会按照上图所示来进行。但是，真实的订单场景远比这个要复杂的多。</p>
+<p>这里我们只看一些简单的几个场景：</p>
+<ol>
+<li>提交订单之后突然心思转变，不买了，那这个时候给客户就是<code>取消订单</code>和<code>付款</code>两种选择，这一步发生的时候，订单状态为 <code>待付款</code>；</li>
+<li>付款之后又看了看发现有更好的店铺选择，此时钱已经付了，所以此时的操作提供给客户的就是 <code>申请退款</code>，此时订单状态为 <code>待发货</code>；</li>
+<li>等等订单场景较为复杂，不过万变不离其宗，即 <code>不同的状态，用户的操作行为和这笔订单之后的行为是有限的</code>；</li>
+</ol>
+<p>用一个图来看下上述几个问题场景</p>
+<p><img src="https://i.loli.net/2020/11/29/gbnuih81x7ZYMBr.png" alt="state-exception-order"></p>
+<p>我们可以通过图可以看到，即使只有这简单的两种情况，整个订单的处理逻辑就已经开始变得复杂了起来，如果利用传统的面向过程编程或简单的面向对象编程思路来设计这个订单流程逻辑，我想，第一版，也就是正常的订单流程开发实现起来问题应该“不大”，无非代码啰嗦一点、判断逻辑多一点。</p>
+<p>不过一旦产品经理提出在付款时可以进行撤单操作、在发货时可以进行退款、发货前可以修改接收地址又或者收货时可以拒收等等这些需求时，我觉得这个业务应该不会有人愿意去开发了。</p>
+<p>不是开发人员不愿意做这个业务，而是不愿意在糟糕的代码上进行再次迭代（当然在现实情况，一个糟糕的团队确有可能继续在糟糕的代码上继续迭代，原因很简单，因为他们从一开始便能设计出来，领导能通过就说明这是一个没有技术沉淀的团队，他们很愿意将一坨坨代码“至死不渝”的一直维护下去）。</p>
+<p>如果订单状态利用 <code>状态模式</code> 来设计，无论状态如何变化，高层模块也永远不需要关心，这也是开闭与单一职责这两个原则的很好体现。在哪个状态能做哪些事情，完全有对应的状态说了算，即使在复杂的业务，也会因为状态的区分而是业务颗粒变得很小（如果传统的 <code>if else</code> 到底，整个业务流程必须全部重新测试一遍，这不是谁说的，这是由高耦合紧密设计决定的，逃不开），这一点在开发和测试上，都会大幅提高开发和测试效率和节省成本。</p>
+<p>好了，关于这一块内容确实大家可以看看 <code>有限状态机</code> ，订单业务在实际情况是交由 <code>状态机</code> 来管理的。</p>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>当你的应用程序可能会存在多种状态，而且每种状态的行为会随着状态的改变而改变，这时你可以考虑使用状态模式。通过状态模式不光可以使应用程序可以和应用状态可以很好的解耦，同时在状态的管理和扩展上都是非常的有帮助。</p>
+<p>状态模式关键的几个点：</p>
+<ol>
+<li>应用环境的上下文，这个是用来作为状态模式的入口，他负责来调用当前状态的执行方法。</li>
+<li>状态接口，这个接口负责管理全部的状态，这里在使用的时候需要好好设计，可以将整个业务所有的状态方法全部维护好，在具体接口类中间放一个抽象状态类，如果当前状态不能操作这个方法可以放在一个抽象类中来实现一个空方法，而不是子类去实现全部的接口方法。</li>
+</ol>
+<p>设计模式是一把双刃剑，在合理的时机使用可以达到很好的应用效果，反之亦然。大家要谨慎对待。不要变成手里只有一把锤子的人。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-command.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（十九）行为型命令之模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-mediator.html">
+        
+          和 lvgo 一起学设计模式（二十一）行为型之中介者模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '4468b9dd7bfd98b77ce02843fed00ee1',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">状态模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B0%8F%E8%8F%9C%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8A%B6%E6%80%81"><span class="toc-nav-text">小菜的工作状态</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%88%A9%E7%94%A8%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F%E8%A7%A3%E5%86%B3%E8%BF%99-3-%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-nav-text">利用状态模式解决这 3 个问题</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">状态模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">状态模式代码 📃</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F%E5%BB%B6%E4%BC%B8"><span class="toc-nav-text">状态模式延伸</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-state.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

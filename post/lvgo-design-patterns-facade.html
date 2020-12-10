@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（十）结构型之外观模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（十）结构型之外观模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-11-02</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/11/02/EhWVb7JoP3mCi9j.png" alt="facade"></p>
+<p>今天用5分23秒，搞懂外观模式，计时~开始！</p>
+<h1 id="书生的家书"><a href="#书生的家书" class="headerlink" title="书生的家书"></a>书生的家书</h1><p>从前，有一个书生，去到很远的地方读书。离开家里久了，难免会思念家乡，于是他便带着书童收拾好行囊，来到城门口登记 —— 接收包裹检查 —— 赶路 ——  到家。几次折腾之后，书生的成绩下滑了，身体也吃不消了，家里觉得这也不是一个长期的办法，于是商量出来一个办法：想家的时候，他便写一封家书，叫自己的书童给他带到老父亲家里。这样一来，书童便拿着他的家书，在城门口进行登记、检查包裹、然后出了城赶路。这使得书生可以专心读书，传递家书的事情，都由书童来做。</p>
+<p><img src="https://i.loli.net/2020/11/01/wIdcHjVJ6P5fK8S.png" alt="facade"></p>
+<p>书生再也不用为了每次登记检查包裹赶路这些事情费心了，可以<strong>专心的学习做好自己的事情</strong>了。即使哪一天不需要登记了，书生也不需要管，只需要努力学习和想家的时候写好家书送给书童就可以了。</p>
+<p><img src="https://i.loli.net/2020/11/01/GvzmfKdp8UrjDeP.png" alt="facade1"></p>
+<p>书生为了使自己能够更好的学习，更加专注于自己的 “业务”，将一些复杂的过程交给了书童去处理。至于书童要经历什么，书生并不关心，他只关心你给我提供传递书信的 “服务”，我给你 ”信“，你再回给我 ”信“。</p>
+<p>这让我想到了汽车加油，好多人他们只知道没有了去加油站加油就好了，但是并没有多少人清楚石油石化业的艰辛历程。扯远了，回来说我们的问题。</p>
+<p>对于书童这种行为，慢慢的演变成了现在的<strong>邮局</strong>。</p>
+<h1 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式</h1><blockquote>
+<p>为多个复杂的子系统提供一个一致的接口，使这些子系统更加容易被访问。</p>
+</blockquote>
+<h2 id="SLFJ"><a href="#SLFJ" class="headerlink" title="SLFJ"></a>SLFJ</h2><p><strong>第一个想到的外观模式具体的应用.</strong></p>
+<p>在我学习外观模式之前，我一直在想的事情就是我哪里用到了这个设计模式，脑子里第一个蹦出来的就是 SL4J 这个日志 api 框架，他就是一个日志门面。主要的核心思想就是外观模式，他所负责的，就是书童干的事。提供你一个方法，你把参数给他，他给你返回一个记录日志的对象，至于这中间的复杂过程，你不需要知道。</p>
+<p>赠送一个用不到的知识点：log4j、logback、sl4j 都是出自同一个作者，这也是为什么 logback 天然支持 sl4j 真香的原因之一。</p>
+<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>我想，基本上知道编程的人，应该都知道什么是 <strong>MVC</strong> ，<strong>model</strong> 、<strong>view</strong> 、<strong>control</strong> 。但大家仔细研究过这三者的关系吗？当然今天不是主要来介绍 <strong>MVC</strong> 的，而是通过 <strong>MVC</strong> 来认识外观模式。其中 <strong>V</strong> 就是书生，<strong>C</strong> 就是书童， <strong>M</strong> 就是具体的送信执行过程。<strong>书生</strong>（客户端 view）永远都不需要知道 <strong>书童</strong>（服务端 control）是如何把<strong>信送</strong>（服务端 model 业务实现）<strong>过去和拿回来</strong>的。</p>
+<p><img src="https://i.loli.net/2020/11/01/bUaKr8cfMwG5LX4.png" alt="facade2"></p>
+<h2 id="外观模式类图-📌"><a href="#外观模式类图-📌" class="headerlink" title="外观模式类图 📌"></a>外观模式类图 📌</h2><p><img src="https://i.loli.net/2020/11/02/O4ebA9Ma3noDVR6.png" alt="facade3.png"></p>
+<h2 id="代码-📃"><a href="#代码-📃" class="headerlink" title="代码 📃"></a>代码 📃</h2><blockquote>
+<p>回复“源码”获取书童送信全部代码</p>
+</blockquote>
+<p>我们通过代码在看一下书童是如何帮助书生完成送信的，<del>看看他路上有没有偷懒</del> 。</p>
+<p><img src="https://i.loli.net/2020/11/02/F8Iv1RbrgnxSlKw.png" alt="shutongsongxin.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 书生送信 - 书生</span><br><span class="hljs-comment"> * &lt;p&gt;</span><br><span class="hljs-comment"> * 欢迎跟我一起学习，公众号搜索：星尘的一个朋友</span><br><span class="hljs-comment"> * 也可以加我微信（lvgocc）拉你进群</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@blog</span> <span class="hljs-doctag">@see</span> http://lvgo.org</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@CSDN</span> <span class="hljs-doctag">@see</span> https://blog.csdn.net/sinat_34344123</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/11/2</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ShuSheng</span> </span>&#123;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(ShuSheng.class);<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        LOGGER.info(<span class="hljs-string">&quot;书生写好信给了书童&quot;</span>);<br>        ShuTong shuTong = <span class="hljs-keyword">new</span> ShuTong();<br>        shuTong.songXin();<br>        LOGGER.info(<span class="hljs-string">&quot;书童拿回了信给了书生&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/11/02/Lmv8Uq7wo4pNWQx.png" alt="shutongsongxin1.png"></p>
+<p>我们通过代码可以看出，整个过程书生也没有参与送信的具体过程，这些全部都由书童（外观角色）来完成，这其中设计了 2 个子系统，城门和老父亲。</p>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>迪米特法则又叫作最少知识原则 LOD/LKP ，1987 年美国东北大学👨‍🎓（Northeastern University）的一个名为迪米特（Demeter）的研究项目….(更多内容关注公众号点击“设计模式”专题序章查看)；</p>
+<p>外观模式是一个遵循了迪米特法则的一种设计模式。书生只知道送信找书童，但他不需要知道还要登记、检查等等其他的事情。</p>
+<p>外观模式又称作门面模式，理解成门面感觉会更好的理解是不是。至少我认为更好理解一些。就像人的脸面嘛，比如有一件事叫我做，你就跟我说嘛，你也不知道我怎么想的，怎么做的，我给你反馈结果就好了。当然例子可能不是很恰当，希望我要表达的意思能让你看的清楚。</p>
+<p>外观模式主要特征</p>
+<ol>
+<li>√ 降低了系统间的耦合度，子系统的变化不会影响高层模块的调用。</li>
+<li>√ 提高了高层模块的使用理解。我只想送信，给我接口。</li>
+<li>× 违背了开闭原则，其实你只要没有遵循依赖倒置，就一定会在功能增加或变更的时候违反开闭原则。如果想要不违背开闭原则，那就需要将依赖的具体的类，转成依赖抽象的类或接口。</li>
+</ol>
+<p><strong>外观模式的扩展</strong> ：上面的案例还可以可以使用一个接口来代替书童的位置，然后让书童来实现这个接口，后面如果想要新增一种送信的工具人实现或者继承送信的接口就可以了。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>一转眼设计模式已经学了 10 种了。时间也过去 3 周了，有些内容可能已经慢慢的开始忘记了，我偶尔也会打开之前的文章在看上一下，如果第一遍第二遍仔细的看过，那后面再看就可以很快的复习一遍。学习任何知识也是如此，如果第一遍第二遍都是走马观花的看，后面每次看都会觉得很陌生，如果前面可以仔细的看过，然后定期的复习，很多东西都可以很容易做到，只是时间的问题。当然我这种都是比较笨的学习方法，但是还是蛮有效的。也特别希望大家能够在群里一起讨论一起学习复习，因为每次交流都是一次加深印象的时刻。</p>
+<p><strong>真正掌握一个知识的时候，便是你能把它教给别人的时候。</strong></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-adapter.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（九）结构型之适配器模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-flyweight.html">
+        
+          和 lvgo 一起学设计模式（十一）结构型之享元模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '42c03c65f00258b5c6110cefb88223f2',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%B9%A6%E7%94%9F%E7%9A%84%E5%AE%B6%E4%B9%A6"><span class="toc-nav-text">书生的家书</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">外观模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#SLFJ"><span class="toc-nav-text">SLFJ</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#MVC"><span class="toc-nav-text">MVC</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">外观模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">代码 📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-nav-text">写在最后</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-facade.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

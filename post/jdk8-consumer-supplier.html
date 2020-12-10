@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      JDK8 Consumer &amp; Supplier 什么意思 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>JDK8 Consumer & Supplier 什么意思</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-08-24</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#JDK8" >
+    <span class="tag-code">JDK8</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="JDK1-8-函数式接口-Consumer-amp-Supplier-以及-JAVA新纪元-λ表达式的到来"><a href="#JDK1-8-函数式接口-Consumer-amp-Supplier-以及-JAVA新纪元-λ表达式的到来" class="headerlink" title="JDK1.8 函数式接口 Consumer &amp; Supplier 以及 JAVA新纪元 λ表达式的到来"></a>JDK1.8 函数式接口 Consumer &amp; Supplier 以及 JAVA新纪元 λ表达式的到来</h2><h3 id="背景什么的被吞了-直接进入主题"><a href="#背景什么的被吞了-直接进入主题" class="headerlink" title="背景什么的被吞了,直接进入主题"></a><font color=red>背景什么的被吞了,直接进入主题</font></h3><hr>
+<h3 id="函数式接口-定义自己百度-一大堆"><a href="#函数式接口-定义自己百度-一大堆" class="headerlink" title="函数式接口(定义自己百度,一大堆)"></a>函数式接口(定义自己百度,一大堆)</h3><blockquote>
+<p>因为看了一些关于JDK1.8函数式接口的文章,发现基本上都是糊里糊涂一笔带过.所以就抽空赶紧整理了一下.</p>
+</blockquote>
+<p>还是附上几个学习了解的传送门 :</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.runoob.com/java/java8-functional-interfaces.html">菜鸟教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.yiibai.com/java8/java8_functional_interfaces.html">易百教程</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.hubwiz.com/class/57525f2eda97b6e9299d301b">汇智网</a></li>
+</ul>
+<hr>
+<h3 id="Consumer-函数式接口"><a href="#Consumer-函数式接口" class="headerlink" title="Consumer 函数式接口"></a>Consumer 函数式接口</h3><p>JDK 源码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 接受单个输入参数并且不返回结果的操作。</span><br><span class="hljs-comment"> * 与大多数其他功能接口不同， Consumer预期通过副作用进行操作。</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.8</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Consumer</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 对给定的参数执行此操作。</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> t the input argument</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(T t)</span></span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 返回一个组合的Consumer ，依次执行此操作，然后执行after操作。 </span><br><span class="hljs-comment">     * 如果执行任一操作会抛出异常，它将被转发到组合操作的调用者。 </span><br><span class="hljs-comment">     * 如果执行此操作会引发异常，则不会执行after操作。</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> 此操作后执行的操作</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 一个组成的 Consumer ，依次执行 after操作</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> NullPointerException - if after is null</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">default</span> Consumer&lt;T&gt; <span class="hljs-title">andThen</span><span class="hljs-params">(Consumer&lt;? <span class="hljs-keyword">super</span> T&gt; after)</span> </span>&#123;<br>        Objects.requireNonNull(after);<br>        <span class="hljs-keyword">return</span> (T t) -&gt; &#123; accept(t); after.accept(t); &#125;;<br>    &#125;<br><br></code></pre></td></tr></table></figure>
+<p>刚拿过来看的时候可能会有一些绕,但是我们换个角度来看一下.</p>
+<p>Consumer 直译过来就是消费者的意思,那我们是不是可以理解成消费代码.既然他要消费,那我们就要给他提供代码.</p>
+<p><strong>来看一个简单的demo</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testConsumer1</span><span class="hljs-params">()</span> </span>&#123;<br>        Consumer&lt;String&gt; consumer = <span class="hljs-keyword">new</span> Consumer&lt;String&gt;() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(String s)</span> </span>&#123;<br>                System.out.println(s + <span class="hljs-string">&quot;?&quot;</span>);<br>            &#125;<br>        &#125;;<br>        consumer.accept(<span class="hljs-string">&quot;李磊&quot;</span>);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p><strong>输出结果</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">李磊?<br></code></pre></td></tr></table></figure>
+
+<p><strong>简单解释一下</strong></p>
+<p><code>Consumer </code>是一个接口,所以当我们直接使用的话,要实现其 <code>accept()</code>方法,而这个方法的参数,就是我们定义接口时候给到的泛型,这里给的是一个<code>String</code>类型,方法当中的内容,就是我们所谓的消费代码,当调用<code>accept()</code>方法时执行.</p>
+<p><font color=red>注意 : 也就是上面提到的通过副作用处理,我不清楚这个单词翻译的是否准确,看了很多博主和一些机器翻译都是这个意思,但我个人的理解意思,更趋近于说是</font><font color=blue>通过侧面来解决问题.</font></p>
+<p>再看一下 <code>consumer.accept(&quot;李磊&quot;)</code>这一句,这里便是真正的执行的地方,也就是调用的我们刚刚自行实现的<code>accept()</code>方法.</p>
+<p><strong>让我们继续刚刚的demo往下看</strong></p>
+<p>这种写法和上面在JDK1.8环境中是等价的. 主要就是利用到了1.8中的 λ 表达式.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testConsumer1</span><span class="hljs-params">()</span> </span>&#123;<br>    Consumer&lt;String&gt; consumer = s -&gt; System.out.println(s + <span class="hljs-string">&quot;?&quot;</span>);<br>    consumer.accept(<span class="hljs-string">&quot;李磊&quot;</span>);<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><code>下面的例子均使用λ表达式完成</code></p>
+<p><strong>泛型为自定义对象时</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testConsumerToSupplier</span><span class="hljs-params">()</span> </span>&#123;<br>        Consumer&lt;Person&gt; consumer = person -&gt; &#123;<br>            person.setName(<span class="hljs-string">&quot;张颖&quot;</span>);<br>            person.setSize(<span class="hljs-number">34</span>);<br>        &#125;;<br>        Person person = <span class="hljs-keyword">new</span> Person();<br>        consumer.accept(person);<br>        System.out.println(<span class="hljs-string">&quot;person = &quot;</span> + person);<br>    &#125;<br><br></code></pre></td></tr></table></figure>
+<p>输入结果:</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">person = Person&#123;<span class="hljs-attribute">name</span>=<span class="hljs-string">&#x27;张颖&#x27;</span>, <span class="hljs-attribute">size</span>=34&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>泛型为自定义接口时</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">People</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">come</span><span class="hljs-params">(Person person)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testConsumerAndInterfaceFunction</span><span class="hljs-params">()</span> </span>&#123;<br>        Consumer&lt;People&gt; consumer = people -&gt; &#123;<br>            people.come(<span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;李四&quot;</span>, <span class="hljs-number">23</span>));<br>            people.come(<span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;找钱&quot;</span>, <span class="hljs-number">34</span>));<br>            people.come(<span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;孙俪&quot;</span>, <span class="hljs-number">45</span>));<br>        &#125;;<br><br>        consumer.accept(<span class="hljs-keyword">this</span>::print);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">print</span><span class="hljs-params">(Person person)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;person = &quot;</span> + person);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">person = Person&#123;name=<span class="hljs-string">&#x27;李四&#x27;</span>, size=<span class="hljs-number">23</span>&#125;<br>person = Person&#123;name=<span class="hljs-string">&#x27;找钱&#x27;</span>, size=<span class="hljs-number">34</span>&#125;<br>person = Person&#123;name=<span class="hljs-string">&#x27;孙俪&#x27;</span>, size=<span class="hljs-number">45</span>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果到了这里还没有明白怎么回事,我建议你亲自动手敲上那么一遍.真的,如果还不懂来杭州,我当面给你讲.</p>
+<hr>
+<h3 id="Supplier-函数式接口"><a href="#Supplier-函数式接口" class="headerlink" title="Supplier 函数式接口"></a>Supplier 函数式接口</h3><p>还是一样,先看一下JDK源码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 获得对象的一个函数式接口</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.8</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Supplier</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 得到一个对象</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 目标对象</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">T <span class="hljs-title">get</span><span class="hljs-params">()</span></span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>这个是不是看起来很容易理解了,<code>Supplier</code>的意思是供应商,那我们是不是可以把他理解成一个商场,然后你告诉他你想要的东西是什么样子的,它是不是就会给你了.</p>
+<p><strong>来看一下这个简单的demo</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testSupplier1</span><span class="hljs-params">()</span> </span>&#123;<br>        Supplier&lt;String&gt; supplier = () -&gt; <span class="hljs-string">&quot;这是你要的字符串&quot;</span>;<br>        String str = supplier.get();<br>        System.out.println(<span class="hljs-string">&quot;str = &quot;</span> + str);<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">str = 这是你要的字符串<br></code></pre></td></tr></table></figure>
+<p><strong>继续自定义对象</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testSupplier2</span><span class="hljs-params">()</span> </span>&#123;<br>        Supplier&lt;Person&gt; supplier = () -&gt; &#123;<br>            Person person = <span class="hljs-keyword">new</span> Person();<br>            person.setName(<span class="hljs-string">&quot;张三&quot;</span>);<br>            person.setSize(<span class="hljs-number">32</span>);<br>            <span class="hljs-keyword">return</span> person;<br>        &#125;;<br><br>        Person person = supplier.get();<br>        System.out.println(<span class="hljs-string">&quot;person = &quot;</span> + person);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>运行结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">person = Person&#123;name=<span class="hljs-string">&#x27;张三&#x27;</span>, size=<span class="hljs-number">32</span>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>再来刺激的自定义接口</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testSupplier3</span><span class="hljs-params">()</span> </span>&#123;<br>    Supplier&lt;People&gt; supplier = <span class="hljs-keyword">new</span> Supplier&lt;People&gt;() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> People <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;<br>            People people = <span class="hljs-keyword">new</span> People() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">come</span><span class="hljs-params">(Person person)</span> </span>&#123;<br>                    System.out.println(<span class="hljs-string">&quot;person = &quot;</span> + person)<br>                &#125;<br>            &#125;;<br>            <span class="hljs-keyword">return</span> people;<br>        &#125;<br>    &#125;;<br><br>    People people = supplier.get();<br>    people.come(<span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;李四&quot;</span>, <span class="hljs-number">24</span>));<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">person = Person&#123;name=<span class="hljs-string">&#x27;李四&#x27;</span>, size=<span class="hljs-number">24</span>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>看好别眨眼,λ表达式的写法</strong> 下面的一行和上面的一堆是等价的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testSupplier4</span><span class="hljs-params">()</span> </span>&#123;<br>    Supplier&lt;People&gt; supplier = () -&gt; person -&gt; System.out.println(<span class="hljs-string">&quot;person = &quot;</span> + person);<br>    People people = supplier.get();<br>    people.come(<span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;李四&quot;</span>, <span class="hljs-number">24</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">person = Person&#123;name=<span class="hljs-string">&#x27;李四&#x27;</span>, size=<span class="hljs-number">24</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>想必看到这你不光明白了 <code>Supplier</code>的用法,更清楚的λ表达式的用处了.</p>
+<hr>
+<h2 id="写在最后-写这篇文章的原因是因为在整理工厂模式的时候遇到的一些问题"><a href="#写在最后-写这篇文章的原因是因为在整理工厂模式的时候遇到的一些问题" class="headerlink" title="写在最后,写这篇文章的原因是因为在整理工厂模式的时候遇到的一些问题"></a>写在最后,写这篇文章的原因是因为在整理工厂模式的时候遇到的一些问题</h2><p>工厂模式简单的是不能再简单了,但是随着技术的发展,也出现了一些新颖的工厂方法.<code>CTS</code>便是其中之一.</p>
+<p>至于<code>Consumer</code>&amp;<code>Supplier</code>应用在工厂模式的代码如下,因为比较特殊,写在了一起,想要亲自体检复制粘贴运行<code>TTT</code>类的<code>main()</code>方法即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgo</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Description</span>: CTS实现工厂模式</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 18-8-24 下午3:57</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">CTS</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> CTS <span class="hljs-title">getCts</span><span class="hljs-params">(Consumer&lt;Peoples&gt; consumer)</span> </span>&#123;<br>        Map&lt;String, Supplier&lt;Persons&gt;&gt; map = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();<br>        consumer.accept(map::put);<br>        <span class="hljs-keyword">return</span> person -&gt; map.get(person).get();<br><br>    &#125;<br><br>    <span class="hljs-function">Persons <span class="hljs-title">getPerson</span><span class="hljs-params">(String name)</span></span>;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Peoples</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">come</span><span class="hljs-params">(String name, Supplier&lt;Persons&gt; personSupplier)</span></span>;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TTT</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        CTS cts = CTS.getCts(people -&gt; &#123;<br>            people.come(<span class="hljs-string">&quot;张三&quot;</span>, () -&gt; <span class="hljs-keyword">new</span> Persons(<span class="hljs-string">&quot;张三&quot;</span>));<br>            people.come(<span class="hljs-string">&quot;李四&quot;</span>, () -&gt; <span class="hljs-keyword">new</span> Persons(<span class="hljs-string">&quot;李四&quot;</span>));<br>            people.come(<span class="hljs-string">&quot;王五&quot;</span>, () -&gt; <span class="hljs-keyword">new</span> Persons(<span class="hljs-string">&quot;王五&quot;</span>));<br>        &#125;);<br><br>        Persons person = cts.getPerson(<span class="hljs-string">&quot;王五&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;persons = &quot;</span> + person);<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Persons</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> String name;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Persons</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Persons</span><span class="hljs-params">(String name)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.name = name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.name = name;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Person&#123;&quot;</span> +<br>                <span class="hljs-string">&quot;name=&#x27;&quot;</span> + name + <span class="hljs-string">&quot;&#x27;&#125;&#x27;&quot;</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>CTS工厂模式说明: Consumer To Supplier 自造词,无处可寻,他处偶遇纯属抄袭;</p>
+<p>通过<code>Peoples</code>接口的<code>come()</code>方法,可以动态在CTS工厂内添加<code>person</code>,然后使其具于生产该实例的能力.</p>
+<hr>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/lvgo/java-design-patterns-cn/blob/master/factory/src/test/java/org/lvgo/CTS.java">本文所有源代码点我</a></li>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/lvgo/java-design-patterns-cn">更多设计模式学习点我或浏览博客设计模式专栏查看</a></li>
+</ul>
+<hr>
+<p>参考文献</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612">Design Patterns: Elements of Reusable Object-Oriented Software 1st Edition</a></li>
+</ul>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#JDK8" >
+    <span class="tag-code">JDK8</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/java-basic-innerclass.html">
+        <span class="nav-arrow">← </span>
+        
+          一篇文章让你彻底了解Java内部类
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/data-structure-concept.html">
+        
+          了解一下，什么是数据结构
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'ba499e3146a1191eb41bdb8e5f763334',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#JDK1-8-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3-Consumer-amp-Supplier-%E4%BB%A5%E5%8F%8A-JAVA%E6%96%B0%E7%BA%AA%E5%85%83-%CE%BB%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%88%B0%E6%9D%A5"><span class="toc-nav-text">JDK1.8 函数式接口 Consumer &amp; Supplier 以及 JAVA新纪元 λ表达式的到来</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%80%E4%B9%88%E7%9A%84%E8%A2%AB%E5%90%9E%E4%BA%86-%E7%9B%B4%E6%8E%A5%E8%BF%9B%E5%85%A5%E4%B8%BB%E9%A2%98"><span class="toc-nav-text">背景什么的被吞了,直接进入主题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3-%E5%AE%9A%E4%B9%89%E8%87%AA%E5%B7%B1%E7%99%BE%E5%BA%A6-%E4%B8%80%E5%A4%A7%E5%A0%86"><span class="toc-nav-text">函数式接口(定义自己百度,一大堆)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Consumer-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3"><span class="toc-nav-text">Consumer 函数式接口</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Supplier-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3"><span class="toc-nav-text">Supplier 函数式接口</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E-%E5%86%99%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%98%AF%E5%9B%A0%E4%B8%BA%E5%9C%A8%E6%95%B4%E7%90%86%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%97%B6%E5%80%99%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-nav-text">写在最后,写这篇文章的原因是因为在整理工厂模式的时候遇到的一些问题</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/jdk8-consumer-supplier.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

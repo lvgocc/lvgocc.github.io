@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（八）结构型之桥接模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（八）结构型之桥接模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-10-28</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/10/29/YIpkj5QDBHb7ytN.png" alt="timg"></p>
+<h1 id="科普闲聊"><a href="#科普闲聊" class="headerlink" title="科普闲聊"></a>科普闲聊</h1><blockquote>
+<p>复杂度守恒定律由Larry Tesler于1984年提出，也称泰斯勒定律（Tesler’s Law）。复杂度守恒定律（Law of conservation of complexity）由Larry Tesler于1984年提出，也称泰斯勒定律（Tesler’s Law）。<br>根据复杂度守恒定律，每个应用程序都具有其内在的、无法简化的复杂度。无论在产品开发环节还是在用户与产品的交互环节，这一固有的复杂度都无法依照我们的意愿去除，只能设法调整、平衡。</p>
+</blockquote>
+<p>这一观点主要被应用在交互设计领域。我们不得不面对的问题是，该由谁来为这一固有的复杂度埋单。打个比方，应该由软件开发工程师花费额外的时间来使软件变得更加简单好用，还是应该让用户自己去解决软件使用中可能存在的问题？</p>
+<p>以上出自百度百科：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%AE%88%E6%81%92%E5%AE%9A%E5%BE%8B/7508660?fr=aladdin">复杂度守恒定律 - 百度百科</a></p>
+<hr>
+<p>如上所述，复杂度守恒定律是一个规避不掉的东西，最早的时候我接触到这个词是发出的一个提问，当时有各种大佬出来解答，大家感兴趣可以去看看。</p>
+<p> <a target="_blank" rel="noopener" href="https://bbs.csdn.net/topics/392308895">到底什么是RPC?远程调用有什么好处?</a></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">迷惑不解,不知是何.<br>我了解了一下dubbo框架,很多的术语搞得是更加模糊不清.<br>顺便提一点,<br>为什么深奥的东西就是被人向往的?<br>将复杂的东西弄成粗浅易懂的这不是更好吗?<br><br>2018-01-15 09:04:03<br></code></pre></td></tr></table></figure>
+
+<p>但我一直以为，技术的东西，本就不复杂。让它变得复杂的是我那迫切想要得到结果的心。</p>
+<p>学习从来都没有捷径，你只是想要速成。学的快慢是一个问题，学与不学是另一个问题，听懂掌声。</p>
+<hr>
+<h1 id="学习时间"><a href="#学习时间" class="headerlink" title="学习时间"></a>学习时间</h1><h2 id="2020年10月的某一天午饭后"><a href="#2020年10月的某一天午饭后" class="headerlink" title="2020年10月的某一天午饭后"></a>2020年10月的某一天午饭后</h2><p>“桥接模式？，那是个啥” 心中突然蹦出这么一个想法。我心血来潮，打开 Google ，输入 <code>桥接模式</code> ，回车走你，等了半天。</p>
+<p><img src="https://i.loli.net/2020/10/26/dJ7BuUjW9RcpQiE.png" alt="google-error.png"></p>
+<p>这丝毫没有影响到我的情绪<del>（艹）</del>，随即我快速的切换搜索引擎视图忘掉刚刚发生的这一切。又是一记回车敲出，这次，它出现了</p>
+<p><img src="https://i.loli.net/2020/10/26/uZGN4z3ckbvI72T.png" alt="baidu-bridge.png"></p>
+<p>不知道是我手不行了，还是键盘要坏了，总之模式两字没带上，出来个桥梁，想着都差不多（呸，差不多个鬼）就看看吧，顺便学习了一下桥梁的专业释义（我就是这样东西越看越多，越看越杂的！龇牙咧嘴中！）。</p>
+<p>不行，得回过神来，继续找<code>桥梁模式</code>去。这怎么都一样啊，<strong>抽象化</strong>、<strong>实现化</strong>、<strong>脱耦</strong>看不懂啊，然后就是那个到处都是，其实出自菜鸟教程的图形案例。</p>
+<p><img src="https://i.loli.net/2020/10/26/vcIRdKGbMN4teTD.png" alt="runoob-bridge.png"></p>
+<blockquote>
+<p>图片来源：<a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/bridge-pattern2.html">https://www.runoob.com/w3cnote/bridge-pattern2.html</a></p>
+</blockquote>
+<p>先看看问题吧，一个图形有2种形状（圆形、矩形）和2种颜色（红色、蓝色）的时候怎么去用类表示，我啥也不说，那肯定继承啊，我这 <strong>封装、继承、多态老扎实了</strong>。</p>
+<p>心里念着”首先有一个<strong>图形</strong>的基类，然后开始继承走起 <strong>红色的圆形</strong>、 <strong>红色的矩形</strong>、 <strong>蓝色的圆形</strong>、<strong>蓝色的矩形</strong>。“ 没毛病，一个抽象类，四个实现类，搞定。</p>
+<p><img src="https://i.loli.net/2020/10/28/qcKwM42eOFBg6Vu.png" alt="bridge.png"></p>
+<p>代码写完，测一手。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">shape</span><span class="hljs-params">()</span></span>&#123;<br>    Shape blueCircle = <span class="hljs-keyword">new</span> BlueCircle();<br>    Shape blueRectangle = <span class="hljs-keyword">new</span> BlueRectangle();<br>    Shape redCircle = <span class="hljs-keyword">new</span> RedCircle();<br>    Shape redRectangle = <span class="hljs-keyword">new</span> RedRectangle();<br><br>    blueCircle.create();<br>    blueRectangle.create();<br>    redCircle.create();<br>    redRectangle.create();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs reStructuredText">蓝色の圆形<br>蓝色の长方形<br>红色の圆形<br>红色の长方形<br></code></pre></td></tr></table></figure>
+
+<p>感觉还可以，这时坐在我边上的大哥说了句，如果再加一种形状呢？</p>
+<p>我：“卧槽，你啥时候来的，想要偷窥我学习？”</p>
+<p>大哥：“先回答问题，别转移话题” </p>
+<p>我：“再加两个类不就行了”， <strong>RedTriangle</strong>、<strong>BlueTriangle</strong>，</p>
+<p>大哥：“也还行，如果再这基础上再加一种绿颜色呢？” </p>
+<p>我：“额。。。再加三个类 <strong>GreenCircle</strong>、 <strong>GreenRectangle</strong>、<strong>GreenTriangle</strong>。。。（开始声音微弱）”</p>
+<p>大哥：“再加一个椭圆呢” </p>
+<p>“emm… 我刀呢！”</p>
+<p>“老弟别激动，大哥帮你看看”</p>
+<h2 id="大哥帮忙诊断代码"><a href="#大哥帮忙诊断代码" class="headerlink" title="大哥帮忙诊断代码"></a>大哥帮忙诊断代码</h2><p>大哥：“你这个是 <strong>乱用继承</strong> 导致的类爆炸晚期啊，要是不拔除对这种继承的理解，基本是废了啊”</p>
+<p>我：“大哥我还不想放弃，救救我，咳…咳（一口老血咳出）”</p>
+<p>大哥：“那你说说看，你都是什么时候用的继承？”</p>
+<p>我：“多个类有共同特征的时候，会抽象出来特征，然后使用继承来扩展”</p>
+<p>大哥：“嗯，看来你还有救，那你看你现在抽象出来的东西对吗？”</p>
+<p>我小声嘀咕：“很多图形，抽象出来个图形，没问题啊”</p>
+<p>大哥：“那颜色呢？颜色和图形是什么关系？”</p>
+<p>我：“emm….，什么什么关系啊？大哥，给点提示吧”</p>
+<p>大哥：“UML中的聚合组合我没教你么？”</p>
+<p>我：“这个真没有”</p>
+<p>大哥：“那这个地方我再教你一次，记着点奥。咳咳！”</p>
+<p><img src="https://i.loli.net/2020/10/27/RQfH3ho9Zg7TJmG.png" alt="uml"></p>
+<p>大哥：“这个就是组合和聚合的意思，同时他们与主体之间的关联关系的表达。”</p>
+<p>大哥：“现在在看你的 <strong>类爆炸</strong> 知道怎么医治了么？”</p>
+<p>我：“我应该把颜色也抽象出来，然后使用聚合与图形进行关联！对不对！”</p>
+<p>大哥：“还不赖嘛，你继续看吧，我忙我的去了”</p>
+<h2 id="重构代码"><a href="#重构代码" class="headerlink" title="重构代码"></a>重构代码</h2><p>领悟了大哥的意思之后，我对代码进行了重构。</p>
+<p>仍然将图形类抽象出来，同时将颜色作为一个接口引入，因为图形的形状和颜色本来就是两个不同的维度，所以它现在的类图应该是这个样子的。</p>
+<p><img src="https://i.loli.net/2020/10/27/DUeGhk2pIcoKdwW.png" alt="bridge1.png"></p>
+<p>有了类图，很快我就重构好了代码，测试一下。</p>
+<blockquote>
+<p>完整代码关注公众号回复：“源码” 获取</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/10/27/EPTuQae6DofyFSG.png" alt="bridge-test.png"></p>
+<p>当我要新增一种图形或者一个颜色时，只需要增加一个类就可以了。真香。</p>
+<h1 id="bridge-桥梁（接）模式"><a href="#bridge-桥梁（接）模式" class="headerlink" title="bridge 桥梁（接）模式"></a>bridge 桥梁（接）模式</h1><blockquote>
+<p>将抽象部分与它的实现部分分离，使它们都可以独立地变化。</p>
+</blockquote>
+<h2 id="把这绕口的东西看清楚"><a href="#把这绕口的东西看清楚" class="headerlink" title="把这绕口的东西看清楚"></a>把这绕口的东西看清楚</h2><p>将抽象部分与它的实现部分分离，使他们都可以独立地变化。这句话我不知道别人能不能读的懂，就我而言，刚看到这句话实在是没有搞清楚在表达什么，我猜想其中的原因，一个是因为设计模式是搞建筑的人提出来了，另一个原因是老外写的软件设计模式。翻译成中文为了达到统一的标准，所以很多知识变得晦涩难懂。</p>
+<p><em>这里在顺带提一下所谓的统一的标准，就像开放平台的接口一样。他为了有更好的扩展性，定义了统一的对外接口，以后无论哪方想要对接，都需要适应我的标准，而不是给每个人都定制化一个接口。所以知识的传播也一样，要以一定的官方标准来定义和传播，不然可能传着传着就出现了歧义。这也就是复杂度守恒定律的根本，它本身其实真的并不复杂。以上个人见解，可以无视。</em></p>
+<h2 id="在看抽象化、实现化、脱。脱。脱你妹啊脱，解耦。"><a href="#在看抽象化、实现化、脱。脱。脱你妹啊脱，解耦。" class="headerlink" title="在看抽象化、实现化、脱。脱。脱你妹啊脱，解耦。"></a>在看抽象化、实现化、脱。脱。脱你妹啊脱，解耦。</h2><p>因为之前有大哥的帮忙，所以很容易就理解了<code>将抽象部分与它的实现部分分离，使它们都可以独立地变化。</code>这句话。</p>
+<p>就拿我刚刚学的图形的那个案例。</p>
+<ul>
+<li>抽象部分就是图形的形状+颜色，图形它一定是有形状和颜色的。存在自身上的两个不同的维度变化</li>
+<li>实现部分就是具体的形状和颜色。形状和颜色一定有具体的体现。要么圆形红色，要么方形透明。而形状又是图形本身的一部分，所以可以跟在主体后通过继承进行变化。颜色可以独立出去进行单独的扩展。</li>
+</ul>
+<p>独立的变化就是讲到抽象部分和实现部分的两个实现</p>
+<ul>
+<li>抽象部分的一个变化就是通过一个矩形类继承图形抽象类。同时完善一个构造函数，这是对抽象部分的矫正或者完备。</li>
+<li>实现部分的变化遵循了<strong>里式替换</strong>与抽象部分的关联又根据<strong>依赖倒置</strong>原则设计。所以实现部分可以在自己的接口定义范畴能进行自由变化，同时又可以与抽象部分进行关联<strong>（桥接）</strong></li>
+</ul>
+<p>我试着把晦涩的东西简化一下</p>
+<p><strong>一个对象的多个维度状态独立变化时，将其通过类组合的方式进行关联，使其每个维度自由变化，降低与主体的耦合。</strong></p>
+<h2 id="桥接模式类图-📌"><a href="#桥接模式类图-📌" class="headerlink" title="桥接模式类图 📌"></a>桥接模式类图 📌</h2><p><img src="https://i.loli.net/2020/10/27/eQgjH6wkB2pSLfO.png" alt="bridge2.png"></p>
+<h2 id="代码-📄"><a href="#代码-📄" class="headerlink" title="代码 📄"></a>代码 📄</h2><blockquote>
+<p>完整代码关注公众号回复：“源码” 获取</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/10/27/iXWcetHJUxyBFNT.png" alt="bridge-code.png"></p>
+<h2 id="总结-🐱‍💻"><a href="#总结-🐱‍💻" class="headerlink" title="总结 🐱‍💻"></a>总结 🐱‍💻</h2><p>哎呀，这个桥接模式我是万万没想到它会是这个样子。同样又是学完不知道在哪用的一种模式，但这就是我放弃学习的理由？那可真是太可笑了。</p>
+<ul>
+<li>当一个对象内存在多个维度多种状态时，可以使用桥接模式解耦，以防新增维度状态时导致 <strong>类爆炸</strong></li>
+<li>维度的体现可以延迟到使用阶段，比如上述例子，颜色被分离出去，当需要具体对象时，在通过 set 方法对维度赋值（回复源码，获取全部源码和文章原稿）</li>
+</ul>
+<p>桥接模式的好处大家都看在眼里，记在心里。用了桥接模式首先解决的就是因为乱用继承导致的类爆炸问题，同时无论之后怎么扩展类，都只需要在对应维度维护新的实现就可以了，降低了对象间的耦合。</p>
+<p>不好的地方，整个设计模式的缺点全都包含这一条： <strong>增加了系统的复杂性，对系统设计的理解多了一层内容。维护的类变多了。</strong> 这更能体现出一劳永逸的感觉，先吃苦，后舒坦。其实对于桥接模式还有一点，就是需要你能正确的去划分出一个对象的多维度状态，不然又成了“手里拿个锤子，看什么都像钉子”的感觉了。</p>
+<h1 id="打工人的早高峰"><a href="#打工人的早高峰" class="headerlink" title="打工人的早高峰"></a>打工人的早高峰</h1><p>今天的公交车一点都不挤！就是下车的时候鸡蛋不知道咋回事碎了！还好是鸡蛋碎了，听懂掌声。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-decorator.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（七）结构型之装饰者模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-adapter.html">
+        
+          和 lvgo 一起学设计模式（九）结构型之适配器模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '47d6db261955c04a00f5a2ec05a19665',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E7%A7%91%E6%99%AE%E9%97%B2%E8%81%8A"><span class="toc-nav-text">科普闲聊</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%AD%A6%E4%B9%A0%E6%97%B6%E9%97%B4"><span class="toc-nav-text">学习时间</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2020%E5%B9%B410%E6%9C%88%E7%9A%84%E6%9F%90%E4%B8%80%E5%A4%A9%E5%8D%88%E9%A5%AD%E5%90%8E"><span class="toc-nav-text">2020年10月的某一天午饭后</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%A7%E5%93%A5%E5%B8%AE%E5%BF%99%E8%AF%8A%E6%96%AD%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">大哥帮忙诊断代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%87%8D%E6%9E%84%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">重构代码</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#bridge-%E6%A1%A5%E6%A2%81%EF%BC%88%E6%8E%A5%EF%BC%89%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">bridge 桥梁（接）模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%8A%8A%E8%BF%99%E7%BB%95%E5%8F%A3%E7%9A%84%E4%B8%9C%E8%A5%BF%E7%9C%8B%E6%B8%85%E6%A5%9A"><span class="toc-nav-text">把这绕口的东西看清楚</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%9C%A8%E7%9C%8B%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%80%81%E5%AE%9E%E7%8E%B0%E5%8C%96%E3%80%81%E8%84%B1%E3%80%82%E8%84%B1%E3%80%82%E8%84%B1%E4%BD%A0%E5%A6%B9%E5%95%8A%E8%84%B1%EF%BC%8C%E8%A7%A3%E8%80%A6%E3%80%82"><span class="toc-nav-text">在看抽象化、实现化、脱。脱。脱你妹啊脱，解耦。</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">桥接模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%84"><span class="toc-nav-text">代码 📄</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%90%B1%E2%80%8D%F0%9F%92%BB"><span class="toc-nav-text">总结 🐱‍💻</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%89%93%E5%B7%A5%E4%BA%BA%E7%9A%84%E6%97%A9%E9%AB%98%E5%B3%B0"><span class="toc-nav-text">打工人的早高峰</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-bridge.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

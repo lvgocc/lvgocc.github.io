@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      算法学习笔记（三）《选择排序》 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>算法学习笔记（三）《选择排序》</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-05-22</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#算法" >
+    <span class="tag-code">算法</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><blockquote>
+<p>本文学习内容来自《算法图解》一书及百度百科内容</p>
+</blockquote>
+<p>算法是一组完成任务的指令。任何代码片段都可视为算法。  —— 摘自《算法图解》</p>
+<hr>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/9762418?fr=aladdin">以下内容摘自百度百科</a><br>选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理是每一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，直到全部待排序的数据元素排完。 选择排序是不稳定的排序方法（比如序列[5， 5， 3]第一次就将第一个[5]与[3]交换，导致第一个5挪动到第二个5后面）。</p>
+</blockquote>
+<h2 id="思路梳理"><a href="#思路梳理" class="headerlink" title="思路梳理"></a>思路梳理</h2><pre><code>    假如你现在在一家新闻媒体公司工作，今天一共有5条新闻，老板现在叫你把这5条新闻按照浏览量最多的排在前面，
+你会怎么去做？</code></pre>
+<table>
+<thead>
+<tr>
+<th>新闻标题</th>
+<th>浏览量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051233_0.shtml?_zbs_baidu_news">辣妈张嘉倪怀二胎气色好 眨眼卖萌很少女</a></td>
+<td>3336</td>
+</tr>
+<tr>
+<td>2.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051144_0.shtml?_zbs_baidu_news">唐嫣被问想不想变矮一点，她的回答很耿直</a></td>
+<td>14564</td>
+</tr>
+<tr>
+<td>3.<a target="_blank" rel="noopener" href="http://news.sina.com.cn/s/2018-05-22/doc-ihawmaua7331989.shtml">“逃犯克星”张学友将在洛阳开唱 警方:已准备好</a></td>
+<td>42214</td>
+</tr>
+<tr>
+<td>4.<a target="_blank" rel="noopener" href="http://www.autohome.com.cn/news/201805/100171639.html">燃爆禾城—浙江康润助力张学友演唱会</a></td>
+<td>8322</td>
+</tr>
+<tr>
+<td>5.<a target="_blank" rel="noopener" href="http://m2.people.cn/r/MV8wXzExMDE5NjI1XzE5MzRfMTUyNjk1MDg1Nw==">王大陆为张杰打call：认识了全世界最好男人</a></td>
+<td>25584</td>
+</tr>
+</tbody></table>
+<p>一般我们会这样去实现这个需求：</p>
+<ol>
+<li>遍历这个5条记录。</li>
+<li>找出其中浏览量最大的放在一旁，放在一个新的地方，排在最前面。</li>
+<li>从这5条记录里把那一条删除。</li>
+<li>重复123步骤，遍历剩下的4条。找出····</li>
+</ol>
+<p>选择排序是根据指定的条件（最大值或者最小值），取决你要排序的顺序，然后在指定的数组中，找到这个条件，把它从指定的数组中提取出来，放到一个新的数组里面，并把它从源数组中删除。</p>
+<hr>
+<p><font color="read"><strong>源数组</strong> </font>对其进行筛选，找出浏览量最大值提取出来放在 <font color="red"><strong>新数组</strong> </font> ，并在源数组中将其删除</p>
+<p>源新闻中第三条新闻的阅读数最高 ： 42214  我们把它拿出来放到了新数组的第一位<br>新闻标题<font color="read">（源数组） </font>|浏览量||新闻标题<font color="red">（新数组）</font> |浏览量<br>–|–|–|–|–<br>1.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051233_0.shtml?_zbs_baidu_news">辣妈张嘉倪怀二胎气色好 眨眼卖萌很少女</a>|3336||1.<a target="_blank" rel="noopener" href="http://news.sina.com.cn/s/2018-05-22/doc-ihawmaua7331989.shtml">“逃犯克星”张学友将在洛阳开唱 警方:已准备好</a><font color="read">↑(3)</font>|42214<br>2.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051144_0.shtml?_zbs_baidu_news">唐嫣被问想不想变矮一点，她的回答很耿直</a>|14564<br>4.<a target="_blank" rel="noopener" href="http://www.autohome.com.cn/news/201805/100171639.html">燃爆禾城—浙江康润助力张学友演唱会</a>|8322<br>5.<a target="_blank" rel="noopener" href="http://m2.people.cn/r/MV8wXzExMDE5NjI1XzE5MzRfMTUyNjk1MDg1Nw==">王大陆为张杰打call：认识了全世界最好男人</a>|25584</p>
+<hr>
+<p>然后是排名第二浏览量的第五条新闻 25584 ，取出后放在新数组的第二位</p>
+<table>
+<thead>
+<tr>
+<th>新闻标题<font color="read">（源数组） </font></th>
+<th>浏览量</th>
+<th></th>
+<th>新闻标题<font color="red">（新数组）</font></th>
+<th>浏览量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051233_0.shtml?_zbs_baidu_news">辣妈张嘉倪怀二胎气色好 眨眼卖萌很少女</a></td>
+<td>3336</td>
+<td></td>
+<td>1.<a target="_blank" rel="noopener" href="http://news.sina.com.cn/s/2018-05-22/doc-ihawmaua7331989.shtml">“逃犯克星”张学友将在洛阳开唱 警方:已准备好</a><font color="read">↑(3)</td>
+<td>42214</td>
+</tr>
+<tr>
+<td>2.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051144_0.shtml?_zbs_baidu_news">唐嫣被问想不想变矮一点，她的回答很耿直</a></td>
+<td>14564</td>
+<td></td>
+<td>2.<a target="_blank" rel="noopener" href="http://m2.people.cn/r/MV8wXzExMDE5NjI1XzE5MzRfMTUyNjk1MDg1Nw==">王大陆为张杰打call：认识了全世界最好男人</a><font color="read">↑(5)</td>
+<td>25584</td>
+</tr>
+<tr>
+<td>4.<a target="_blank" rel="noopener" href="http://www.autohome.com.cn/news/201805/100171639.html">燃爆禾城—浙江康润助力张学友演唱会</a></td>
+<td>8322</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<p>接下来的数据中，浏览量最多的新闻是第三条， 14564 我们把它拿出来放在新数组的第三位</p>
+<table>
+<thead>
+<tr>
+<th>新闻标题<font color="read">（源数组） </font></th>
+<th>浏览量</th>
+<th></th>
+<th>新闻标题<font color="red">（新数组）</font></th>
+<th>浏览量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051233_0.shtml?_zbs_baidu_news">辣妈张嘉倪怀二胎气色好 眨眼卖萌很少女</a></td>
+<td>3336</td>
+<td></td>
+<td>1.<a target="_blank" rel="noopener" href="http://news.sina.com.cn/s/2018-05-22/doc-ihawmaua7331989.shtml">“逃犯克星”张学友将在洛阳开唱 警方:已准备好</a><font color="read">↑(3)</td>
+<td>42214</td>
+</tr>
+<tr>
+<td>4.<a target="_blank" rel="noopener" href="http://www.autohome.com.cn/news/201805/100171639.html">燃爆禾城—浙江康润助力张学友演唱会</a></td>
+<td>8322</td>
+<td></td>
+<td>2.<a target="_blank" rel="noopener" href="http://m2.people.cn/r/MV8wXzExMDE5NjI1XzE5MzRfMTUyNjk1MDg1Nw==">王大陆为张杰打call：认识了全世界最好男人</a><font color="read">↑(5)</td>
+<td>25584</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>3.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051144_0.shtml?_zbs_baidu_news">唐嫣被问想不想变矮一点，她的回答很耿直</a><font color="read">↓(2)</td>
+</tr>
+</tbody></table>
+<hr>
+<p>然后在把接下来最高的是 8322 我们把它取出，放在新数组的第三位</p>
+<table>
+<thead>
+<tr>
+<th>新闻标题<font color="read">（源数组） </font></th>
+<th>浏览量</th>
+<th></th>
+<th>新闻标题<font color="red">（新数组）</font></th>
+<th>浏览量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051233_0.shtml?_zbs_baidu_news">辣妈张嘉倪怀二胎气色好 眨眼卖萌很少女</a></td>
+<td>3336</td>
+<td></td>
+<td>1.<a target="_blank" rel="noopener" href="http://news.sina.com.cn/s/2018-05-22/doc-ihawmaua7331989.shtml">“逃犯克星”张学友将在洛阳开唱 警方:已准备好</a><font color="read">↑(3)</td>
+<td>42214</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>2.<a target="_blank" rel="noopener" href="http://m2.people.cn/r/MV8wXzExMDE5NjI1XzE5MzRfMTUyNjk1MDg1Nw==">王大陆为张杰打call：认识了全世界最好男人</a><font color="read">↑(5)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>3.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051144_0.shtml?_zbs_baidu_news">唐嫣被问想不想变矮一点，她的回答很耿直</a><font color="read">↓(2)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>4.<a target="_blank" rel="noopener" href="http://www.autohome.com.cn/news/201805/100171639.html">燃爆禾城—浙江康润助力张学友演唱会</a><font color="read">(4)</td>
+</tr>
+</tbody></table>
+<hr>
+<p>最后再把浏览量最小的第一条新闻，放在新数组的最后一位。至此完成了我们的《选择排序》</p>
+<table>
+<thead>
+<tr>
+<th>新闻标题<font color="red">（新数组）</font></th>
+<th>浏览量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.<a target="_blank" rel="noopener" href="http://news.sina.com.cn/s/2018-05-22/doc-ihawmaua7331989.shtml">“逃犯克星”张学友将在洛阳开唱 警方:已准备好</a> <font color="read">↑(3)</td>
+<td>42214</td>
+</tr>
+<tr>
+<td>2.<a target="_blank" rel="noopener" href="http://m2.people.cn/r/MV8wXzExMDE5NjI1XzE5MzRfMTUyNjk1MDg1Nw==">王大陆为张杰打call：认识了全世界最好男人</a> <font color="read">↑(5)</td>
+<td>25584</td>
+</tr>
+<tr>
+<td>3.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051144_0.shtml?_zbs_baidu_news">唐嫣被问想不想变矮一点，她的回答很耿直</a> <font color="read">↓(2)</td>
+<td>14564</td>
+</tr>
+<tr>
+<td>4.<a target="_blank" rel="noopener" href="http://www.autohome.com.cn/news/201805/100171639.html">燃爆禾城—浙江康润助力张学友演唱会</a> <font color="read">(4)</td>
+<td>8322</td>
+</tr>
+<tr>
+<td>5.<a target="_blank" rel="noopener" href="http://ent.ifeng.com/a/20180522/43051233_0.shtml?_zbs_baidu_news">辣妈张嘉倪怀二胎气色好 眨眼卖萌很少女</a> <font color="read">↓(1)</td>
+<td>3336</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p><strong>Java</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span>[] selectionSort(<span class="hljs-keyword">int</span>[] ints) &#123;<br>        <span class="hljs-keyword">int</span>[] newInts = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[ints.length];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = ints.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            <span class="hljs-keyword">int</span> index = findBiggest(ints);<br>            newInts[i] = ints[index];<br>            ints = remove(ints, index);<br>        &#125;<br>        <span class="hljs-keyword">return</span> newInts;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">findBiggest</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] ints)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> biggest = ints[<span class="hljs-number">0</span>];<br>        <span class="hljs-keyword">int</span> biggestIndex = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; ints.length; i++) &#123;<br>            <span class="hljs-keyword">if</span> (ints[i] &lt; biggest) &#123;<br>                biggest = ints[i];<br>                biggestIndex = i;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> biggestIndex;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span>[] remove(<span class="hljs-keyword">int</span>[] ints, <span class="hljs-keyword">int</span> index) &#123;<br>        <span class="hljs-keyword">int</span>[] newArray = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[ints.length - <span class="hljs-number">1</span>];<br>        <span class="hljs-keyword">if</span> (index &gt; <span class="hljs-number">0</span>) &#123;<br>            System.arraycopy(ints, <span class="hljs-number">0</span>, newArray, <span class="hljs-number">0</span>, index);<br>            System.arraycopy(ints, index + <span class="hljs-number">1</span>, newArray, index, newArray.length - index);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            System.arraycopy(ints, index + <span class="hljs-number">1</span>, newArray, <span class="hljs-number">0</span>, newArray.length);<br>        &#125;<br>        <span class="hljs-keyword">return</span> newArray;<br>    &#125;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span>[] ints = &#123;<span class="hljs-number">3336</span>, <span class="hljs-number">14564</span>, <span class="hljs-number">42214</span>, <span class="hljs-number">8322</span>, <span class="hljs-number">25584</span>&#125;;<br>        ints = selectionSort(ints);<br>        System.out.println(<span class="hljs-string">&quot;ints = &quot;</span> + Arrays.toString(ints));<br>    &#125;<br><br><span class="hljs-comment">// ints = [42214, 25584, 14564, 8322, 3336]</span><br></code></pre></td></tr></table></figure>
+
+
+<hr>
+<p><strong>python</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findBiggest</span>(<span class="hljs-params">arry</span>):</span><br>    biggest = arry[<span class="hljs-number">0</span>]<br>    biggest_index = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-built_in">len</span>(arry)):<br>        <span class="hljs-keyword">if</span> arry[index] &gt; biggest:<br>            biggest = arry[index]<br>            biggest_index = index<br>    <span class="hljs-keyword">return</span> biggest_index<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">selectionSort</span>(<span class="hljs-params">arry</span>):</span><br>    resultArry = []<br>    <span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(arry)):<br>        index = findBiggest(arry)<br>        resultArry.append(arry.pop(index))<br>    <span class="hljs-keyword">return</span> resultArry<br><br><br>print(<span class="hljs-string">&#x27;ints =&#x27;</span>, selectionSort([<span class="hljs-number">3336</span>, <span class="hljs-number">14564</span>, <span class="hljs-number">42214</span>, <span class="hljs-number">8322</span>, <span class="hljs-number">25584</span>]))<br><br><span class="hljs-comment"># ints = [42214, 25584, 14564, 8322, 3336]</span><br></code></pre></td></tr></table></figure>
+
+<p>选择排序是一种灵巧的算法，但其速度不是很快。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#算法" >
+    <span class="tag-code">算法</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/algorithm-binary-search-1.html">
+        <span class="nav-arrow">← </span>
+        
+          算法学习笔记（二）《二分查找》
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/course-mysql42701.html">
+        
+          MySQL的疑难问题解决
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '131302d7f2e3edcc5c1de0f2d98803b4',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-nav-text">写在前面</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="toc-nav-text">选择排序</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%9D%E8%B7%AF%E6%A2%B3%E7%90%86"><span class="toc-nav-text">思路梳理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">代码实现</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/algorithm-choose-sort-1.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

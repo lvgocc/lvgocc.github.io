@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      Oracle 利用数据泵导入导出数据 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Oracle 利用数据泵导入导出数据</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2019-03-12</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#Oracle" >
+    <span class="tag-code">Oracle</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>目的：使用数据泵，将一台电脑上的数据库导出，导入到另一台电脑上的数据库。</p>
+<a id="more"></a>
+
+<h4 id="A电脑上的操作。expdp数据导出"><a href="#A电脑上的操作。expdp数据导出" class="headerlink" title="A电脑上的操作。expdp数据导出"></a>A电脑上的操作。expdp数据导出</h4><p>1、运行cmd；</p>
+<p>2、登录数据库，输入命令：</p>
+<figure class="highlight clean"><table><tr><td class="code"><pre><code class="hljs clean">sqlplus <span class="hljs-keyword">system</span>/密码；<br></code></pre></td></tr></table></figure>
+<p>3、创建目录路径：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">directory</span> backup_path <span class="hljs-keyword">as</span> ‘E:\app\tws\<span class="hljs-keyword">oradata</span>\orcldv’;  <br></code></pre></td></tr></table></figure>
+<p>(backup_path为路径名称，可自命名（必须是已存在路径），E:\app\tws\oradata\orcl为源数据库路径)</p>
+<p>5、导入导出操作授权：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">grant</span> exp_full_database,imp_full_database <span class="hljs-keyword">to</span> dmuser;  (dmuser为数据库用户名)<br></code></pre></td></tr></table></figure>
+<p>6、退出：exit;    </p>
+<p>7、数据导出，执行命令：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><code class="hljs 1c">expdp  dmuser/***** directory=backup_path dumpfile=dmuser_schema.dmp logfile=dmuser_schema_29.<span class="hljs-built_in">log</span>;<br></code></pre></td></tr></table></figure>
+<p>dmuser为用户名<br>*****为密码<br>dmuser_schema.dmp为导出数据库文件，可自命名，但格式要为.dmp，dmuser_schema_29.log为日志文件，可自命名</p>
+<hr>
+<h4 id="B电脑上的操作。impdp-数据导入"><a href="#B电脑上的操作。impdp-数据导入" class="headerlink" title="B电脑上的操作。impdp 数据导入"></a>B电脑上的操作。impdp 数据导入</h4><p>将导出的数据库文件复制到目标数据库路径下。</p>
+<p>1、运行cmd；</p>
+<p>2、登录数据库，输入命令：</p>
+<figure class="highlight clean"><table><tr><td class="code"><pre><code class="hljs clean">sqlplus <span class="hljs-keyword">system</span>/密码；<br></code></pre></td></tr></table></figure>
+<p>3、创建目录路径：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">directory</span> goup_path <span class="hljs-keyword">as</span> ‘E:\app\tws\<span class="hljs-keyword">oradata</span>\orcl’;   <br></code></pre></td></tr></table></figure>
+<p>(goup_path为路径名称，可自命名，E:\app\tws\oradata\orcl为目标数据库路径)</p>
+<p>4、退出：exit;    </p>
+<p>5、数据导入，执行命令：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><code class="hljs 1c">impdp  dmuser/*****  directory=goup_path  dumpfile=dmuser_schema.dmp  logfile=dmuser_schema_29.<span class="hljs-built_in">log</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="完整演示"><a href="#完整演示" class="headerlink" title="完整演示"></a>完整演示</h4><figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">create directory backup_path as <span class="hljs-string">&#x27;E:\XPAD&#x27;</span>;<br>grant exp_full_database,imp_full_database <span class="hljs-keyword">to</span> xpad706;<br>expdp xpad706/xpad706 <span class="hljs-attribute">directory</span>=backup_path <span class="hljs-attribute">dumpfile</span>=xpad706.dmp <span class="hljs-attribute">logfile</span>=xpad706.log;<br>impdp  xpad706/xpad706  <span class="hljs-attribute">directory</span>=backup_path   <span class="hljs-attribute">dumpfile</span>=xpad706.dmp  <span class="hljs-attribute">logfile</span>=impxpad706.log;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Oracle-数据泵（IMPDP-EXPDP）导入导出总结"><a href="#Oracle-数据泵（IMPDP-EXPDP）导入导出总结" class="headerlink" title="Oracle 数据泵（IMPDP/EXPDP）导入导出总结"></a>Oracle 数据泵（IMPDP/EXPDP）导入导出总结</h4><p>Oracle数据泵导入导出是日常工作中常用的基本技术之一，它相对传统的逻辑导入导出要高效，这种特性更适合数据库对象数量巨大的情形，因为我日常运维的数据库对象少则几千，多则几万甚至几十万，所以传统exp/imp就会非常耗时，而数据泵方式就因此脱引而出，下面就详细总结一下数据泵的使用方法，希望能给初学者带来帮助。</p>
+<p>一、新建逻辑目录</p>
+<p>   最好以system等管理员创建逻辑目录，Oracle不会自动创建实际的物理目录“D:\oracleData”（务必手动创建此目录），仅仅是进行定义逻辑路径dump_dir；</p>
+<figure class="highlight"><table><tr><td class="code"><pre><code class="hljs sql">sql&gt; conn system/123456a?@orcl as sysdba;<br><br>sql&gt;create directory dump_dir as &#x27;D:\oracleData&#x27;;<br></code></pre></td></tr></table></figure>
+<p>二、查看管理员目录（同时查看操作系统是否存在该目录，因为oracle并不关心该目录是否存在，假如不存在，则出错）</p>
+<figure class="highlight"><table><tr><td class="code"><pre><code class="hljs sql">sql&gt;select * from dba_directories;<br></code></pre></td></tr></table></figure>
+<p>三、用expdp导出数据</p>
+<p>1)导出用户及其对象</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">expdp scott/tiger@orcl <span class="hljs-attribute">schemas</span>=scott <span class="hljs-attribute">dumpfile</span>=expdp.dmp <span class="hljs-attribute">directory</span>=dump_dir;<br></code></pre></td></tr></table></figure>
+<p>2)导出指定表</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">expdp scott/tiger@orcl <span class="hljs-attribute">tables</span>=emp,dept <span class="hljs-attribute">dumpfile</span>=expdp.dmp <span class="hljs-attribute">directory</span>=dump_dir;<br></code></pre></td></tr></table></figure>
+<p>3)按查询条件导</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">expdp scott/tiger@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=expdp.dmp <span class="hljs-attribute">tables</span>=empquery=&#x27;where <span class="hljs-attribute">deptno</span>=20&#x27;;<br></code></pre></td></tr></table></figure>
+<p>4)按表空间导</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">expdp system/manager@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=tablespace.dmptablespaces=temp,example;<br></code></pre></td></tr></table></figure>
+<p>5)导整个数据库</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">expdp system/manager@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=full.dmp <span class="hljs-attribute">full</span>=y;<br></code></pre></td></tr></table></figure>
+<p>四、用impdp导入数据</p>
+<p>   在正式导入数据前，要先确保要导入的用户已存在，如果没有存在，请先用下述命令进行新建用户</p>
+<figure class="highlight"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">--创建表空间</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">tablespace</span> tb_name <span class="hljs-keyword">datafile</span> <span class="hljs-string">&#x27;D:\tablespace\tb_name.dbf&#x27;</span> <span class="hljs-keyword">size</span> <span class="hljs-number">1024</span>m <span class="hljs-keyword">AUTOEXTEND</span> <span class="hljs-keyword">ON</span>;<br><br><span class="hljs-comment">--创建用户</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> user_name <span class="hljs-keyword">identified</span> <span class="hljs-keyword">by</span> A123456a <span class="hljs-keyword">default</span> <span class="hljs-keyword">tablespace</span> tb_name <span class="hljs-keyword">temporary</span> <span class="hljs-keyword">tablespace</span> TEMP;<br><br><span class="hljs-comment">--给用户授权</span><br><br>sql&gt;grant read,write on directory dump_dir to user_name;<br><br>sql&gt;grant dba,resource,unlimited tablespace to user_name;<br></code></pre></td></tr></table></figure>
+<p>1)导入用户（从用户scott导入到用户scott）</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">impdp scott/tiger@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=expdp.dmp <span class="hljs-attribute">schemas</span>=scott;<br></code></pre></td></tr></table></figure>
+<p>2)导入表（从scott用户中把表dept和emp导入到system用户中）</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">impdp system/manager@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=expdp.dmptables=scott.dept,scott.emp <span class="hljs-attribute">remap_schema</span>=scott:system;<br></code></pre></td></tr></table></figure>
+<p>3)导入表空间</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">impdp system/manager@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=tablespace.dmp <span class="hljs-attribute">tablespaces</span>=example;<br></code></pre></td></tr></table></figure>
+<p>4)导入数据库</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">impdb system/manager@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=full.dmp <span class="hljs-attribute">full</span>=y;<br></code></pre></td></tr></table></figure>
+<p>5)追加数据</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">impdp system/manager@orcl <span class="hljs-attribute">directory</span>=dump_dir <span class="hljs-attribute">dumpfile</span>=expdp.dmp <span class="hljs-attribute">schemas</span>=systemtable_exists_action<br></code></pre></td></tr></table></figure>
+<pre><code>以上是日常工作中实际工作中用到的，希望能够给你得到帮助。</code></pre>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Oracle" >
+    <span class="tag-code">Oracle</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/problem-plsql-garbled.html">
+        <span class="nav-arrow">← </span>
+        
+          解决 PLSQL Developer 中文乱码
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/try-catch-right-operation.html">
+        
+          try catch 中的异常怎么处理
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'ce07b1c95fcbb50e51548e8c679b6f85',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#A%E7%94%B5%E8%84%91%E4%B8%8A%E7%9A%84%E6%93%8D%E4%BD%9C%E3%80%82expdp%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA"><span class="toc-nav-text">A电脑上的操作。expdp数据导出</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#B%E7%94%B5%E8%84%91%E4%B8%8A%E7%9A%84%E6%93%8D%E4%BD%9C%E3%80%82impdp-%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5"><span class="toc-nav-text">B电脑上的操作。impdp 数据导入</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%8C%E6%95%B4%E6%BC%94%E7%A4%BA"><span class="toc-nav-text">完整演示</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Oracle-%E6%95%B0%E6%8D%AE%E6%B3%B5%EF%BC%88IMPDP-EXPDP%EF%BC%89%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA%E6%80%BB%E7%BB%93"><span class="toc-nav-text">Oracle 数据泵（IMPDP&#x2F;EXPDP）导入导出总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/course-oracle-import-export.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

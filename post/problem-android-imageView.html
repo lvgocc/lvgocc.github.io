@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      Android 显示图片的指定位置图像 ImageView ImageButton | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Android 显示图片的指定位置图像 ImageView ImageButton</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-08-12</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#Android" >
+    <span class="tag-code">Android</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>UI提供了一些图标素材，但是是在一张图片上 如图：</p>
+<a id="more"></a>
+
+<p><img src="/images/posts/problem-android-imageView/20180812183216164.png" alt="UI提供的图"></p>
+<p><code>产品需要在页面下方横排显示三个按钮</code></p>
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_183322.png" alt="产品需要的图"></p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>废话不多说，网上搜了一下，大多都是通过代码重新绘制。因为我比较粗俗，所以自己找到了一种解决办法。</p>
+<h4 id="心历路程"><a href="#心历路程" class="headerlink" title="心历路程"></a>心历路程</h4><blockquote>
+<p>设置scaleType的值来实现</p>
+</blockquote>
+<p>根据查阅资料了解Image相关view的属性值了解到</p>
+<p>对于android:scaleType属性，因为关于图像在ImageView中的显示效果，所以有如下属性值可以选择：</p>
+<ul>
+<li>matrix：使用matrix方式进行缩放。</li>
+<li>fitXY：横向、纵向独立缩放，以适应该ImageView。</li>
+<li>fitStart:保持纵横比缩放图片，并且将图片放在ImageView的左上角。</li>
+<li>fitCenter：保持纵横比缩放图片，缩放完成后将图片放在ImageView的中央。</li>
+<li>fitEnd：保持纵横比缩放图片，缩放完成后将图片放在ImageView的右下角。</li>
+<li>center：把图片放在ImageView的中央，但是不进行任何缩放。</li>
+<li>centerCrop：保持纵横比缩放图片，以使图片能完全覆盖ImageView。</li>
+<li>centerInside：保持纵横比缩放图片，以使得ImageView能完全显示该图片。</li>
+</ul>
+<p>由于我这里UI提供的图片比较特殊，所以第一张和第二张的图片分别可以通过设置 <code>matrix</code>和<code>center</code>获取到</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>      android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>      android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>      android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;&quot;</span><br>      android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/qq_login_content_description&quot;</span><br>      android:<span class="hljs-attribute">scaleType</span>=<span class="hljs-string">&quot;matrix&quot;</span><br>      app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>      app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>      app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_184259.png"></p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wx_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wb_login_content_description&quot;</span><br>    android:<span class="hljs-attribute">scaleType</span>=<span class="hljs-string">&quot;centerCrop&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toStartOf</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toEndOf</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_184312.png"></p>
+<p>到上面的时候,心里还是美滋滋,只要这样下去,不超过5分钟,我的图就画好了.<strong>可是接着尴尬的问题出现了</strong></p>
+<p>第三张的图片怎么取?? WTF??? <s>此处省略18分钟</s></p>
+<hr>
+<h4 id="终极方案-完美解决"><a href="#终极方案-完美解决" class="headerlink" title="终极方案,完美解决"></a>终极方案,完美解决</h4><figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">paddingTop</span>=<span class="hljs-string">&quot;94dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/qq_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br>&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wx_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wx_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toStartOf</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toEndOf</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br>&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">paddingBottom</span>=<span class="hljs-string">&quot;94dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wb_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toEndOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_191847.png" alt="最终效果"></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Android" >
+    <span class="tag-code">Android</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/problem-Failed-to-resolve-support-fragment.html">
+        <span class="nav-arrow">← </span>
+        
+          Failed to resolve support-fragment（已解决）
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/spring-structure-concept.html">
+        
+          《Spring的设计理念和整体架构》
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '4b181dfdb17984cecf18cb07cb3950ae',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E5%87%BA%E7%8E%B0"><span class="toc-nav-text">问题出现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-nav-text">解决方案</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%BF%83%E5%8E%86%E8%B7%AF%E7%A8%8B"><span class="toc-nav-text">心历路程</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E7%BB%88%E6%9E%81%E6%96%B9%E6%A1%88-%E5%AE%8C%E7%BE%8E%E8%A7%A3%E5%86%B3"><span class="toc-nav-text">终极方案,完美解决</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/problem-android-imageView.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

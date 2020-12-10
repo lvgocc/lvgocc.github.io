@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（三）创建型之抽象工厂模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（三）创建型之抽象工厂模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-10-16</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="抽象工厂模式-🌉"><a href="#抽象工厂模式-🌉" class="headerlink" title="抽象工厂模式 🌉"></a>抽象工厂模式 🌉</h1><blockquote>
+<p>提供一个创建产品族的接口，其每个子类可以生产一系列相关的产品。</p>
+</blockquote>
+<h2 id="概念理解（重要❗❗❗）"><a href="#概念理解（重要❗❗❗）" class="headerlink" title="概念理解（重要❗❗❗）"></a>概念理解（重要❗❗❗）</h2><p>　　特别强调了一下抽象工厂模式的概念理解部分我觉得是非常有必要的，当然我在写下这篇文章之前看过很多优秀的博文、书籍、视频等资料对抽象工厂模式的讲解和代码示例等内容，但我发现。抽象工厂的概念被一次又一次的刷新，所以我也想表达一下自己对抽象工厂的理解。如果你和我持不同的意见，可以继续往下看，我很愿意和你一起讨论这个问题。</p>
+<p>　　看我过之前的文章应该知道了我写的工厂模式的概念和代码实现，以及使用的时机。而抽象工厂模式的实现，等于工厂方法模式的实现。</p>
+<p>　　那为什么会有两个模式的定义出现呢？这个问题解决了，那我们的概念就捋清楚了。我们一起来回顾一下这两个模式的定义：</p>
+<ol>
+<li>工厂（Factory）模式：定义一个用于创建产品的接口，由子类决定生产什么产品。</li>
+<li>抽象工厂（AbstractFactory）模式：提供一个创建产品族的接口，其每个子类可以生产一系列相关的产品。</li>
+</ol>
+<p>　　我们将上面的两个模式的定义放在一起总结一下，是不是可以认为是，首先定义一个工厂接口，由子类去实现具体的工厂。如果我总结的定义你可以认可，那继续往下看。不认可忍一忍，看完再喷。让我们通过代码在理解一下。</p>
+<p>　　<strong>❗下面内容很关键，希望你能认真看完</strong>。当然，不建议死扣字眼和代码，还是最初的那个誓言，学习设计模式的思想。而不是学语文。</p>
+<h2 id="一行代码-❗"><a href="#一行代码-❗" class="headerlink" title="一行代码 ❗"></a>一行代码 ❗</h2><h3 id="工厂方法模式的伪代码"><a href="#工厂方法模式的伪代码" class="headerlink" title="工厂方法模式的伪代码"></a>工厂方法模式的伪代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 电子工厂</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ElectronicsFactory</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个手机</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Phone <span class="hljs-title">creatPhone</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 苹果手机电子工厂</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IphoneElectronicsFactory</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ElectronicsFactory</span></span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个苹果手机</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Phone <span class="hljs-title">creatPhone</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> IPhone()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 小米手机电子工厂</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MiPhoneElectronicsFactory</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ElectronicsFactory</span></span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个苹果手机</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Phone <span class="hljs-title">creatPhone</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MiPhone()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="让我们在看一下抽象工厂模式的伪代码"><a href="#让我们在看一下抽象工厂模式的伪代码" class="headerlink" title="让我们在看一下抽象工厂模式的伪代码"></a>让我们在看一下抽象工厂模式的伪代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 电子工厂</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ElectronicsFactory</span> </span>&#123;<br><br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个手机</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Phone <span class="hljs-title">creatPhone</span><span class="hljs-params">()</span></span>;<br>    <br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个电脑</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Computer <span class="hljs-title">creatComputer</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 苹果电子工厂</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppleElectronicsFactory</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ElectronicsFactory</span></span>&#123;<br><br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个苹果手机</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Phone <span class="hljs-title">creatPhone</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> IPhone()<br>    &#125;<br>    <br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个苹果电脑</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Computer <span class="hljs-title">creatComputer</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MACBook();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 小米电子工厂</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MiElectronicsFactory</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ElectronicsFactory</span></span>&#123;<br><br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个小米手机</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Phone <span class="hljs-title">creatPhone</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MiPhone()<br>    &#125;<br>    <br>     <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生产一个小米电脑</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function">Computer <span class="hljs-title">creatComputer</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MiComputer();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>我们通过工厂方法模式，可以得到各种各样的同类型产品（都是手机），但我们如果通过抽象工厂模式，就可以得到各种各样同个产品族的产品（一个品牌的所有产品）<strong>而这一切的内容，仅仅相差了一行代码</strong> 。<strong>同样的，当抽象工厂中只有一个工厂时，它与工厂模式，没有什么不同。</strong></p>
+<p><img src="https://i.loli.net/2020/10/15/ojTOhcA9eB8X2IJ.gif"></p>
+<blockquote>
+<p>工厂方法模式只考虑生产同等级的产品，抽象工厂模式将考虑多等级产品的生产，将同一个具体工厂所生产的位于不同等级的一组产品称为一个产品族（品牌）</p>
+<p>来源：<a target="_blank" rel="noopener" href="http://c.biancheng.net/view/1351.html">http://c.biancheng.net/view/1351.html</a></p>
+</blockquote>
+<h2 id="抽象工厂类图-🖌"><a href="#抽象工厂类图-🖌" class="headerlink" title="抽象工厂类图 🖌"></a>抽象工厂类图 🖌</h2><p><img src="https://i.loli.net/2020/10/16/9Rj52oePSYbqiry.png" alt="抽象工厂类图"></p>
+<h2 id="具体代码-📄"><a href="#具体代码-📄" class="headerlink" title="具体代码 📄"></a>具体代码 📄</h2><blockquote>
+<p>完整代码及单元测试结果 <a target="_blank" rel="noopener" href="https://github.com/lvgocc/java-design-patterns/tree/main/abstract-factory">https://github.com/lvgocc/java-design-patterns/tree/main/abstract-factory</a></p>
+</blockquote>
+<p>代码在上面已经罗列过，这里就不在赘述，需要的同学可以移步上面链接。可以的话，给个star吧（脸皮厚的不行）</p>
+<h2 id="总结-✨"><a href="#总结-✨" class="headerlink" title="总结 ✨"></a>总结 ✨</h2><p>抽象工厂与工厂方法模式为同一种设计思想，他们不同于简单工厂。因为看了很多资料，对这部分内容的描述各有千秋。所以我在这里也表达了自己的一些看法。参考内容感兴趣的小伙伴可以看一下，我们一起讨论一下是极好的</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/1351.html">http://c.biancheng.net/view/1351.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.journaldev.com/1392/factory-design-pattern-in-java">https://www.journaldev.com/1392/factory-design-pattern-in-java</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.journaldev.com/1418/abstract-factory-design-pattern-in-java">https://www.journaldev.com/1418/abstract-factory-design-pattern-in-java</a></li>
+</ul>
+<p>再回到上面的两个定义：</p>
+<ol>
+<li>工厂（Factory）模式：<strong>定义一个用于创建产品的接口，由子类决定生产什么产品。</strong></li>
+<li>抽象工厂（AbstractFactory）模式：<strong>提供一个创建产品族的接口，其每个子类可以生产一系列相关的产品。</strong></li>
+</ol>
+<p>抽象工厂，比如’富士康‘，细品一下，他就有多个产品族，此时你应该明白了抽象工厂的概念和与工厂方法模式的区别（相差一行代码，相差一个产品族），如果被我说晕了，我真的很抱歉，愿意的话可以与我私聊。</p>
+<p>当然相差一行代码是为了表达两者直接的关系，在实际应用情况下还是遵循标准的命名规范。避免产生歧义，出现理解误差。</p>
+<p>　　文末的<strong>JDK中的抽象工厂设计模式示例</strong>生产的就是一个系列，所以上面也提到了抽象工厂与工厂本身并无大差别，当你一个工厂可以生产出多个系列的产品的时候，其实他就是抽象工厂了。比如看过我上一篇工厂模式文章的小伙伴就会发现，文末给出的 JDK 例子使用的是静态工厂模式。这一次给出的是抽象工厂（工厂方法模式）。抽象工厂与工厂方法本是同根生。我知道我把你说绕了，但是我的初衷是让你清楚这两者（抽象工厂模式与所谓的工厂方法模式），本就是一个思想。</p>
+<p><strong>🔔如果觉得我没说明白的请联系我，非常乐意被打扰</strong></p>
+<p><code>如果上面星尘表述的内容没能讲清楚抽象工厂的概念，大家不要急。继续往下看。如果我说的还不明白，给我个机会，加我微信（lvgocc）或者公众号内私聊，直到聊清楚为止。你若不会，我愿受累，为了你，我愿意执着🐱‍💻。</code></p>
+<h2 id="使用时机"><a href="#使用时机" class="headerlink" title="使用时机"></a>使用时机</h2><ul>
+<li>当你想要管理多个系列产品的时候，比如多个套餐？多种策略组合？看你需求，合理使用，总之多系列就用它！</li>
+</ul>
+<p>例如你有一套方法，在不同的操作系统需要使用不同的实现，那这个时候你就可以使用抽象工厂，可以让它在不同的操作系统下发挥不同的功能。</p>
+<p>　　</p>
+<h2 id="JDK中的抽象工厂设计模式示例"><a href="#JDK中的抽象工厂设计模式示例" class="headerlink" title="JDK中的抽象工厂设计模式示例"></a>JDK中的抽象工厂设计模式示例</h2><blockquote>
+<p>案例来源：<a target="_blank" rel="noopener" href="https://www.journaldev.com/1418/abstract-factory-design-pattern-in-java">https://www.journaldev.com/1418/abstract-factory-design-pattern-in-java</a></p>
+</blockquote>
+<ul>
+<li>javax.xml.parsers.DocumentBuilderFactory＃newInstance（）</li>
+<li>javax.xml.transform.TransformerFactory＃newInstance（）</li>
+<li>javax.xml.xpath.XPathFactory＃newInstance（）</li>
+</ul>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-factory.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（二）创建型之工厂模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-prototype.html">
+        
+          和 lvgo 一起学设计模式（四）创建型之原型模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '7163ead793e534785e9ac414ab4be47c',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%F0%9F%8C%89"><span class="toc-nav-text">抽象工厂模式 🌉</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A6%82%E5%BF%B5%E7%90%86%E8%A7%A3%EF%BC%88%E9%87%8D%E8%A6%81%E2%9D%97%E2%9D%97%E2%9D%97%EF%BC%89"><span class="toc-nav-text">概念理解（重要❗❗❗）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81-%E2%9D%97"><span class="toc-nav-text">一行代码 ❗</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">工厂方法模式的伪代码</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%AE%A9%E6%88%91%E4%BB%AC%E5%9C%A8%E7%9C%8B%E4%B8%80%E4%B8%8B%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">让我们在看一下抽象工厂模式的伪代码</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E7%B1%BB%E5%9B%BE-%F0%9F%96%8C"><span class="toc-nav-text">抽象工厂类图 🖌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B7%E4%BD%93%E4%BB%A3%E7%A0%81-%F0%9F%93%84"><span class="toc-nav-text">具体代码 📄</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%E2%9C%A8"><span class="toc-nav-text">总结 ✨</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="toc-nav-text">使用时机</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#JDK%E4%B8%AD%E7%9A%84%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%A4%BA%E4%BE%8B"><span class="toc-nav-text">JDK中的抽象工厂设计模式示例</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-abstract-factory.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

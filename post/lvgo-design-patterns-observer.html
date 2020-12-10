@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（十五）行为型之观察者模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（十五）行为型之观察者模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-11-24</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/11/24/NYiKTrU5G2BnkEs.png" alt="observer-title.png"></p>
+<h1 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h1><blockquote>
+<p>多个对象间存在一对多关系，当一个对象发生改变时，把这种改变通知给其他多个对象，从而影响其他对象的行为。</p>
+</blockquote>
+<p>提到观察者，就一定有“被观察者”。</p>
+<p>被观察者发生改变时，通知给每个观察者，这就是观察者模式。放到生活中的例子就是</p>
+<ul>
+<li>天气预报的短信通知，在很早以前，我们的天气预报服务可以通过短信的信息订阅。在这个业务场景中，天气预报就是被观察者，每个付费的用户就是观察者，当有最新的天气预报的消息时，会以短信的形式通知给曾经付过费订阅的用户。如果不订阅是不会收到的。</li>
+<li>你现在在使用的通讯软件中的’群聊’功能，这个相对较为复杂一点，可以抽象的理解一下，用一个人去理解，群里的每个人都是被观察者，每个人都是观察者。当一个人发出消息的时候，所有在群里的人都会收到消息也包括自己。反之，不在群里的人则收不到。</li>
+<li>还记得小区单元门口一个一个小盒子吗？有的小盒子里是有当天的报纸的。甚至里面的报纸内容可能是不相同的，这里就涉及到了多个被观察者和观察之间的关系，这个小盒子能收到自己订阅的报社报纸，当然你可以同时订阅多个，这样你就可以收到多个报社送过来的报纸了。</li>
+</ul>
+<p>对于上面的例子，天气预报需要用户自己付费订阅、群聊需要先进群、在家看报需要联系报社订阅报纸。这里就能看出来。这种关系是一个一对多的关系。被观察者是同一个，而观察者却可以是很多个不同的对象。还有就是观察者需要自己主动的去找被观察者“提前”说明好，“一旦有消息，请通知我一声”。所有这里可以抽象出来几个角色和动作。</p>
+<ol>
+<li>被观察者（1个）</li>
+<li>观察者（n个）</li>
+<li>被观察者负责管理观察者对象</li>
+<li>观察者自己负责被观察者给予的通知内容</li>
+</ol>
+<h2 id="观察者模式类图-📌"><a href="#观察者模式类图-📌" class="headerlink" title="观察者模式类图 📌"></a>观察者模式类图 📌</h2><p><img src="https://i.loli.net/2020/11/24/ybnYo1RH5wNC9Gk.png" alt="observer-UML.png"></p>
+<ol>
+<li>被观察者（Observable）</li>
+<li>观察者（Observer）</li>
+<li>被观察者负责管理观察者对象(Observable.obs)</li>
+<li>观察者自己负责被观察者给予的通知内容(Observer.update)</li>
+</ol>
+<p>如果对 JDK 熟悉的同学可能早已看穿，这个类图画的其实就是 JDK 提供的观察者框架，我们可以用它轻松的实现一个订阅通知功能。而这一功能在 JDK 1.0 的版本就已经存在了。</p>
+<h2 id="代码-📃"><a href="#代码-📃" class="headerlink" title="代码 📃"></a>代码 📃</h2><p>JDK 源码，篇幅原因只保留了核心代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;<br><span class="hljs-comment">// 观察者</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Observer</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Observable var1, Object var2)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>JDK 源码，篇幅原因只保留了核心代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;<br><span class="hljs-comment">// 被观察者</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Observable</span> </span>&#123;<br>	<span class="hljs-comment">// 管理观察者对象</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Vector&lt;Observer&gt; obs = <span class="hljs-keyword">new</span> Vector();<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addObserver</span><span class="hljs-params">(Observer var1)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.obs.contains(var1)) &#123;<br>            <span class="hljs-keyword">this</span>.obs.addElement(var1);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 通知给订阅的观察者</span><br> 	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">notifyObservers</span><span class="hljs-params">(Object var1)</span> </span>&#123;<br>        Object[] var2 = <span class="hljs-keyword">this</span>.obs.toArray();<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> var3 = var2.length - <span class="hljs-number">1</span>; var3 &gt;= <span class="hljs-number">0</span>; --var3) &#123;<br>            ((Observer)var2[var3]).update(<span class="hljs-keyword">this</span>, var1);<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>自己实现部分</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Producer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Observable</span> </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span>  <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setChanged</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.setChanged();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Consumer1</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Observer</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Observable o, Object arg)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;我是 consumer1 我收到了&quot;</span> + o + <span class="hljs-string">&quot;的通知，通知内容：&quot;</span> + arg);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Consumer2</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Observer</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Observable o, Object arg)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;我是 consumer2 我收到了&quot;</span> + o + <span class="hljs-string">&quot;的通知，通知内容：&quot;</span> + arg);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Consumer3</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Observer</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Observable o, Object arg)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;我是 consumer3 我收到了&quot;</span> + o + <span class="hljs-string">&quot;的通知，通知内容：&quot;</span> + arg);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试，定义了 2 个被观察者（生产者），3 个观察者（消费者）来分别使用12生产者来发布消息。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">jdkOb</span><span class="hljs-params">()</span> </span>&#123;<br>    Producer producer1 = <span class="hljs-keyword">new</span> Producer();<br>    producer1.setChanged();<br>    Producer producer2 = <span class="hljs-keyword">new</span> Producer();<br>    producer2.setChanged();<br>    Consumer1 consumer1 = <span class="hljs-keyword">new</span> Consumer1();<br>    Consumer2 consumer2 = <span class="hljs-keyword">new</span> Consumer2();<br>    Consumer3 consumer3 = <span class="hljs-keyword">new</span> Consumer3();<br><br>    producer1.addObserver(consumer1);<br>    producer1.addObserver(consumer2);<br>    producer1.addObserver(consumer3);<br>    producer2.addObserver(consumer1);<br>    producer2.addObserver(consumer2);<br>    producer2.addObserver(consumer3);<br><br>    producer1.notifyObservers(<span class="hljs-string">&quot;我是生产者1，我现在给你们通知一条消息，收到赶紧去消费掉&quot;</span>);<br>    producer2.notifyObservers(<span class="hljs-string">&quot;我是生产者2，我现在给你们通知一条消息，收到赶紧去消费掉&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">我是 consumer3 我收到了Producer@57cd70的通知，通知内容：我是生产者1，我现在给你们通知一条消息，收到赶紧去消费掉<br>我是 consumer2 我收到了Producer@57cd70的通知，通知内容：我是生产者1，我现在给你们通知一条消息，收到赶紧去消费掉<br>我是 consumer1 我收到了Producer@57cd70的通知，通知内容：我是生产者1，我现在给你们通知一条消息，收到赶紧去消费掉<br><br>我是 consumer3 我收到了Producer@1a7504c的通知，通知内容：我是生产者2，我现在给你们通知一条消息，收到赶紧去消费掉<br>我是 consumer2 我收到了Producer@1a7504c的通知，通知内容：我是生产者2，我现在给你们通知一条消息，收到赶紧去消费掉<br>我是 consumer1 我收到了Producer@1a7504c的通知，通知内容：我是生产者2，我现在给你们通知一条消息，收到赶紧去消费掉<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>使用观察者模式需要注意的几个点</p>
+<ol>
+<li>观察者数量，如果一个被观察者被很多观察者观察（订阅）时，在通知时的时间将会变得漫长；</li>
+<li>不能出现被观察者和观察者之间存在循环观察情况，否则系统会直接崩溃；</li>
+</ol>
+<p>观察者模式的代码虽然很简单，但是它所创造的价值却远不止这些。相信你同我一样，通过观察者模式联想到了消息通知、binlog订阅、注册中心等技术组件。其核心内容也只是在此简单的不能再简单的思想上去做更多更复杂的功能迭代。</p>
+<p>万变不离其宗。在复杂的系统，在复杂的功能，都能找到其根本所在。知识，亦是如此。</p>
+<p>当然，你也可以尝试在现有的代码中进行一些修改，比如通知的情况改为有新的观察者加入时？通知的数据变得更丰富一些？异步通知？等等等等。</p>
+<p>如果你有更好的点子可以关注并分享给我们（欢迎加群）！</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-template-method.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（十四）行为型之模板方法模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-chain-of-responsibility.html">
+        
+          和 lvgo 一起学设计模式（十六）行为型责任链模式之模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'e6de0bea4ddb348e3675a4d675337b7a',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">观察者模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">观察者模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">代码 📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-observer.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

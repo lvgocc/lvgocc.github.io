@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      关于Spring事务管理 之 默认事务间调用问题 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>关于Spring事务管理 之 默认事务间调用问题</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2019-12-24</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#Spring" >
+    <span class="tag-code">Spring</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>由事务的传播行为我们知道, 如果将方法配置为默认事务(<b>REQUIRED</b>)在执行过程中Spring会为其新启事务(<b>REQUIRES_NEW</b>), 作为一个独立事务来执行. 由此存在一个问题.</p>
+<p>如果使用不慎, 会引发  <code>org.springframework.transaction.UnexpectedRollbackException: Transaction rolled back because it has been marked as rollback-only</code></p>
+<a id="more"></a>
+
+<hr>
+<p>具体原因见以下demo简例:</p>
+<h4 id="部分关键代码"><a href="#部分关键代码" class="headerlink" title="部分关键代码"></a>部分关键代码</h4><h5 id="DemoService1"><a href="#DemoService1" class="headerlink" title="DemoService1"></a>DemoService1</h5><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoService1Impl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">DemoService1</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Logger logger = LoggerFactory.getLogger(<span class="hljs-keyword">this</span>.getClass());<br><br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> DemoDao demoDao;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> DemoService2 demoService2;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 业务逻辑 , 默认事务, 事务回滚异常 : Exception</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-meta">@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doService</span><span class="hljs-params">()</span> </span>&#123;<br>        HashMap&lt;String, Integer&gt; param = <span class="hljs-keyword">new</span> HashMap&lt;&gt;(<span class="hljs-number">2</span>);<br>        param.put(<span class="hljs-string">&quot;applId&quot;</span>, <span class="hljs-number">19</span>);<br>        param.put(<span class="hljs-string">&quot;code&quot;</span>, <span class="hljs-number">19</span>);<br>        demoDao.insert1(param);<br>        <span class="hljs-keyword">try</span> &#123;<br>            demoService2.doService();<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            logger.error(<span class="hljs-string">&quot;业务2处理异常,&#123;&#125;&quot;</span>, e.getMessage());<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="DemoService2"><a href="#DemoService2" class="headerlink" title="DemoService2"></a>DemoService2</h5><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoService2Impl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">DemoService2</span> </span>&#123;<br><br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> DemoDao demoDao;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 业务逻辑, 默认事务, 事务回滚异常 : Exception</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-meta">@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doService</span><span class="hljs-params">()</span> </span>&#123;<br>        HashMap&lt;String, Integer&gt; param = <span class="hljs-keyword">new</span> HashMap&lt;&gt;(<span class="hljs-number">2</span>);<br>        param.put(<span class="hljs-string">&quot;applId&quot;</span>, <span class="hljs-number">10</span>);<br>        param.put(<span class="hljs-string">&quot;code&quot;</span>, <span class="hljs-number">10</span>);<br>        demoDao.insert2(param);<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;因为一些原因,我处理失败了.&quot;</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<h4 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h4><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoService1ImplTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseTest</span> </span>&#123;<br><br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> DemoService1 demoService1;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doService</span><span class="hljs-params">()</span> </span>&#123;<br>        demoService1.doService();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h5><p><i>这里用到的事务配置为注解方式, 目前我们项目开发过程中使用配置文件方式, 一般为以下方式 . 这种方式的事务配置, 更容易引起问题</i></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">tx:advice</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;txAdvice&quot;</span> <span class="hljs-attr">transaction-manager</span>=<span class="hljs-string">&quot;transactionManager&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">tx:attributes</span>&gt;</span><br>       	...<br>		<span class="hljs-tag">&lt;<span class="hljs-name">tx:method</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;do*&quot;</span>  /&gt;</span><br>           <span class="hljs-tag">&lt;<span class="hljs-name">tx:method</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;doNew*&quot;</span>  <span class="hljs-attr">propagation</span>=<span class="hljs-string">&quot;REQUIRES_NEW&quot;</span> /&gt;</span><br>           ...<br>	<span class="hljs-tag">&lt;/<span class="hljs-name">tx:attributes</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">tx:advice</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h4><figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - [com<span class="hljs-selector-class">.erayt</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.dao</span><span class="hljs-selector-class">.DemoDao</span>.insert1] prepare sql:[         insert into  ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - [com<span class="hljs-selector-class">.erayt</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.dao</span><span class="hljs-selector-class">.DemoDao</span>.insert1] prepare parameters:[<span class="hljs-number">19</span>, <span class="hljs-number">19</span>]  ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - &#123;pstm-<span class="hljs-number">100001</span>&#125; Executing Statement:          insert into   ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - &#123;pstm-<span class="hljs-number">100001</span>&#125; Types: [java<span class="hljs-selector-class">.lang</span><span class="hljs-selector-class">.Integer</span>, java<span class="hljs-selector-class">.lang</span>.Integer]  ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - [com<span class="hljs-selector-class">.erayt</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.dao</span><span class="hljs-selector-class">.DemoDao</span>.insert2] prepare sql:[         insert into   ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - [com<span class="hljs-selector-class">.erayt</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.cms</span><span class="hljs-selector-class">.dao</span><span class="hljs-selector-class">.DemoDao</span>.insert2] prepare parameters:[<span class="hljs-number">10</span>, <span class="hljs-number">10</span>]  ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - &#123;conn-<span class="hljs-number">100002</span>&#125; Preparing Statement:          insert into   ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [DEBUG] - &#123;pstm-<span class="hljs-number">100003</span>&#125; Types: [java<span class="hljs-selector-class">.lang</span><span class="hljs-selector-class">.Integer</span>, java<span class="hljs-selector-class">.lang</span>.Integer]  ...<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [ERROR] - 业务<span class="hljs-number">2</span>处理异常,因为一些原因,我处理失败了.<br><span class="hljs-number">27</span>:<span class="hljs-number">38</span> [WARN ] - Caught exception while allowing TestExecutionListener  ...<br>org<span class="hljs-selector-class">.springframework</span><span class="hljs-selector-class">.transaction</span><span class="hljs-selector-class">.UnexpectedRollbackException</span>: Transaction rolled back because it has been marked as rollback-only<br>	at org<span class="hljs-selector-class">.springframework</span><span class="hljs-selector-class">.transaction</span><span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.AbstractPlatformTransactionManager</span><span class="hljs-selector-class">.commit</span> ...<br>	at org<span class="hljs-selector-class">.springframework</span><span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.context</span><span class="hljs-selector-class">.transaction</span><span class="hljs-selector-class">.TransactionContext</span><span class="hljs-selector-class">.endTransaction</span> ...<br>	at org<span class="hljs-selector-class">.springframework</span><span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.context</span><span class="hljs-selector-class">.transaction</span><span class="hljs-selector-class">.TransactionalTestExecutionListener</span><span class="hljs-selector-class">.afterTestMethod</span> ...<br>	at org<span class="hljs-selector-class">.springframework</span><span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.context</span><span class="hljs-selector-class">.TestContextManager</span><span class="hljs-selector-class">.afterTestMethod</span> ...<br>	<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><p>问题出现的代码为</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>           demoService2.doService();<br>       &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>           logger.error(<span class="hljs-string">&quot;业务2处理异常,&#123;&#125;&quot;</span>, e.getMessage());<br>       &#125;<br></code></pre></td></tr></table></figure>
+
+<p>问题原因是因为两个service中的方法doService均为默认事务(<b>REQUIRED</b>),<br>默认事务再被调用时, 如外层方法无事务, 自身会新启事务. 此时<code>#demoService1.doService()</code>的事务则为新启事务(<b>REQUIRES_NEW</b>) , 之后再被调用的方法<code>#demoService2.doService()</code>会加入到调用者<code>#demoService1.doService()</code>事务中. </p>
+<p>又由于spring的事务回滚依托在异常之上, 当demoService2.doService()出现异常后它将事务标记为回滚. 异常抛出后被catch , demoService1.doService 没有接受到里面抛出的异常, 方法继续执行, 执行结束后, 事务提交. </p>
+<p>但当demoService1在做commit的时候检测到事务被标记为回滚, 与预期不符, 也就是<code>Unexpected</code> 意想不到的</p>
+<p><code>UnexpectedRollbackException: Transaction rolled back because it has been marked as rollback-only</code></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Spring" >
+    <span class="tag-code">Spring</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/octopus.html">
+        <span class="nav-arrow">← </span>
+        
+          octopus 为梦而生的八爪鱼
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/precipitate.html">
+        
+          开启人生的沉淀篇章
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'be1aa1455a2f7cea59eb5fc0f6bba58b',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%83%A8%E5%88%86%E5%85%B3%E9%94%AE%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">部分关键代码</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#DemoService1"><span class="toc-nav-text">DemoService1</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#DemoService2"><span class="toc-nav-text">DemoService2</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-nav-text">单元测试</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-nav-text">说明</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-nav-text">执行结果</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-nav-text">问题分析</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/spring-transaction-invocation.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

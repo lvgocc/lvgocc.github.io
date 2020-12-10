@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（六）结构型之代理模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（六）结构型之代理模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-10-22</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/10/22/5l9eIS7tXdofFAE.png" alt="代理模式"></p>
+<h1 id="设计模式的学习问题⁉❔"><a href="#设计模式的学习问题⁉❔" class="headerlink" title="设计模式的学习问题⁉❔"></a>设计模式的学习问题⁉❔</h1><p>我一直都在想如何学会一个新东西，和掌握一个旧东西🤔，有很多前辈给过一些建议和意见📑，（当然不是直接给我，都是看大佬的文章或者书籍当中。）先去用，再去学。嗯，我想是的，这样肯定是个很正常的学习过程。但是对于一些你暂时无法使用的东西，你如何去掌握它呢？我认为应该抛开表象去了解本质，通过本质的类比去掌握那些暂时无法使用的东西。设计模式就是这种情况，在平常的开发中，常用的设计模式就那么几种，其它的那些没有机会去接触，干学，如何才能掌握呢？🗃</p>
+<p>我从小就是一个好为人师的家伙🤓，然而自己学习却一直都不怎么样😢。人太实在，也不懂的包装，我只知道我学习这么差的能学会的东西，讲给别人应该差不哪去。😊</p>
+<p>在学习算法的时候，学到一个特别巧妙而且很好用的解题思路或者说逻辑思维<code>”分而治之“</code>，还有之前和网友讨论的一个叫做<code>”复杂度守恒定律“</code>的东西。这两个东西放在一起，可以说是很”矛盾“⚔🛡了。</p>
+<p>说了这么多我想说的就是，设计模式这个知识点，真的很简单又很难。简单是因为每种设计模式的定义拿出来都能看的懂，难是难在如何，何时的应用。而我希望我写的这个设计模式系列是去应用化的，就是单纯的把设计模式的思想记录下来。我所理解的设计模式就该如此。</p>
+<p>GOF的<strong>《设计模式.可复用面向对象软件的基础》</strong>通过一个应用案例的实现，串起了23种设计模式，我想在系列更新完之后也更新一个应用，将 23 种设计模式尽可能的应用到一个应用案例中去，而不是每个设计模式都涉及具体的应用，因为我觉得这可能会带的人们更关注应用的实现，而不是设计模式的应用，这是我的一些想法。</p>
+<p><strong>不要纠结每种模式的具体实现，把它们抽象出来，你能够清楚的描述每种模式是为了解决什么问题而存在的时候，就已经掌握它了，就可以把它用在任何当你需要的时候。而不是问什么时候需要它，这可能有点绕，不过它是真的。不要问我设计模式可以解决哪些问题，把问题给我，我告诉你用什么设计模式可以解决它！</strong></p>
+<p><em>我发现我更适合写一些畅谈型的文章🤣</em></p>
+<h1 id="代理模式-👥"><a href="#代理模式-👥" class="headerlink" title="代理模式 👥"></a>代理模式 👥</h1><blockquote>
+<p>为某对象提供一种代理以控制对该<strong>对象的访问</strong>。即客户端通过代理间接地访问该对象，从而限制、增强或修改该对象的一些特性。</p>
+</blockquote>
+<p>代理模式是为了解决<strong>对象的访问控制</strong>，特别是当你的目标对象不可改变的时候。效果更佳明显。</p>
+<p>先来几段对话，简单感受一下这个“代理”</p>
+<ul>
+<li>“这 google 好慢啊，搞个代理”</li>
+<li>“您好，请问明年3月-12月有档期吗？” ”和我经纪人联系“</li>
+<li>“我要告你” “好啊，有什么问题跟我的律师说吧”</li>
+<li>“哦？是海大富海公公” “这是皇上口谕” “啊？（急忙下跪）“</li>
+<li>“您好，这里是 12345 市长热线”</li>
+</ul>
+<p><strong>“控制一个实际的对象访问，同时可以达到一定的目的”</strong></p>
+<h2 id="生活中的比喻"><a href="#生活中的比喻" class="headerlink" title="生活中的比喻"></a>生活中的比喻</h2><p>希望可以用生活中的一些例子能让我更好的去表达和梳理代理模式</p>
+<h3 id="明星-amp-经纪人"><a href="#明星-amp-经纪人" class="headerlink" title="明星&amp;经纪人"></a>明星&amp;经纪人</h3><p>比如经纪人，他代理了明星（主体），负责主体功能以外的事情，主体可以进行商演，但在商演以前或以后的事情，都不需要主体去关系，全部都由经纪人去处理。</p>
+<h3 id="公园门-amp-门禁"><a href="#公园门-amp-门禁" class="headerlink" title="公园门&amp;门禁"></a>公园门&amp;门禁</h3><p>一个公园的门禁，通过门禁系统，代理了公园的入口，公园入口只负责放人进入公园，不关心什么时候什么情况，来人就表示可以进入。门禁系统则负责什么时候，什么情况可以进。</p>
+<p>通过使用代理模式，可以让我们的业务代码结构更加完整清晰，而将一些控制和辅助型的逻辑处理交给代理类，这其中体现的就是单一职责原则与迪米特法则。</p>
+<p>上面的两个例子，我所想要表达的意思就是说明代理模式是为了<strong>控制一个实际对象的访问</strong>而存在的一种模式。不知道我说清了没有。</p>
+<h2 id="程序中的例子"><a href="#程序中的例子" class="headerlink" title="程序中的例子"></a>程序中的例子</h2><h3 id="mybats-的数据访问接口"><a href="#mybats-的数据访问接口" class="headerlink" title="mybats 的数据访问接口"></a>mybats 的数据访问接口</h3><p>在代理模式中我们最常用到的应该就是 ORM 框架中的应用了，我们熟知的 mybatis 对<strong>数据库的访问控制</strong>就是使用了代理模式，通过一个接口的定义，来代理了数据库的访问操作。</p>
+<p>在 mybatis 的代理模式处理思想如果翻译成白话：”你将你要执行的 SQL 告诉我在哪（mapper 映射，statement space），语句写好（xml）剩下的你都不用管“，这里的 mapper 接口即代理了数据库的访问工作。</p>
+<p><strong>甚至 #{} ${} 占位符，也是一种代理模式的体现，不一定非要有完整的接口，具体的实现类，代理类才是代理模式。</strong>可能这理解起来会让你觉得有点强词夺理。</p>
+<h2 id="代理模式类图-📌"><a href="#代理模式类图-📌" class="headerlink" title="代理模式类图 📌"></a>代理模式类图 📌</h2><p><img src="https://i.loli.net/2020/10/22/ziGBmy81YFw7kts.png" alt="prxy-UML"></p>
+<h2 id="代码-📄"><a href="#代码-📄" class="headerlink" title="代码 📄"></a>代码 📄</h2><blockquote>
+<p>完整代码获取关注公众号：星尘的一个朋友 回复 “源码”</p>
+</blockquote>
+<p>为了在深入的理解一下代理模式，我选择使用 mybatis 的代理模式实现原理伪代码。以及挖掘一下JDK动态代理的一些细节内容，当然我不会去写源码的东西（毕竟道理大家都懂，不可能凭空 new 出来一个接口的实例，这当中定有蹊跷，我相信你在任何一篇博文中都能看到这部分内容，当然也欢迎加我微信（lvgocc）进群讨论）</p>
+<p><strong>mybatis的核心代理模式伪代码</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 用户接口</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/21 22:51</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">UserMapper</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 查询</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> id 用户id</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">selectByUserId</span><span class="hljs-params">(<span class="hljs-keyword">int</span> id)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">UserMapper o = (UserMapper) Proxy.newProxyInstance(<br>        UserMapper.class.getClassLoader(),<br>        <span class="hljs-keyword">new</span> Class[]&#123;UserMapper.class&#125;,<br>        (proxy, method, arg) -&gt; &#123;<br>            <span class="hljs-comment">// 这里会执行具体的连接数据库执行 SQL 的操作 感兴趣可以查看 mybatis 源码继续了解。</span><br>            <br>            <span class="hljs-comment">// 打印参数</span><br>             logger.info(<span class="hljs-string">&quot;statement position: &#123;&#125;, args: &#123;&#125;&quot;</span>, method.getDeclaringClass().getCanonicalName() + <span class="hljs-string">&quot;#&quot;</span> + method.getName(), Arrays.toString(arg));<br>             <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;用户id：&quot;</span> + arg[<span class="hljs-number">0</span>] + <span class="hljs-string">&quot;公众号：星尘的一个朋友，加群一起学习设计模式&quot;</span>;<br>        &#125;);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs reStructuredText">14:25:43.966 [main] INFO io.github.lvgocc.App - Hello World!<br>14:25:44.251 [main] INFO io.github.lvgocc.App - statement position: io.github.lvgocc.proxy.UserMapper#selectByUserId, args: [2333]<br>14:25:44.258 [main] INFO io.github.lvgocc.App - 查询结果：用户id：2333公众号：星尘的一个朋友，加群一起学习设计模式<br></code></pre></td></tr></table></figure>
+
+<p>mybatis 使用动态代理，让一个接口去代理了真实的数据库对象，当你需要的时候，再去建立连接、访问数据库、执行SQL、返回结果。如果之前有了解过 mybatis 的代理模式，这里应该不难理解。</p>
+<p><strong>下面再看一个简单的例子，当然用图说明可能会更容易</strong></p>
+<p><img src="https://i.loli.net/2020/10/22/MpN1wxuCjrBH96t.png" alt="大洋彼岸的服务器"></p>
+<blockquote>
+<p>请忽略图中示意具体内容，只是借图表达代理的意义，控制对象的访问。</p>
+</blockquote>
+<h2 id="总结一下-🐱‍💻"><a href="#总结一下-🐱‍💻" class="headerlink" title="总结一下 🐱‍💻"></a>总结一下 🐱‍💻</h2><p>代理模式为了解决对象的访问控制而存在。</p>
+<ul>
+<li>当你想要抢一张<code>回家的车票</code>，你选择了<code>候补</code>，他选择了<code>加速</code>.此时 12306 或是 第三方 成了你的购票代理人。</li>
+<li>当你来到一个<code>陌生的小区</code>，需要刷<code>门禁</code>卡才能进入。此时<code>门禁</code>成了<code>小区</code>的代理。</li>
+</ul>
+<p>通过上面的总结，我知道</p>
+<ol>
+<li>当我选择了候补，我和购票<strong>解耦了</strong>✔，不需要等它的结果，等通知就行。但中间多了一个候补，<strong>链路更长</strong>❌了。</li>
+<li>我进门要刷卡，<strong>维护的对象多了</strong>❌，虽然<strong>系统变得复杂</strong>❌了，但小区<strong>更安全</strong>✔了，保护了小区。</li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-build.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（五）创建型之建造者模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/example.html">
+        
+          《1024，程序人生，这个属于我们的特殊日子》
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'd1f106a89ac3aad5972342fc24c3f5c1',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E2%81%89%E2%9D%94"><span class="toc-nav-text">设计模式的学习问题⁉❔</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F-%F0%9F%91%A5"><span class="toc-nav-text">代理模式 👥</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%94%9F%E6%B4%BB%E4%B8%AD%E7%9A%84%E6%AF%94%E5%96%BB"><span class="toc-nav-text">生活中的比喻</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%98%8E%E6%98%9F-amp-%E7%BB%8F%E7%BA%AA%E4%BA%BA"><span class="toc-nav-text">明星&amp;经纪人</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%AC%E5%9B%AD%E9%97%A8-amp-%E9%97%A8%E7%A6%81"><span class="toc-nav-text">公园门&amp;门禁</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-nav-text">程序中的例子</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mybats-%E7%9A%84%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3"><span class="toc-nav-text">mybats 的数据访问接口</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">代理模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%84"><span class="toc-nav-text">代码 📄</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B-%F0%9F%90%B1%E2%80%8D%F0%9F%92%BB"><span class="toc-nav-text">总结一下 🐱‍💻</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-proxy.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

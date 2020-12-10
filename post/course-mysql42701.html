@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      MySQL的疑难问题解决 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>MySQL的疑难问题解决</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-07-04</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#MySQL" >
+    <span class="tag-code">MySQL</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h4 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h4><ol>
+<li>ubuntu 16.04</li>
+<li>mysql-server-5.7</li>
+</ol>
+<hr>
+<a id="more"></a>
+
+<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update</span><br>apt-<span class="hljs-keyword">get</span> installl mysql-<span class="hljs-keyword">server</span><span class="hljs-number">-5.7</span><br></code></pre></td></tr></table></figure>
+
+
+<p>对于出现的提示选择 y 就好 ，然后输入root密码。安装完成</p>
+<hr>
+<h4 id="操作使用"><a href="#操作使用" class="headerlink" title="操作使用"></a>操作使用</h4><ol>
+<li>远程连接mysql<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">mysql -h<span class="hljs-built_in"> IP </span>-P<span class="hljs-built_in"> port </span>-u root -p<br><br>mysql -h 127.0.0.1 -P 3306 -u root<br></code></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<blockquote>
+<p>以下内容为转载</p>
+</blockquote>
+<p>1.<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xujishou/p/6306765.html%EF%BC%88MySQL5.7">https://www.cnblogs.com/xujishou/p/6306765.html（MySQL5.7</a> 添加用户、删除用户与授权）<br>2.<a target="_blank" rel="noopener" href="https://www.cnblogs.com/SQL888/p/5748824.html%EF%BC%88mysql">https://www.cnblogs.com/SQL888/p/5748824.html（mysql</a> 用户及权限管理 小结）</p>
+<hr>
+<h4 id="疑难问题解决-（后续更新）"><a href="#疑难问题解决-（后续更新）" class="headerlink" title="疑难问题解决 （后续更新）"></a>疑难问题解决 （后续更新）</h4><p>###一、ERROR 1045 (28000): Access denied for user ‘root’@’localhost’ (using password: NO)</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">复现<br>root@itlvgo:~# mysql<br><span class="hljs-builtin-name">ERROR</span> 1045 (28000): Access denied <span class="hljs-keyword">for</span><span class="hljs-built_in"> user </span><span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> (using password: <span class="hljs-literal">NO</span>)<br>root@itlvgo:~# mysql -uroot<br><span class="hljs-builtin-name">ERROR</span> 1045 (28000): Access denied <span class="hljs-keyword">for</span><span class="hljs-built_in"> user </span><span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> (using password: <span class="hljs-literal">NO</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/posts/course-mysql42701/20180704102409229.png" alt="lvgo star dust"></p>
+<p><strong>恩。原因是因为需要输入输入密码的命令，少输入了一个-p using password：NO 正确操作如下</strong></p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">root@itlvgo:~# mysql -uroot -p<br>Enter password: <br>Welcome <span class="hljs-keyword">to</span> the MySQL monitor.  Commands end with ; <span class="hljs-keyword">or</span> \g.<br>Your MySQL<span class="hljs-built_in"> connection </span>id is 14<br>Server version: 5.7.22-0ubuntu0.16.04.1 (Ubuntu)<br><br>Copyright (c) 2000, 2018, Oracle <span class="hljs-keyword">and</span>/<span class="hljs-keyword">or</span> its affiliates. All rights reserved.<br><br>Oracle is a registered trademark of Oracle Corporation <span class="hljs-keyword">and</span>/<span class="hljs-keyword">or</span> its<br>affiliates. Other names may be trademarks of their respective<br>owners.<br><br>Type <span class="hljs-string">&#x27;help;&#x27;</span> <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;\h&#x27;</span> <span class="hljs-keyword">for</span> help.<span class="hljs-built_in"> Type </span><span class="hljs-string">&#x27;\c&#x27;</span> <span class="hljs-keyword">to</span> clear the current input statement.<br><br>mysql&gt; <br><br></code></pre></td></tr></table></figure>
+
+<p>###二、配置用户无法外网访问（本地可以）</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><code class="hljs angelscript">/etc/mysql/mysql.conf.d<br><br>配置如下信息<br>port=<span class="hljs-number">3306</span><br><br><span class="hljs-comment">// 原来的注释掉，默认127.0.0.1</span><br>bind-address=<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br></code></pre></td></tr></table></figure>
+<p>如果还不可以，进行下面的检查操作</p>
+<ol>
+<li>检查一下是否有开启防火墙；（云服务器的安全组配置）</li>
+<li>如果开启不想关闭，需要开放mysql的占用端口，默认3306；</li>
+<li>关闭防火墙。。<br>###三、无法存储中文<br>修改mysql配置文件<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">cd</span> /etc/mysql<br><span class="hljs-keyword">vi</span> my.<span class="hljs-keyword">cnf</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[client]</span><br><span class="hljs-attr">default-character-set</span>=utf8<br><span class="hljs-section">[mysqld]</span><br><span class="hljs-attr">character-set-server</span>=utf8<br></code></pre></td></tr></table></figure>
+重起mysql即可<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">sudo <span class="hljs-regexp">/etc/i</span>nit.d/mysql restart<br></code></pre></td></tr></table></figure>
+</li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#MySQL" >
+    <span class="tag-code">MySQL</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/algorithm-choose-sort-1.html">
+        <span class="nav-arrow">← </span>
+        
+          算法学习笔记（三）《选择排序》
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/node-LAN-deploy-vue.html">
+        
+          node.js 部署的 vue 项目怎么在局域网访问
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '4a97eede270e91fa4d4ae02e543fe61b',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-nav-text">前置条件</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="toc-nav-text">安装步骤</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%93%8D%E4%BD%9C%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">操作使用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3-%EF%BC%88%E5%90%8E%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89"><span class="toc-nav-text">疑难问题解决 （后续更新）</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/course-mysql42701.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

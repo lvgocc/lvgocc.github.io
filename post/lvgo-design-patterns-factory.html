@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（二）创建型之工厂模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（二）创建型之工厂模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-10-13</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="工厂模式-🏗"><a href="#工厂模式-🏗" class="headerlink" title="工厂模式 🏗"></a>工厂模式 🏗</h1><blockquote>
+<p>定义一个用于创建产品的接口，由子类决定生产什么产品。</p>
+</blockquote>
+<p>大家可能都知道工厂模式，可真正理解应用的又有多少呢？此文本着能让大家彻底了解和何时适合使用工厂模式的原则来书写，希望能对你有所帮助，点个关注，一起开启新的思维来学习设计模式。</p>
+<h2 id="概念-👀"><a href="#概念-👀" class="headerlink" title="概念 👀"></a>概念 👀</h2><p>　　首先我们要知道的是，工厂模式是**<u>创建型</u><strong>设计模式分类下的一种，用来创建对象时选择使用。而还有一种看似功能一样，但实际的实现却大相径庭的方式叫做 <em>简单工厂模式或（静态工厂模式）</em>。要注意这两者区别。即使他们完成的工作都是 <u>**创建对象</strong></u></p>
+<ul>
+<li>简单工厂模式（静态工厂模式）：通过一个工厂类完成所有对象的创建工作；</li>
+<li>工厂方法模式：如引用说明 <strong>定义一个用于创建产品的接口，由子类决定生产什么产品</strong>；</li>
+</ul>
+<h2 id="简单工厂模式-😉"><a href="#简单工厂模式-😉" class="headerlink" title="简单工厂模式 😉"></a>简单工厂模式 😉</h2><p>　　让我们先来看一下简单工厂模式，这个模式‘人如其名’，非常简单。</p>
+<h3 id="类图-🖌"><a href="#类图-🖌" class="headerlink" title="类图 🖌"></a>类图 🖌</h3><p><img src="https://i.loli.net/2020/10/13/RbNwGdVjuQAnkY9.png" alt="通过 idea UML 工具构建"></p>
+<h3 id="具体代码-📄"><a href="#具体代码-📄" class="headerlink" title="具体代码 📄"></a>具体代码 📄</h3><blockquote>
+<p>完整代码及单元测试结果 <a target="_blank" rel="noopener" href="https://github.com/lvgocc/java-design-patterns/tree/main/factory">https://github.com/lvgocc/java-design-patterns/tree/main/factory</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 抽象图形类</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 21:33</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AbstractGraphical</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getClass().getSimpleName();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 圆形</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 21:55</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Circular</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractGraphical</span> </span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 矩形</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 22:10</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Rectangle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractGraphical</span> </span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 三角形</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 22:10</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Triangle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractGraphical</span> </span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 图形工厂</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 22:05</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GraphicalFactory</span> </span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CIRCULAR = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> RECTANGLE = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> TRIANGLE = <span class="hljs-number">2</span>;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> AbstractGraphical <span class="hljs-title">create</span><span class="hljs-params">(<span class="hljs-keyword">int</span> type)</span> </span>&#123;<br>        <span class="hljs-keyword">switch</span> (type) &#123;<br>            <span class="hljs-keyword">case</span> CIRCULAR:<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Circular();<br>            <span class="hljs-keyword">case</span> RECTANGLE:<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Rectangle();<br>            <span class="hljs-keyword">case</span> TRIANGLE:<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Triangle();<br>            <span class="hljs-keyword">default</span>:<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">&quot;please check param， range 0 - 2&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用时机"><a href="#使用时机" class="headerlink" title="使用时机"></a>使用时机</h3><p>　　当我们所要创建的<u>对象个数较少</u>，<u>创建过程较复杂</u>，<u>使用较频繁</u> 可以通过简单工厂模式将创建对象的过程封装起来，这样可以提高代码可读性，业务代码更专注于业务本身（当然案例代码中没有模拟构建复杂对象的情景）同时为了便于使用，将方法定义为静态。故也称之为静态工厂模式。</p>
+<p>　　❗这里在强调一下，同时解释一下使用时机</p>
+<ol>
+<li>对象个数少：指的是需要通过这种方式创建的对象个数，通常为不变个数。因为如果对象个数迭代频繁，个数较多，在这种方法的维护上会出现一个很大的问题，即每新增加一个 class （一种图形，比如在增加一个正方形）就要调整一次 GraphicalFactory 类的代码。同样，即违反了开闭原则。</li>
+<li>创建过程较复杂：通过反向推理可知，如果创建对象过程不复杂，我选择直接 new。</li>
+<li>使用较频繁：同上可得，如果使用不频繁，我选择直接 new。不会考虑相对较复杂的设计模式。</li>
+</ol>
+<h2 id="工厂方法模式-😊"><a href="#工厂方法模式-😊" class="headerlink" title="工厂方法模式 😊"></a>工厂方法模式 😊</h2><p>　　当我们将上面的简单工厂模式中的创建图形的方法抽象出来，将创建的过程延迟到子类中。满足了开闭原则的时候，那这就是工厂方法模式了。</p>
+<p>　　<strong>工厂方法模式怎么理解呢，顾名思义，通过工厂的方法来创建对象，每个对象都由一个工厂来创建，怎么创建这个工厂说了算</strong>。理解工厂方法模式对后面的抽象工厂理解可以说是“很精彩”</p>
+<h3 id="类图-🖌-1"><a href="#类图-🖌-1" class="headerlink" title="类图 🖌"></a>类图 🖌</h3><p><strong>工厂方法模式</strong>的类图</p>
+<p><img src="https://i.loli.net/2020/10/13/jdoIiGvwtP2JCFY.png"></p>
+<p><strong>简单工厂模式</strong>的类图</p>
+<p><img src="https://i.loli.net/2020/10/13/RbNwGdVjuQAnkY9.png" alt="通过 idea UML 工具构建"></p>
+<p>通过类图的比较我们发现。简单工厂的工厂类抽象成了一个抽象工厂，而工厂方法模式中多了3个工厂。这就是工厂模式的定义诠释 </p>
+<blockquote>
+<p><strong>定义一个用于创建产品的接口，由子类决定生产什么产品</strong></p>
+</blockquote>
+<h3 id="具体代码-📄-1"><a href="#具体代码-📄-1" class="headerlink" title="具体代码 📄"></a>具体代码 📄</h3><blockquote>
+<p>避免篇幅过长，完整代码及单元测试结果点击查看 <a target="_blank" rel="noopener" href="https://github.com/lvgocc/java-design-patterns/tree/main/factory">https://github.com/lvgocc/java-design-patterns/tree/main/factory</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 图形类接口</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 21:33</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Graphical</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 图形描述</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">description</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 圆形</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 21:55</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Circular</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Graphical</span> </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">description</span><span class="hljs-params">()</span> </span>&#123;<br>        LOGGER.info(<span class="hljs-string">&quot;circular&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 抽象工厂</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 23:16</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AbstractGraphicalFactory</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建一个图形</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 具体图形</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> Graphical <span class="hljs-title">creat</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 圆形工厂</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgorice@gmail.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2020/10/8 23:27</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CircularFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractGraphicalFactory</span> </span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将创建复杂的圆形过程封装到工厂里。</span><br><span class="hljs-comment">     * 1. 选定圆形位置；</span><br><span class="hljs-comment">     * 2. 指定圆形半径；</span><br><span class="hljs-comment">     * 3. 设置绘制图形所用的画笔；</span><br><span class="hljs-comment">     * 4. 选择图形的颜色；</span><br><span class="hljs-comment">     * 5. 。。。。。</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 一个复杂的圆形</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Graphical <span class="hljs-title">creat</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Circular();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用时机-1"><a href="#使用时机-1" class="headerlink" title="使用时机"></a>使用时机</h3><p>　　其实这里我们通过与上面的简单工厂模式比较就可以看出，工厂方法模式适合在<u><strong>对象可能存在新增的情况，而且数量不定。创建对象过程复杂，使用频繁</strong></u>的场景。</p>
+<h3 id="JDK中的工厂设计模式示例"><a href="#JDK中的工厂设计模式示例" class="headerlink" title="JDK中的工厂设计模式示例"></a>JDK中的工厂设计模式示例</h3><blockquote>
+<p>案例来源：<a target="_blank" rel="noopener" href="https://www.journaldev.com/1392/factory-design-pattern-in-java">https://www.journaldev.com/1392/factory-design-pattern-in-java</a></p>
+</blockquote>
+<ol>
+<li>java.util.Calendar，ResourceBundle和NumberFormat<code>getInstance()</code>方法使用Factory模式。</li>
+<li><code>valueOf()</code> 包装器类（例如Boolean，Integer等）中的方法。</li>
+</ol>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>　　当我们所要创建的<u>对象个数较少且不会在新增</u>，<u>创建过程较复杂</u>，<u>使用较频繁</u> 可以通过简单工厂模式将创建对象。如不满足以上 3 种情况，建议直接 new。</p>
+<p>　　<strong>当我们所需要创建的对象使用频繁，创建过程较复杂，可能增加对象个数时，这无疑选择使用工厂方法模式。</strong></p>
+<p>当我们试图用上面的3个原则去选择使用工厂模式的时候应该要思考几个问题。如</p>
+<ol>
+<li><p>对象个数很少，创建不复杂。（new 关键字）</p>
+</li>
+<li><p>创建过程虽然复杂，但是很少使用。（建造者模式）</p>
+</li>
+<li><p>使用虽然很频繁，但只有1个对象就满足了需要。（单例模式）</p>
+</li>
+</ol>
+<p>等等诸如以上对象与使用使机的权衡都需要我们自己去仔细的设计和衡量，设计模式只提供了一种思想，你可以将一些思想整合使用，也可以使用一个方法来解决你的所有问题。</p>
+<p>以上的几个问题，分别可以考虑单例模式和后面要讲到的建造者模式来实现，并不一定非要用工厂模式，活学活用才是我们的宗旨。</p>
+<blockquote>
+<p><em>千万不要搞骚操作，为了用设计模式而用，否则岂不是 new 个 String 对象也要工厂来创建？😢</em></p>
+</blockquote>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-singleton.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（一）创建型之单例模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-abstract-factory.html">
+        
+          和 lvgo 一起学设计模式（三）创建型之抽象工厂模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '9f8a0e68116784a92698f8df4649de0b',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%F0%9F%8F%97"><span class="toc-nav-text">工厂模式 🏗</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A6%82%E5%BF%B5-%F0%9F%91%80"><span class="toc-nav-text">概念 👀</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%F0%9F%98%89"><span class="toc-nav-text">简单工厂模式 😉</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%B1%BB%E5%9B%BE-%F0%9F%96%8C"><span class="toc-nav-text">类图 🖌</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B7%E4%BD%93%E4%BB%A3%E7%A0%81-%F0%9F%93%84"><span class="toc-nav-text">具体代码 📄</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="toc-nav-text">使用时机</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F-%F0%9F%98%8A"><span class="toc-nav-text">工厂方法模式 😊</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%B1%BB%E5%9B%BE-%F0%9F%96%8C-1"><span class="toc-nav-text">类图 🖌</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B7%E4%BD%93%E4%BB%A3%E7%A0%81-%F0%9F%93%84-1"><span class="toc-nav-text">具体代码 📄</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E6%9C%BA-1"><span class="toc-nav-text">使用时机</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#JDK%E4%B8%AD%E7%9A%84%E5%B7%A5%E5%8E%82%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%A4%BA%E4%BE%8B"><span class="toc-nav-text">JDK中的工厂设计模式示例</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-factory.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

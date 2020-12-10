@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（四）创建型之原型模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（四）创建型之原型模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-10-17</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/10/17/q62IGUFY1xmdbw4.png" alt="clone-wordpress"></p>
+<h1 id="原型模式-🎭"><a href="#原型模式-🎭" class="headerlink" title="原型模式 🎭"></a>原型模式 🎭</h1><blockquote>
+<p>用一个已经创建的实例作为原型，通过复制该原型对象来创建一个和原型相同或相似的新对象。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/10/16/waBiVhAvyOptTE3.png" alt="来源：https://refactoringguru.cn/design-patterns/prototype"></p>
+<blockquote>
+<p>图片来源：<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/prototype">https://refactoringguru.cn/design-patterns/prototype</a></p>
+</blockquote>
+<h2 id="简单理解"><a href="#简单理解" class="headerlink" title="简单理解"></a>简单理解</h2><p>每年中秋节的时候，大家都会吃到自己心仪口味的样式各异的月饼，但是他是怎么生产出来的呢，我猜它应该是有一个模板，比如花边图案的月饼</p>
+<p><img src="https://i.loli.net/2020/10/16/Lm9cNiTsrtSRMdl.jpg" alt="月饼模板原型"></p>
+<p>他会创造出来一个月饼原型，当你想吃五仁的时候，就把里面的馅改成五仁的，当你想吃蛋黄的（自己准备鸡蛋），就把馅改成蛋黄的，这样做不仅提高了生产效率，而且还节省了一部分再创建一个月饼的时间。</p>
+<p>==再比如说可恶的盗图、盗文章、盗视频的人，他们把原创内容拿回去改个名字，去掉水印，随便改改内容，就成了自己的了！？==</p>
+<p><img src="https://i.loli.net/2020/10/17/koZI5pEbB8hmJHl.png" alt="clone-wordpress1"></p>
+<p>上面说的两个案例的行为都是在节省了创建时间，同时达到了自己的一些目的。而这在设计模式中，就叫做<strong>原型模式</strong>，为了解决一个对象的创建而出现的一种设计模式，归类在了创建型模式中。</p>
+<blockquote>
+<p>注意：在行为型模式中有着与之类似的一种模式——模版方法模式，是为了制定解决一件事情中的一系列操作约束而存在的一种模式，二者的区别在于，原型模式用于对象创建，模板方法模式用于事件行为约束。</p>
+</blockquote>
+<h2 id="原型模式类图-📌"><a href="#原型模式类图-📌" class="headerlink" title="原型模式类图 📌"></a>原型模式类图 📌</h2><p><img src="https://i.loli.net/2020/10/16/Ct5bJAgkDiTcWsy.png" alt="prototype-UML"></p>
+<h2 id="来看代码-📃"><a href="#来看代码-📃" class="headerlink" title="来看代码 📃"></a>来看代码 📃</h2><blockquote>
+<p>完整代码及单元测试结果点击查看 <a target="_blank" rel="noopener" href="https://github.com/lvgocc/java-design-patterns/tree/main/prototype">https://github.com/lvgocc/java-design-patterns/tree/main/prototype</a></p>
+</blockquote>
+<p>java 的 JDK 中，提供一个标识接口 Cloneable ，我们将需要定义成原型的类实现这个接口就可以完成复制了。</p>
+<p><strong>通过 cloneable 接口实现原型模式</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Graphics</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Cloneable</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> String color;<br>    <span class="hljs-keyword">private</span> String shape;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Graphics</span><span class="hljs-params">(String color, String shape)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.color = color;<br>        <span class="hljs-keyword">this</span>.shape = shape;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> Graphics <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>        <span class="hljs-keyword">return</span> (Graphics) <span class="hljs-keyword">super</span>.clone();<br>    &#125;<br>    <br>    ..... set/get/toString<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在上面的例子中，类中的对象类型都是基本类型，如果出现引用类型的时候，就会引发一个问题“浅克隆”，这会导致我们克隆出来的类会受原型中引用的类型影响，那我们如何才能规避这个问题做到“深克隆”呢​？</p>
+<h2 id="浅克隆？🎭-深克隆？🎎"><a href="#浅克隆？🎭-深克隆？🎎" class="headerlink" title="浅克隆？🎭 深克隆？🎎"></a>浅克隆？🎭 深克隆？🎎</h2><p>浅、深指的是对对象的占有权利。比如我借给你一个手机，那你只能使用这个手机里现有的东西，我如果删除了一个软件，那你自然也就没有这个软件了。假如我送给你一个手机，那你就可以随便的使用，不用担心我会做什么了，因为这个手机就是你的了。</p>
+<p>那在 java 代码中，我们怎么理解浅克隆🎭 、深克隆🎎 呢？</p>
+<p>实现了 cloneable 接口，可以克隆一个区别于当前对象的另外一个新的对象，但对于对象中的引用，却不能进行克隆，你随得到了他的人，但你却得不到他的心，如果想要得到他的心怎么办？拿钱砸他！非也，你只要把他的心也克隆一份就可以了。但是前提是他的心允许克隆（实现了 cloneable 接口）。</p>
+<h3 id="浅克隆代码"><a href="#浅克隆代码" class="headerlink" title="浅克隆代码"></a>浅克隆代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Graphics</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Cloneable</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> String color;<br>    <span class="hljs-keyword">private</span> String shape;<br>    <span class="hljs-comment">// 引用类型没有实现 cloneable 接口</span><br>    <span class="hljs-keyword">private</span> Size size;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Graphics</span><span class="hljs-params">(String color, String shape, Size size)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.color = color;<br>        <span class="hljs-keyword">this</span>.shape = shape;<br>        <span class="hljs-keyword">this</span>.size = size;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> Graphics <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>        <span class="hljs-keyword">return</span> (Graphics) <span class="hljs-keyword">super</span>.clone();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 引用类型没有实现 cloneable 接口</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Size</span> </span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> width;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> height;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Size</span><span class="hljs-params">(<span class="hljs-keyword">int</span> width, <span class="hljs-keyword">int</span> height)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.width = width;<br>        <span class="hljs-keyword">this</span>.height = height;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Size(&quot;</span> + width + <span class="hljs-string">&quot;, &quot;</span> + height + <span class="hljs-string">&quot;)&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GraphicsTest</span> </span>&#123;<br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">graphicsTest</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>        Size size = <span class="hljs-keyword">new</span> Size(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);<br>        Graphics graphics = <span class="hljs-keyword">new</span> Graphics(<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;circular&quot;</span>, size);<br>        Graphics clone = graphics.clone();<br>        size.height = <span class="hljs-number">3</span>;<br>        size.width = <span class="hljs-number">5</span>;<br>        System.out.println(<span class="hljs-string">&quot;graphics = &quot;</span> + graphics);<br>        <span class="hljs-comment">// 判断两个对象是否不同</span><br>        Assertions.assertNotSame(graphics, clone);<br>        clone.setColor(<span class="hljs-string">&quot;blue&quot;</span>);<br>        clone.setShape(<span class="hljs-string">&quot;square&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;clone = &quot;</span> + clone);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意此时的引用对象 size 的值</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">graphics = Graphics[color=&#x27;red&#x27;, shape=&#x27;circular&#x27;, size=Size(5, 3)]<br>clone = Graphics[color=&#x27;blue&#x27;, shape=&#x27;square&#x27;, size=Size(5, 3)]<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="深克隆：引用类型也实现-Cloneable-接口"><a href="#深克隆：引用类型也实现-Cloneable-接口" class="headerlink" title="深克隆：引用类型也实现 Cloneable 接口"></a>深克隆：引用类型也实现 Cloneable 接口</h3><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 引用类型实现了 cloneable 接口</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Size</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Cloneable</span> </span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> width;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> height;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Size</span><span class="hljs-params">(<span class="hljs-keyword">int</span> width, <span class="hljs-keyword">int</span> height)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.width = width;<br>        <span class="hljs-keyword">this</span>.height = height;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> Size <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>        <span class="hljs-keyword">return</span> (Size) <span class="hljs-keyword">super</span>.clone();<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Size(&quot;</span> + width + <span class="hljs-string">&quot;, &quot;</span> + height + <span class="hljs-string">&quot;)&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在原型类中调整 clone 方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">protected</span> Graphics <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>    Graphics clone = (Graphics) <span class="hljs-keyword">super</span>.clone();<br>    clone.size = size.clone();<br>    <span class="hljs-keyword">return</span> clone;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GraphicsTest</span> </span>&#123;<br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">graphicsTest</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;<br>        Size size = <span class="hljs-keyword">new</span> Size(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);<br>        Graphics graphics = <span class="hljs-keyword">new</span> Graphics(<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;circular&quot;</span>, size);<br>        Graphics clone = graphics.clone();<br>        size.height = <span class="hljs-number">3</span>;<br>        size.width = <span class="hljs-number">5</span>;<br>        System.out.println(<span class="hljs-string">&quot;graphics = &quot;</span> + graphics);<br>        <span class="hljs-comment">// 判断两个对象是否不同</span><br>        Assertions.assertNotSame(graphics, clone);<br>        clone.setColor(<span class="hljs-string">&quot;blue&quot;</span>);<br>        clone.setShape(<span class="hljs-string">&quot;square&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;clone = &quot;</span> + clone);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意此时的引用对象 size 的值</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><code class="hljs text">graphics = Graphics[color=&#x27;red&#x27;, shape=&#x27;circular&#x27;, size=Size(5, 3)]<br>clone = Graphics[color=&#x27;blue&#x27;, shape=&#x27;square&#x27;, size=Size(1, 2)]<br></code></pre></td></tr></table></figure>
+
+<p>完整代码  <a target="_blank" rel="noopener" href="https://github.com/lvgocc/java-design-patterns/tree/main/prototype">https://github.com/lvgocc/java-design-patterns/tree/main/prototype</a></p>
+<h2 id="原型模式自身有什么优势和问题呢？"><a href="#原型模式自身有什么优势和问题呢？" class="headerlink" title="原型模式自身有什么优势和问题呢？"></a>原型模式自身有什么优势和问题呢？</h2><p><strong>优势：</strong></p>
+<ol>
+<li>JDK 的 cloneable 接口是基于内存数据的直接复制，速度相较于 new 关键字创建对象更加快速；同时简化了创建过程（不会执行构造方法）。</li>
+<li>通过<strong>深克隆</strong>来保存一个对象某一时刻的状态，便于还原，实现撤销操作；</li>
+</ol>
+<p>问题：</p>
+<ol>
+<li>需要为每个类重写 #clone 方法；</li>
+<li>深克隆需要将每个对象都维护一个 cloneable 接口；</li>
+<li>构造方法中的代码不会执行；</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>当我们需要频繁使用一些类似的对象的时候，可以考虑使用原型模式来降低资源的开销，使资源得到合理的分配和使用。而对于原型模式的深克隆带来的弊端，就显得那么的不重要了。</p>
+<ol>
+<li>类似的对象使用频繁，考虑原型模式</li>
+<li>深克隆时注意类中的引用类型是否实现了 cloneable 接口</li>
+<li>注意构造函数中是否有必要代码要执行，可以考虑放到 #clone 方法中执行</li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-abstract-factory.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（三）创建型之抽象工厂模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-build.html">
+        
+          和 lvgo 一起学设计模式（五）创建型之建造者模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '07f5aff84cae7260474145741a8db80c',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F-%F0%9F%8E%AD"><span class="toc-nav-text">原型模式 🎭</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3"><span class="toc-nav-text">简单理解</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">原型模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%9D%A5%E7%9C%8B%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">来看代码 📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B5%85%E5%85%8B%E9%9A%86%EF%BC%9F%F0%9F%8E%AD-%E6%B7%B1%E5%85%8B%E9%9A%86%EF%BC%9F%F0%9F%8E%8E"><span class="toc-nav-text">浅克隆？🎭 深克隆？🎎</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B5%85%E5%85%8B%E9%9A%86%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">浅克隆代码</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B7%B1%E5%85%8B%E9%9A%86%EF%BC%9A%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E4%B9%9F%E5%AE%9E%E7%8E%B0-Cloneable-%E6%8E%A5%E5%8F%A3"><span class="toc-nav-text">深克隆：引用类型也实现 Cloneable 接口</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F%E8%87%AA%E8%BA%AB%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E5%8A%BF%E5%92%8C%E9%97%AE%E9%A2%98%E5%91%A2%EF%BC%9F"><span class="toc-nav-text">原型模式自身有什么优势和问题呢？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-prototype.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

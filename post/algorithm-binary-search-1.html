@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      算法学习笔记（二）《二分查找》 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>算法学习笔记（二）《二分查找》</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-05-20</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#算法" >
+    <span class="tag-code">算法</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><blockquote>
+<p>本文学习内容来自《算法图解》一书及百度百科内容</p>
+</blockquote>
+<p>算法是一组完成任务的指令。任何代码片段都可视为算法。  —— 摘自《算法图解》</p>
+<hr>
+<h2 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE">以下内容摘自百度百科</a><br>二分查找也称折半查找（Binary Search），它是一种效率较高的查找方法。但是，折半查找要求线性表必须采用顺序存储结构，而且表中元素按关键字有序排列。</p>
+</blockquote>
+<h3 id="问题思考"><a href="#问题思考" class="headerlink" title="问题思考"></a>问题思考</h3><ol>
+<li>还记得我们上学的时候，假如你想要去词典中找“算法”是什么意思，我们会怎么做？</li>
+<li>上课的时候，老师叫我们把书翻到146页的时候，你是怎么翻到的呢？</li>
+<li>我们以前和同学一起玩过的猜数字游戏还记得怎么玩的了吗？</li>
+</ol>
+<p>当我们去思考上面问题，我们是不是这样可以通过地毯式的搜索，去达到我们的目的，例如我们可以从词典的第一页开始找，总能找到“算法”；我们从书的第一页开始翻，在下课之前一定能够翻到146页；或者你给我的范围，我从最小的开始猜，“0，1，2，3，······97，98，99 。对啦！” 我总能猜到你心里想的数字。这种方式称其简单查找。</p>
+<hr>
+<h3 id="二分查找思路"><a href="#二分查找思路" class="headerlink" title="二分查找思路"></a>二分查找思路</h3><ol>
+<li>如果我们换种思路去解决这个问题。我们把字典翻开，翻到中间，看下中间位置的拼音和我们的“suan”能不能够对应的上，如果不能，“suan”在这前面还是在这后面，我们继续的去对应的位置去翻看，最终会找到我们要找的“算法”。</li>
+<li>我们把书直接翻到中间，280页，在280页之前的一侧，再翻到中间，147页。往前再翻一页，成功翻到老师指定的页数学习。</li>
+<li>同学A没毛病说 ：“0~100我随便想一个数，你来猜猜看？”，同学B很执着说：“好啊，我来了啊，0”，同学A没毛病说：“不对，小了”，“1”，“不对，小了”，“2”，“不对，小了”，“3”，“不对，小了”，“4”，同学A没毛病吼道：“滚，你赢了。”同学C二分哥：“我来试试，50”，“小了”，“75”，“大了”，“62”，“小了”，“68”，“大了”，“65”，“小了”，“66”，“bingo！”；</li>
+</ol>
+<p>看到这估计大部分同学已经看懂了二分查找的核心实现思路了。那我们来看看具体的实现过程</p>
+<h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><ul>
+<li>必须采用顺序存储结构。</li>
+<li>必须按关键字大小有序排列。</li>
+</ul>
+<blockquote>
+<p>这里面大家需要注意一下，二分查找的使用是有硬性的条件约束的，必须满足条件的数据才能够使用二分查找。</p>
+</blockquote>
+<h3 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h3><p>首先，假设表中元素是按升序排列，将表中间位置记录的关键字与查找关键字比较，如果两者相等，则查找成功；否则利用中间位置记录将表分成前、后两个子表，如果中间位置记录的关键字大于查找关键字，则进一步查找前一子表，否则进一步查找后一子表。重复以上过程，直到找到满足条件的记录，使查找成功，或直到子表不存在为止，此时查找不成功。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>为了方便大家学习和调试，这里列出Java 和 python的代码给大家参考。</p>
+<p><strong>Java</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">dichotomy</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] ints, <span class="hljs-keyword">int</span> item)</span> </span>&#123;<br>       <span class="hljs-keyword">int</span> start = <span class="hljs-number">0</span>;<br>       <span class="hljs-keyword">int</span> end = ints.length - <span class="hljs-number">1</span>;<br>       <span class="hljs-keyword">while</span> (start &lt;= end) &#123;<br>           <span class="hljs-keyword">int</span> mid = (start + end) &gt;&gt;&gt; <span class="hljs-number">2</span>;<br>           <span class="hljs-keyword">int</span> guess = ints[mid];<br>           <span class="hljs-keyword">if</span> (guess == item) &#123;<br>               <span class="hljs-keyword">return</span> mid;<br>           &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (guess &gt; item) &#123;<br>               end = mid - <span class="hljs-number">1</span>;<br>           &#125; <span class="hljs-keyword">else</span> &#123;<br>               start = mid + <span class="hljs-number">1</span>;<br>           &#125;<br>       &#125;<br>       <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
+<p><strong>python</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dichotomy</span>(<span class="hljs-params"><span class="hljs-built_in">list</span>, item</span>):</span><br>    low = <span class="hljs-number">0</span><br>    high = <span class="hljs-built_in">len</span>(<span class="hljs-built_in">list</span>) - <span class="hljs-number">1</span><br>    <span class="hljs-keyword">while</span> low &lt;= high:<br>        mid = (low + high) // <span class="hljs-number">2</span><br>        guess = <span class="hljs-built_in">list</span>[mid]<br>        <span class="hljs-keyword">if</span> guess == item:<br>            <span class="hljs-keyword">return</span> mid<br>        <span class="hljs-keyword">elif</span> guess &gt; item:<br>            high = mid - <span class="hljs-number">1</span><br>        <span class="hljs-keyword">else</span>:<br>            low = mid + <span class="hljs-number">1</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br></code></pre></td></tr></table></figure>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#算法" >
+    <span class="tag-code">算法</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/algorithm-quick-sort-1.html">
+        <span class="nav-arrow">← </span>
+        
+          算法学习笔记（一）《快速排序》
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/algorithm-choose-sort-1.html">
+        
+          算法学习笔记（三）《选择排序》
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '1cb1fb7017a9d67c7fb955bbd128319a',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-nav-text">写在前面</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="toc-nav-text">二分查找</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E6%80%9D%E8%80%83"><span class="toc-nav-text">问题思考</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%80%9D%E8%B7%AF"><span class="toc-nav-text">二分查找思路</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-nav-text">前置条件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B"><span class="toc-nav-text">实现过程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">代码实现</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/algorithm-binary-search-1.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

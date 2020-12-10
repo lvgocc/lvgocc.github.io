@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      算法学习笔记（一）《快速排序》 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>算法学习笔记（一）《快速排序》</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2018-05-18</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#算法" >
+    <span class="tag-code">算法</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><blockquote>
+<p>本文学习内容来自《算法图解》一书及百度百科内容</p>
+</blockquote>
+<p>算法是一组完成任务的指令。任何代码片段都可视为算法。  —— 摘自《算法图解》</p>
+<hr>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/369842?fr=aladdin&fromid=612251&fromtitle=%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E6%B3%95">以下内容摘自百度百科</a><br>快速排序（Quicksort）是对冒泡排序的一种改进。<br>快速排序由C. A. R. Hoare在1962年提出。它的基本思想是：通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。</p>
+</blockquote>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><blockquote>
+<p>分而治之（divide and conquer， D&amp;C）一种著名的递归式问题解决方法。</p>
+</blockquote>
+<p><strong>这里有个问题，请读者思考一下</strong></p>
+<p>假如你是一个农场主，现在你有一块土地，想要给它均匀的分成大小相同的方块。<br><img src="/images/posts/algorithm-quick-sort-1/20180518115105443.png" alt="lvgo star dust">  </p>
+<p>如果要你来均匀的分开成一个个小方块你会怎么做？ 像下面这样？</p>
+<p><img src="/images/posts/algorithm-quick-sort-1/20180518115307930.png" alt="lvgo star dust">  </p>
+<p>显然这是愚蠢的，也是不可能的。那我们应该怎么样去做呢？<br>这里就用到了我们上面提到的<strong>D&amp;C策略</strong> ，D&amp;C策略是使用递归的，解决这个分成两个步骤：</p>
+<ol>
+<li>找到基准条件，这个条件，必须尽可能的简单。</li>
+<li>竟可能的缩短范围找到基准，将给定条件不断缩小范围。</li>
+</ol>
+<hr>
+<h4 id="1、我们先按照给定的宽度-640m-将长切成-640m-640m-400m-×-640m-大小的三块方块"><a href="#1、我们先按照给定的宽度-640m-将长切成-640m-640m-400m-×-640m-大小的三块方块" class="headerlink" title="1、我们先按照给定的宽度 640m 将长切成  ( 640m + 640m + 400m ) × 640m 大小的三块方块"></a>1、我们先按照给定的宽度 640m 将长切成  ( 640m + 640m + 400m ) × 640m 大小的三块方块</h4><p><img src="/images/posts/algorithm-quick-sort-1/20180518135554838.png" alt="lvgo star dust"><br>这样我们就得到了一个 400m × 640m 的小方块<br><img src="/images/posts/algorithm-quick-sort-1/20180518135906652.png" alt="lvgo star dust"></p>
+<h4 id="2、再按照-400m-×-400m-分成-2-块"><a href="#2、再按照-400m-×-400m-分成-2-块" class="headerlink" title="2、再按照 400m × 400m 分成 2 块"></a>2、再按照 400m × 400m 分成 2 块</h4><p>640 m × 400 m的土地，可从中划出的最大方块为400 m × 400 m。 这样就会余下一个 400m × 240m 的一个方块。</p>
+<p><img src="/images/posts/algorithm-quick-sort-1/20180518140447909.png" alt="lvgo star dust"></p>
+<h4 id="3、我们在把余出的-400m-×-240m-切成-240m-×-240m-240m-×-160m"><a href="#3、我们在把余出的-400m-×-240m-切成-240m-×-240m-240m-×-160m" class="headerlink" title="3、我们在把余出的 400m × 240m 切成  240m × 240m +  240m × 160m"></a>3、我们在把余出的 400m × 240m 切成  240m × 240m +  240m × 160m</h4><p><img src="/images/posts/algorithm-quick-sort-1/20180518140807139.png" alt="lvgo star dust"></p>
+<h4 id="4、以此类推"><a href="#4、以此类推" class="headerlink" title="4、以此类推"></a>4、以此类推</h4><p><img src="/images/posts/algorithm-quick-sort-1/20180518140832372.png" alt="lvgo star dust"></p>
+<p><img src="/images/posts/algorithm-quick-sort-1/2018051814083991.png" alt="lvgo star dust"></p>
+<p>最终我们找到了想要的小方块 80m × 80m 这样我们就把最初的  1680m × 640m 分成了 1680 个 80m × 80m 的小方块</p>
+<p>以上讲述的只是一种解决问题的思路，也是D&amp;C策略的具体体现，那我们现在回顾一下解决问题的过程。</p>
+<ol>
+<li>我们拿到问题之后，是想要找到问题的基准条件。</li>
+<li>紧接着我们把适应问题条件的范围不断的缩小。</li>
+<li>在更小的范围去寻找我们想要的答案。</li>
+</ol>
+<p>其实我们在解决这个问题的时候，已经用到了一个算法，那就是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E7%AE%97%E6%B3%95/9002848?fr=aladdin&fromid=1647675&fromtitle=%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95">《欧几里德算法》</a>，具体大家可以查看百度百科即可</p>
+<hr>
+<h3 id="实际例子"><a href="#实际例子" class="headerlink" title="实际例子"></a>实际例子</h3><p>说了这么多，那如果是实际的问题我们该如何解决呢？</p>
+<ul>
+<li><strong>快速排序</strong>说的是怎么去给一个数组，或者列表进行一个有序的排列。<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 如果我们有这样一个数组</span><br><span class="hljs-keyword">int</span>[] ints = &#123;<span class="hljs-number">1</span>&#125;;<br><span class="hljs-comment">// 那我们说，这是不需要排序的，直接返回结果就可以</span><br>[<span class="hljs-number">1</span>]<br></code></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<hr>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">// 如果是有两个值呢</span><br><span class="hljs-built_in">int</span>[] <span class="hljs-built_in">int</span>s = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>&#125;;<br><span class="hljs-comment">// 这个也很简单，只需要比较两个数值的大小即可</span><br><span class="hljs-string">[1, 2]</span><br></code></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">// 如果是有三个值呢</span><br><span class="hljs-built_in">int</span>[] <span class="hljs-built_in">int</span>s = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>&#125;;<br><span class="hljs-string">[?, ?, ?]</span><br><span class="hljs-comment">// 如果是有多个值呢</span><br><span class="hljs-built_in">int</span>[] <span class="hljs-built_in">int</span>s = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">15</span>&#125;;<br><span class="hljs-string">[?, ?, ?, ?, ?, ?, ?, ?]</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>同样我们使用的也是<strong>D&amp;C策略</strong>来解决这个问题，首先要找到一个基准条件。那我们说这个条件怎么去找？</p>
+<p>先别急，我们来看最后一个数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span>[] ints = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">15</span>&#125;;<br></code></pre></td></tr></table></figure>
+<p>首先我们要做的事情很简单，找到一个基准条件，缩小我们的排序范围。无论多少个值，我们只进行两个值得比较。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><code class="hljs angelscript"><span class="hljs-built_in">int</span> temp = <span class="hljs-built_in">int</span>s[<span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure>
+<p>那我们说，temp 就是我们要的小范围的一个基准条件，所有的数字和这个基准条件去比较。那就变成了两个值得比较。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><code class="hljs angelscript"><br><span class="hljs-built_in">int</span>s [<span class="hljs-number">1</span>] = <span class="hljs-number">23</span>; <span class="hljs-comment">// 大于temp</span><br><span class="hljs-built_in">int</span>s [<span class="hljs-number">2</span>] = <span class="hljs-number">12</span>; <span class="hljs-comment">// 大于temp</span><br><span class="hljs-built_in">int</span>s [<span class="hljs-number">3</span>] = <span class="hljs-number">34</span>; <span class="hljs-comment">// 大于temp</span><br>...<br>...<br></code></pre></td></tr></table></figure>
+<p> 比较的之后的值怎么办 ，我们把比较的值分成两组，要么大于基准值，要么小于等于基准值。大于的，我们放到基准值的右侧，小于等于的，我们放到基准值的左侧。并且，<strong>如果出现位置转换的时候，我们的基准值得位置是在跟着变动的</strong>。我们比较的顺序是从数组的第一个和数组最后一个进行比较。依次像中间靠拢。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * 我们如果拿数组的第一个数字进行比较，那数组将会被分成两个部分</span><br><span class="hljs-comment"> * 要么大于1，要么小于等于1 </span><br><span class="hljs-comment"> * 结果数组会变成这个样子</span><br><span class="hljs-comment"> * [1, 23, 12, 34, 87, 45, 68, 15]</span><br><span class="hljs-comment"> * /</span><br></code></pre></td></tr></table></figure>
+<p>看过之后你可能会有疑虑，这什么啊？怎么没有变化呢？是的，因为我们选取的基准值1，大于它的放到右侧，因为其它的数字全部大于1，所以我们放到了右侧。接下来再看。</p>
+<blockquote>
+<p>现在我们可以理解为，原来数组被拆成了两个数组<br>由原来的<code>[1, 23, 12, 34, 87, 45, 68, 15] </code><br>变成了现在的<code>[]</code>和<code>[23, 12, 34, 87, 45, 68, 15]</code></p>
+</blockquote>
+<p>其实看似没有变化，实则我们已经缩小了排序的范围，再一次我们需要对两个数组进行之前的方法进行计算<br>数组 <code>[23, 12, 34, 87, 45, 68, 15] </code>进行我们接下来的选取基准值，进行比较分开大小。因为我们的基准值选取的是23，所以 12 15 在 23 的左侧，其余的在 23 右侧，那具体的结果是什么样子的呢？</p>
+<blockquote>
+<p>同样的我们的数组被<code>[23]</code>分隔成了两部分<br>分成了<code>[15, 12]</code> <code>[87, 45,  68, 34]</code></p>
+</blockquote>
+<hr>
+<p><strong>快速排序实现原理</strong><br>可能有的同学看到这里会有疑问，为什么 15 在 12 的左侧，这就是上面我们提到的比较之后改变数字位置的问题，我们开始比较的时候是 23 和 15 去比较，显然 15 比 23 小，所以它要放到 23 的左侧，那此时的 23 将会和 15 的位置互换，这样就达到了小的数字在基准值的左侧，当我们在拿基准值 23 和 左侧的数字比较的时候，23 比 12 大，保持不变，依次 23 比 34 小，此时由要进行位置互调。23 出现在了 34 的位置上，34 则在了 23 的位置上。重点来了，<strong>基准条件在做完一次基准值之后，不会再次参与后续排序。</strong></p>
+<hr>
+<p>此时我们又要对拆分出的数组进行比较</p>
+<blockquote>
+<p><code>[15, 12]</code> 用同样的基准值办法进行比较显然变成了<code>[12, 15]</code><br>而<code>[87, 45,  68, 34]</code> 则变成了 <code>[34, 45, 68, 87]</code> </p>
+</blockquote>
+<p>以此类推，我们的数组对应的变化如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json">[<span class="hljs-number">1</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">15</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">15</span>, <span class="hljs-number">12</span>, <span class="hljs-number">23</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">34</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">34</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">34</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">87</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">34</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">87</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">34</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">87</span>]<br></code></pre></td></tr></table></figure>
+
+<p>相信看到现在，多多少少大家已经掌握了快速排序法的原理。</p>
+<ol>
+<li>找到一个基准值</li>
+<li>将其与数字与该基准值进行比较</li>
+<li>比较成功后按大小，改变数字位置，基准值被隔离开来，用来连接数组。（这里比较抽象，需要一定的自行脑补）</li>
+<li>对重新组成的数组再次进行 1 2 3 步骤</li>
+</ol>
+<hr>
+<p>为了大家学习和调试方便，下面提供了快速排序的 java 和 python 的代码</p>
+<p><strong>Java</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> </span>&#123;<br>    <span class="hljs-keyword">int</span>[] ints = &#123;<span class="hljs-number">1</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">15</span>&#125;;<br>    quickSort(ints, <span class="hljs-number">0</span>, ints.length - <span class="hljs-number">1</span>);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">quickSort</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] ints, <span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> h = high;<br>    <span class="hljs-keyword">int</span> l = low;<br>    <span class="hljs-keyword">if</span> (l &lt; h) &#123;<br>        <span class="hljs-keyword">int</span> temp = ints[l];<br>        <span class="hljs-keyword">while</span> (l &lt; h) &#123;<br>            <span class="hljs-keyword">while</span> (l &lt; h &amp;&amp; ints[h] &gt; temp) &#123;<br>                h--;<br>            &#125;<br>            ints[l] = ints[h];<br>            <span class="hljs-keyword">while</span> (l &lt; h &amp;&amp; ints[l] &lt;= temp) &#123;<br>                l++;<br>            &#125;<br>            ints[h] = ints[l];<br>        &#125;<br>        ints[l] = temp;<br>        System.out.println(Arrays.toString(ints));<br>        quickSort(ints, low, h - <span class="hljs-number">1</span>);<br>        quickSort(ints, l+ <span class="hljs-number">1</span>, high);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="code"><pre><code class="hljs json">[<span class="hljs-number">1</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">15</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">15</span>, <span class="hljs-number">12</span>, <span class="hljs-number">23</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">34</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">34</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">34</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">87</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">34</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">87</span>]<br>[<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>, <span class="hljs-number">23</span>, <span class="hljs-number">34</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">87</span>]<br></code></pre></td></tr></table></figure>
+
+
+<hr>
+<p><strong>python</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">quickSort</span>(<span class="hljs-params">array</span>):</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(array) &lt; <span class="hljs-number">2</span>:<br>        <span class="hljs-keyword">return</span> array<br>    <span class="hljs-keyword">else</span>:<br>        pivot = array[<span class="hljs-number">0</span>]<br>        less = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> array[<span class="hljs-number">1</span>:] <span class="hljs-keyword">if</span> i &lt;= pivot]<br>        greater = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> array[<span class="hljs-number">1</span>:] <span class="hljs-keyword">if</span> i &gt; pivot]<br>        <span class="hljs-keyword">return</span> quickSort(less) + [pivot] + quickSort(greater)<br><br><br>print(quickSort([<span class="hljs-number">1</span>, <span class="hljs-number">23</span>, <span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">87</span>, <span class="hljs-number">45</span>, <span class="hljs-number">68</span>, <span class="hljs-number">15</span>]))<br></code></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://book.douban.com/subject/26979890/">算法图解 (豆瓣)_豆瓣读书 作者: [美] Aditya Bhargava </a></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#算法" >
+    <span class="tag-code">算法</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/course-jenkins-auto-deploy-springboot.html">
+        <span class="nav-arrow">← </span>
+        
+          jenkins 自动化部署 spring boot 项目（多图）
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/algorithm-binary-search-1.html">
+        
+          算法学习笔记（二）《二分查找》
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'd3abd0e40c782b1ebe44babb291669ea',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-nav-text">写在前面</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="toc-nav-text">快速排序</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%80%9D%E8%B7%AF"><span class="toc-nav-text">实现思路</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1%E3%80%81%E6%88%91%E4%BB%AC%E5%85%88%E6%8C%89%E7%85%A7%E7%BB%99%E5%AE%9A%E7%9A%84%E5%AE%BD%E5%BA%A6-640m-%E5%B0%86%E9%95%BF%E5%88%87%E6%88%90-640m-640m-400m-%C3%97-640m-%E5%A4%A7%E5%B0%8F%E7%9A%84%E4%B8%89%E5%9D%97%E6%96%B9%E5%9D%97"><span class="toc-nav-text">1、我们先按照给定的宽度 640m 将长切成  ( 640m + 640m + 400m ) × 640m 大小的三块方块</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2%E3%80%81%E5%86%8D%E6%8C%89%E7%85%A7-400m-%C3%97-400m-%E5%88%86%E6%88%90-2-%E5%9D%97"><span class="toc-nav-text">2、再按照 400m × 400m 分成 2 块</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#3%E3%80%81%E6%88%91%E4%BB%AC%E5%9C%A8%E6%8A%8A%E4%BD%99%E5%87%BA%E7%9A%84-400m-%C3%97-240m-%E5%88%87%E6%88%90-240m-%C3%97-240m-240m-%C3%97-160m"><span class="toc-nav-text">3、我们在把余出的 400m × 240m 切成  240m × 240m +  240m × 160m</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4%E3%80%81%E4%BB%A5%E6%AD%A4%E7%B1%BB%E6%8E%A8"><span class="toc-nav-text">4、以此类推</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E9%99%85%E4%BE%8B%E5%AD%90"><span class="toc-nav-text">实际例子</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/algorithm-quick-sort-1.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

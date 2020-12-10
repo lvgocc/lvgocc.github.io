@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      7个阻塞队列 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>7个阻塞队列</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-07-29</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p>眼睛看到的不是你的，但你看到之后将其思想复刻后的产物便是你的。（什么是借鉴？）</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>本文抱着互相学习分享、技术积累使其慢慢沉淀的态度写作，如有错误望各位大佬同仁指正。</p>
+<p><em>文中出现代码来自 jdk 1.8</em></p>
+<p><strong>队列</strong></p>
+<blockquote>
+<p>FIFO(先进先出)的数据结构即为队列</p>
+</blockquote>
+<p>阻塞队列</p>
+<blockquote>
+<p>操作会被阻塞的队列即为阻塞队列, 在java中 BlockingQueue 接口在 Queue 接口的基础上增加了两组阻塞方法, offer(e,time) put , poll(time) take()</p>
+</blockquote>
+<h2 id="我也来说一说Java的7个阻塞队列"><a href="#我也来说一说Java的7个阻塞队列" class="headerlink" title="我也来说一说Java的7个阻塞队列"></a>我也来说一说Java的7个阻塞队列</h2><ul>
+<li>有界: 在创建队列时必须或允许指定队列大小, 允许调用抛出异常的 add 方法</li>
+<li>无界: 在创建队列时无需或不可以指定队列大小, 无限制的插入 add = offer 操作</li>
+</ul>
+<p>阻塞队列的几个操作方法</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>抛出异常</th>
+<th>特殊值</th>
+<th>阻塞</th>
+<th>超时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>插入</td>
+<td>add(e)</td>
+<td>offer(e)</td>
+<td>put(e)</td>
+<td>offer(e,time,unit)</td>
+</tr>
+<tr>
+<td>移除</td>
+<td>remove()</td>
+<td>poll()</td>
+<td>take()</td>
+<td>poll(time,unit)</td>
+</tr>
+<tr>
+<td>检查</td>
+<td>element()</td>
+<td>peek()</td>
+<td>不可用</td>
+<td>不可用</td>
+</tr>
+</tbody></table>
+<h3 id="1-ArrayBlockingQueue-有界"><a href="#1-ArrayBlockingQueue-有界" class="headerlink" title="1. ArrayBlockingQueue[有界]"></a>1. ArrayBlockingQueue[有界]</h3><p>一个使用数组实现的有界阻塞队列. 创建队列时必须给定队列大小, 同时可以通过创建队列的时候设置公平访问(通过重入锁的公平访问实现)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ArrayBlockingQueue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity, <span class="hljs-keyword">boolean</span> fair)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (capacity &lt;= <span class="hljs-number">0</span>)<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException();<br>        <span class="hljs-keyword">this</span>.items = <span class="hljs-keyword">new</span> Object[capacity];<br>        lock = <span class="hljs-keyword">new</span> ReentrantLock(fair);<br>        notEmpty = lock.newCondition();<br>        notFull =  lock.newCondition();<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="元素达到队列容量上限时再入队"><a href="#元素达到队列容量上限时再入队" class="headerlink" title="元素达到队列容量上限时再入队"></a>元素达到队列容量上限时再入队</h4><p> 根据调用不同的方法, 返回不同的状态</p>
+<p><strong>add 方法将抛出异常</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">add</span><span class="hljs-params">(E e)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (offer(e))<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">&quot;Queue full&quot;</span>);<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>offer 方法将返回 false</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">offer</span><span class="hljs-params">(E e)</span> </span>&#123;<br>        checkNotNull(e);<br>        <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;<br>        lock.lock();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">if</span> (count == items.length)<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>            <span class="hljs-keyword">else</span> &#123;<br>                enqueue(e);<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>            &#125;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>put 方法将无限时阻塞</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">put</span><span class="hljs-params">(E e)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        checkNotNull(e);<br>        <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;<br>        lock.lockInterruptibly();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">while</span> (count == items.length)<br>                notFull.await();<br>            enqueue(e);<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>offer(E e, long timeout, TimeUnit unit) 将超时阻塞</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">offer</span><span class="hljs-params">(E e, <span class="hljs-keyword">long</span> timeout, TimeUnit unit)</span></span><br><span class="hljs-function">        <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br><br>        checkNotNull(e);<br>        <span class="hljs-keyword">long</span> nanos = unit.toNanos(timeout);<br>        <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;<br>        lock.lockInterruptibly();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">while</span> (count == items.length) &#123;<br>                <span class="hljs-keyword">if</span> (nanos &lt;= <span class="hljs-number">0</span>)<br>                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>                nanos = notFull.awaitNanos(nanos);<br>            &#125;<br>            enqueue(e);<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="队列为空时获取元素时"><a href="#队列为空时获取元素时" class="headerlink" title="队列为空时获取元素时"></a>队列为空时获取元素时</h4><p><strong>poll 方法返回空</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">poll</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;<br>    lock.lock();<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> (count == <span class="hljs-number">0</span>) ? <span class="hljs-keyword">null</span> : dequeue();<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        lock.unlock();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>take 将无限时阻塞</strong></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">take</span>(<span class="hljs-params"></span>) throws InterruptedException</span> &#123;<br>    final ReentrantLock <span class="hljs-keyword">lock</span> = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">lock</span>;<br>    <span class="hljs-keyword">lock</span>.lockInterruptibly();<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">while</span> (count == <span class="hljs-number">0</span>)<br>            notEmpty.<span class="hljs-keyword">await</span>();<br>        <span class="hljs-keyword">return</span> dequeue();<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-keyword">lock</span>.unlock();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>poll(long timeout, TimeUnit unit) 超时阻塞</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">poll</span><span class="hljs-params">(<span class="hljs-keyword">long</span> timeout, TimeUnit unit)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>    <span class="hljs-keyword">long</span> nanos = unit.toNanos(timeout);<br>    <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;<br>    lock.lockInterruptibly();<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">while</span> (count == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">if</span> (nanos &lt;= <span class="hljs-number">0</span>)<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>            nanos = notEmpty.awaitNanos(nanos);<br>        &#125;<br>        <span class="hljs-keyword">return</span> dequeue();<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        lock.unlock();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>总结 :</strong></p>
+<ol>
+<li>数组有界队列</li>
+<li>可加入公平策略</li>
+<li>插入时提供了可抛出异常操作</li>
+<li>插入元素不能为空</li>
+</ol>
+<blockquote>
+<p>该队列模式适合在需要公平访问的场景下使用, 若无公平性要求该队列个人拙见不建议使用, 因操作数组和公平性原因,其吞吐量较低</p>
+</blockquote>
+<hr>
+<h3 id="2-LinkedBlockingQueue-有界"><a href="#2-LinkedBlockingQueue-有界" class="headerlink" title="2. LinkedBlockingQueue[有界]"></a>2. LinkedBlockingQueue[有界]</h3><p>一个使用链表实现的有界队列</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LinkedBlockingQueue</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (capacity &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException();<br>    <span class="hljs-keyword">this</span>.capacity = capacity;<br>    last = head = <span class="hljs-keyword">new</span> Node&lt;E&gt;(<span class="hljs-keyword">null</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果不指定大小, 默认值为 int 的最大值</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LinkedBlockingQueue</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">this</span>(Integer.MAX_VALUE);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="元素达到队列容量上限时再入队-1"><a href="#元素达到队列容量上限时再入队-1" class="headerlink" title="元素达到队列容量上限时再入队"></a>元素达到队列容量上限时再入队</h4><h4 id="队列为空时获取元素时-1"><a href="#队列为空时获取元素时-1" class="headerlink" title="队列为空时获取元素时"></a>队列为空时获取元素时</h4><p>与 [ArrayBlockingQueue](#1. ArrayBlockingQueue[有界]) 相同</p>
+<p><strong>总结:</strong></p>
+<ol>
+<li>结论不指定队列大小, 默认值为 int 最大值</li>
+<li>吞吐量要比ArrayBlockingQueue高</li>
+<li>链表有界队列</li>
+<li>不可加入公平策略</li>
+<li>插入时提供了可抛出异常操作</li>
+<li>插入元素不能为空</li>
+</ol>
+<hr>
+<h3 id="3-LinkedBlockingDeque-有界"><a href="#3-LinkedBlockingDeque-有界" class="headerlink" title="3. LinkedBlockingDeque[有界]"></a>3. LinkedBlockingDeque[有界]</h3><p>通过链表实现的一个双端阻塞队列(LikedBlockingQueue增加了队尾的操作)</p>
+<p>该队列增加了一组队首队尾的操作方法</p>
+<figure class="highlight xl"><table><tr><td class="code"><pre><code class="hljs xl"><span class="hljs-function"><span class="hljs-title">add</span> -&gt;</span> addFirst(push)/addLast<br><br><span class="hljs-function"><span class="hljs-title">offer</span> -&gt;</span> offerFirst/offerLast<br><br><span class="hljs-function"><span class="hljs-title">offer</span>(<span class="hljs-built_in">time</span>) -&gt;</span>offerFirst(<span class="hljs-built_in">time</span>)/offerLast(<span class="hljs-built_in">time</span>)<br><br><span class="hljs-function"><span class="hljs-title">peek</span> -&gt;</span> peekFirst/peekLast<br><br><span class="hljs-function"><span class="hljs-title">poll</span> -&gt;</span> pollFirst/pollLast<br><br><span class="hljs-function"><span class="hljs-title">poll</span>(<span class="hljs-built_in">time</span>) -&gt;</span> pollFirst(<span class="hljs-built_in">time</span>)/pollLast(<span class="hljs-built_in">time</span>)<br><br><span class="hljs-function"><span class="hljs-title">put</span> -&gt;</span> putFrist/putLast<br></code></pre></td></tr></table></figure>
+
+<p>增加类(add/put/offer) 原方法调用与其调用相同前缀last方法操作相同</p>
+<p><code>例: add = addLast ; put = putLast</code></p>
+<p>获取类(peek/poll/element) 原方法调用与其调用相同前缀first方法操作相同</p>
+<p><code>例: peek = peekFirst; poll = peekFirst</code></p>
+<h4 id="元素达到队列容量上限时再入队-2"><a href="#元素达到队列容量上限时再入队-2" class="headerlink" title="元素达到队列容量上限时再入队"></a>元素达到队列容量上限时再入队</h4><p>add 方法在队列容量达到最大值时抛出异常  <code> throw new IllegalStateException(&quot;Deque full&quot;);</code></p>
+<h4 id="队列为空时获取元素时-2"><a href="#队列为空时获取元素时-2" class="headerlink" title="队列为空时获取元素时"></a>队列为空时获取元素时</h4><p>element/getFirst/getLast 方法在队列为空时抛出异常 <code>if (x == null) throw new NoSuchElementException();</code></p>
+<p><strong>总结 :</strong></p>
+<ol>
+<li>如果创建队列时不指定队列大小, 默认值为 int 最大值</li>
+<li>吞吐量要比LinkedBlockingQueue高</li>
+<li>链表有界双端队列</li>
+<li>不可加入公平策略</li>
+<li>插入时提供了可抛出异常操作</li>
+<li>插入元素不能为空</li>
+<li>可以通过队首队尾插入或取出元素</li>
+</ol>
+<hr>
+<h3 id="4-LinkedTransferQueue-无界"><a href="#4-LinkedTransferQueue-无界" class="headerlink" title="4. LinkedTransferQueue[无界]"></a>4. LinkedTransferQueue[无界]</h3><p>一个由链表实现的无界转换队列, 相对 [LinkedBlockingQueue](#2. LinkedBlockingQueue[有界]) 增加了几个方法</p>
+<h4 id="1-transfer-E-e"><a href="#1-transfer-E-e" class="headerlink" title="1.transfer(E e)"></a>1.transfer(E e)</h4><blockquote>
+<p>等待消费者调用返回</p>
+</blockquote>
+<p>向队列的调用阻塞者直接提供元素, 如果没有人来获取, 则将这个元素放入队尾, 当这个元素出队的时候返回, 否则一直阻塞</p>
+<h4 id="2-tryTransfer-E-e"><a href="#2-tryTransfer-E-e" class="headerlink" title="2.tryTransfer(E e)"></a>2.tryTransfer(E e)</h4><blockquote>
+<p>调用一次即返回</p>
+</blockquote>
+<p>尝试向队列的调用阻塞者直接提供元素, 立即返回false or true, 提供的元素不入队.</p>
+<h4 id="3-tryTransfer-E-e-long-timeout-TimeUnit-unit"><a href="#3-tryTransfer-E-e-long-timeout-TimeUnit-unit" class="headerlink" title="3.tryTransfer(E e, long timeout, TimeUnit unit)"></a>3.tryTransfer(E e, long timeout, TimeUnit unit)</h4><blockquote>
+<p>等待消费者调用返回, 一定时间内等不到亦返回</p>
+</blockquote>
+<p>在 tryTransfer 的基础上加入了时间, 在给定时间内尝试</p>
+<p>如果有阻塞调用者直接调用该队列的take 或者 poll(time) 方法, 阻塞状态下返回该值</p>
+<p>如果未有阻塞调用者调用, 将元素放入队尾, 当在给定时间内被调用 返回 true, 如果在给定时间内未被调用, 返回false 且元素从队列中移除.</p>
+<p><strong>总结 :</strong></p>
+<ol>
+<li>创建时无需指定队列大小, 且无最大值即无阻塞插入知道内存溢出</li>
+<li>吞吐量要比LinkedBlockingQueue高</li>
+<li>链表无界队列</li>
+<li>在调用队列元素被阻塞时, 提供了可以将入队元素直接返回的 transfer方法</li>
+<li>插入元素不能为空</li>
+</ol>
+<hr>
+<h3 id="5-PriorityBlockingQueue-无界"><a href="#5-PriorityBlockingQueue-无界" class="headerlink" title="5. PriorityBlockingQueue[无界]"></a>5. PriorityBlockingQueue[无界]</h3><p>一个使用数组 + 比较器实现的优先级队列</p>
+<p>这个队列使用了二叉堆排序的方式来实现优先级</p>
+<p>关于这个队列的重点内容也是在二叉堆排序上, 这里延伸的内容还是比较多的, 堆结构, 二叉堆, 堆排序, 选择排序….</p>
+<p><strong>总结 :</strong></p>
+<ol>
+<li>如果创建队列时不指定队列大小, 默认值为 11, 超出时不会阻塞而是扩容(当扩容超过 int 最大值 - 8 时将抛出堆内存溢出异常) 每次扩容为当前队列大小的 50%</li>
+<li>数组无界队列(最大长度 int最大值 - 8)</li>
+<li>如果指定了比较器, 则必须指定大小</li>
+<li>插入元素不能为空</li>
+</ol>
+<hr>
+<h3 id="6-DelayQueue-无界"><a href="#6-DelayQueue-无界" class="headerlink" title="6. DelayQueue[无界]"></a>6. DelayQueue[无界]</h3><p>使用 PriorityQueue 实现的一个无界延迟队列, 使用这个队列需要自己实现一些内容, 包括延迟配置、比较器的实现。该队列可以用于定时任务调度，周期任务调度</p>
+<p>当你需要指定元素的优先级，执行的时机，那这个队列即是不二之选。</p>
+<p><strong>总结 :</strong></p>
+<ol>
+<li>元素存储使用的 priorityqueue</li>
+<li>可以指定元素的访问延迟时间及优先级</li>
+<li>插入元素不能为空</li>
+</ol>
+<hr>
+<h3 id="7-SynchronousQueue-无容量"><a href="#7-SynchronousQueue-无容量" class="headerlink" title="7. SynchronousQueue[无容量]"></a>7. SynchronousQueue[无容量]</h3><p>dual queue + dual stack   双队列 + 双栈实现</p>
+<p>这个队列也是一个比较特殊的队列, 在 JDK 1.6的时候改写了底层实现, 就是用了上面提到的方法.</p>
+<p>这个队列是一个没有容量的队列，所以在调用方法上有一些不同。</p>
+<p>add 方法将会抛出一个 <code>java.lang.IllegalStateException: Queue full</code>异常</p>
+<p>offer 方法会返回false</p>
+<p>put 方法将会被阻塞</p>
+<p>调用出队方法也会有一些问题</p>
+<p>poll 方法返回null</p>
+<p>take 方法将被阻塞</p>
+<p>同步执行入队和出队即可, 这也是为什么该队列是吞吐量最高的队列原因</p>
+<p><strong>总结 :</strong></p>
+<ol>
+<li>没有容量</li>
+<li>吞吐量要比ArrayBlockingQueue与LinkedBlockingQueue高</li>
+<li>可加入公平策略</li>
+<li>插入时提供了可抛出异常操作</li>
+<li>插入元素不能为空</li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/opportunity.html">
+        <span class="nav-arrow">← </span>
+        
+          机遇，奇遇
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/java-juc-first-meet.html">
+        
+          初识并发编程
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '9f61d62edc707ae4fa9439bad200878c',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BA%8F"><span class="toc-nav-text">序</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%88%91%E4%B9%9F%E6%9D%A5%E8%AF%B4%E4%B8%80%E8%AF%B4Java%E7%9A%847%E4%B8%AA%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97"><span class="toc-nav-text">我也来说一说Java的7个阻塞队列</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-ArrayBlockingQueue-%E6%9C%89%E7%95%8C"><span class="toc-nav-text">1. ArrayBlockingQueue[有界]</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%85%83%E7%B4%A0%E8%BE%BE%E5%88%B0%E9%98%9F%E5%88%97%E5%AE%B9%E9%87%8F%E4%B8%8A%E9%99%90%E6%97%B6%E5%86%8D%E5%85%A5%E9%98%9F"><span class="toc-nav-text">元素达到队列容量上限时再入队</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%98%9F%E5%88%97%E4%B8%BA%E7%A9%BA%E6%97%B6%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E6%97%B6"><span class="toc-nav-text">队列为空时获取元素时</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-LinkedBlockingQueue-%E6%9C%89%E7%95%8C"><span class="toc-nav-text">2. LinkedBlockingQueue[有界]</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%85%83%E7%B4%A0%E8%BE%BE%E5%88%B0%E9%98%9F%E5%88%97%E5%AE%B9%E9%87%8F%E4%B8%8A%E9%99%90%E6%97%B6%E5%86%8D%E5%85%A5%E9%98%9F-1"><span class="toc-nav-text">元素达到队列容量上限时再入队</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%98%9F%E5%88%97%E4%B8%BA%E7%A9%BA%E6%97%B6%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E6%97%B6-1"><span class="toc-nav-text">队列为空时获取元素时</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-LinkedBlockingDeque-%E6%9C%89%E7%95%8C"><span class="toc-nav-text">3. LinkedBlockingDeque[有界]</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%85%83%E7%B4%A0%E8%BE%BE%E5%88%B0%E9%98%9F%E5%88%97%E5%AE%B9%E9%87%8F%E4%B8%8A%E9%99%90%E6%97%B6%E5%86%8D%E5%85%A5%E9%98%9F-2"><span class="toc-nav-text">元素达到队列容量上限时再入队</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%98%9F%E5%88%97%E4%B8%BA%E7%A9%BA%E6%97%B6%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E6%97%B6-2"><span class="toc-nav-text">队列为空时获取元素时</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-LinkedTransferQueue-%E6%97%A0%E7%95%8C"><span class="toc-nav-text">4. LinkedTransferQueue[无界]</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-transfer-E-e"><span class="toc-nav-text">1.transfer(E e)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2-tryTransfer-E-e"><span class="toc-nav-text">2.tryTransfer(E e)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#3-tryTransfer-E-e-long-timeout-TimeUnit-unit"><span class="toc-nav-text">3.tryTransfer(E e, long timeout, TimeUnit unit)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-PriorityBlockingQueue-%E6%97%A0%E7%95%8C"><span class="toc-nav-text">5. PriorityBlockingQueue[无界]</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-DelayQueue-%E6%97%A0%E7%95%8C"><span class="toc-nav-text">6. DelayQueue[无界]</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#7-SynchronousQueue-%E6%97%A0%E5%AE%B9%E9%87%8F"><span class="toc-nav-text">7. SynchronousQueue[无容量]</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-juc-blockingqueue.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

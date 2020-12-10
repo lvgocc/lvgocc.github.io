@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      Spring中Quartz2.2.2的使用 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Spring中Quartz2.2.2的使用</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2019-09-30</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#教程" >
+    <span class="tag-code">教程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>本文介绍的内容为, 在spring管理的项目中使用Quartz2.2.2版本进行任务调度</p>
+<h4 id="quartz-非教学介绍"><a href="#quartz-非教学介绍" class="headerlink" title="quartz 非教学介绍"></a>quartz 非教学介绍</h4><p>quartz是一款基于java timer开发的一个轻量级任务调度框架, 可以帮助我们快速实现定时/周期任务处理工具组件</p>
+<p> Quartz中有任务组, 任务, 触发器组, 触发器 cron expression 等概念.<br> JOB_GROUP 、JOB 、TRIGGER_GROUP 、TRIGGER 、CRON</p>
+<p>顾名思义任务组对应任务, 触发器组对应触发器, 目前实战项目中的用法比较特殊.</p>
+<p>我们使用一个任务, 对应多个触发器来达到任务调度的实现.当前Quartz支持两种任务配置, 这里使用的是以任务为单位来进行定时执行的概念, 还有一种指定service方法来执行, 具体大家可以参考其他博主的文章自行了解.</p>
+<a id="more"></a>
+
+<p><strong>注意!!! Quartz版本2.x以后,不支持向下兼容, 此文所用Quartz为2.2.2</strong></p>
+<h4 id="常用类及API"><a href="#常用类及API" class="headerlink" title="常用类及API"></a>常用类及API</h4><p>JobDetail、JobBuilder、TriggerBuilder、Scheduler、CronTrigger、CronScheduleBuilder</p>
+<h5 id="相互之间的关系"><a href="#相互之间的关系" class="headerlink" title="相互之间的关系"></a>相互之间的关系</h5><p>任务调度器 Scheduler 内可以存在多个任务 JobDetail 任务内可以存在多个触发器来调起这个任务来进行任务的执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs mermaid">graph LR<br> B((job1)) --&gt;A[Scheduler] <br>f((job2)) --&gt;A[Scheduler] <br>g[Trigger1] --0&#x2F;5 * * * * --&gt; f((job2)) <br><br>h[Trigger2] --0&#x2F;10 * * * * --&gt; f((job2)) <br><br>i[Trigger3] --0&#x2F;10 * * * * --&gt; f((job2)) <br>c[Trigger1] --0&#x2F;5 * * * * --&gt; B((job1)) <br><br>d[Trigger2] --0&#x2F;10 * * * * --&gt; B((job1)) <br><br>e[Trigger3] --0&#x2F;10 * * * * --&gt; B((job1)) <br></code></pre></td></tr></table></figure>
+
+<h5 id="JobDetail"><a href="#JobDetail" class="headerlink" title="JobDetail"></a>JobDetail</h5><p>任务的最小单元。该类主要记录任务信息</p>
+<h5 id="Trigger"><a href="#Trigger" class="headerlink" title="Trigger"></a>Trigger</h5><p>任务的执行时机，触发的时点</p>
+<h5 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h5><blockquote>
+<p>创建一个任务</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * Quartz 2.x 以后版本,JobDetail由类, 上升成为了接口,对应的实现为JobDetailImpl</span><br><span class="hljs-comment"> * 但Quartz并不推荐使用JobDetailImpl直接获取到Job对象</span><br><span class="hljs-comment"> * Quartz提供了构建者模式创建对象</span><br><span class="hljs-comment"> * 其中包含这里看到的任务构建器, 以及后面得到触发器构建器</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * 这里说明一下构建器的几个参数, 通过阅读源码我们可以发现,</span><br><span class="hljs-comment"> * Job构建器需要指定一个任务的class路径作为一个构建者的标注, 然后依次属性durably</span><br><span class="hljs-comment"> * 任务是否进行持久化, 默认为false, 这里后面我们可以通过观察qrtz_job_details中is_durably字段</span><br><span class="hljs-comment"> * 数据变化来检查对应任务的设置情况. 接着requestRecovery属性为是否记录任务执行状态,</span><br><span class="hljs-comment"> * 比如中断后, 重启应用后是否继续执行,默认为false,对应表字段qrtz_job_details中 request_recovery字段</span><br><span class="hljs-comment"> * 接着后面的 withIdentity 为我们任务的基本信息, 分别为任务名称及任务组</span><br><span class="hljs-comment"> */</span><br>JobDetail jobDetail = JobBuilder.newJob(xsdsJob.getClass())<br>        .storeDurably().requestRecovery().<br>                withIdentity(xsdsJob.getJobName(), xsdsJob.getJobGroupName()).build();<br><span class="hljs-keyword">try</span> &#123;<br>    scheduler.addJob(jobDetail, <span class="hljs-keyword">true</span>);<br>&#125; <span class="hljs-keyword">catch</span> (SchedulerException e) &#123;<br>    ........<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为某个任务增加执行时机(触发器)</p>
+</blockquote>
+<p>具体内容参考代码中日志</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;<br>	  <span class="hljs-comment">// TriggerKey  是作为一个触发器的标识存在的, 通过 TriggerKey 可以定位到一个触发器, 这里使用的参数为触发器所在组及触发器名称</span><br>    TriggerKey triggerKey = TriggerKey.triggerKey(trigger.getTriggerName(), trigger.getTriggerGroupName());<br> <span class="hljs-comment">// 通过使用调度器 scheduler.getTrigger() 方法返回值来获取对应的触发器</span><br>    <span class="hljs-keyword">if</span> (scheduler.getTrigger(triggerKey) != <span class="hljs-keyword">null</span>) &#123;<br>        logger.error(<span class="hljs-string">&quot;当前任务【&quot;</span> + trigger.getTriggerName() + <span class="hljs-string">&quot;】已存在, 无法覆盖创建任务调度计划&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br> <span class="hljs-comment">// 触发器构建器</span><br>    TriggerBuilder&lt;Trigger&gt; triggerBuilder = TriggerBuilder.newTrigger();<br>    <span class="hljs-comment">// 执行时辅助参数</span><br>    triggerBuilder.usingJobData(trigger.getParam());<br>    <span class="hljs-comment">// 触发器信息</span><br>    triggerBuilder.withIdentity(trigger.getTriggerName(), trigger.getTriggerGroupName());<br>    <span class="hljs-comment">// 设置后立即启动</span><br>    triggerBuilder.startNow();<br>    <span class="hljs-comment">// 使用的调度类型, 这里配置为cron表达式触发器</span><br>    triggerBuilder.withSchedule(<br>            CronScheduleBuilder.cronSchedule(trigger.getCron())<br>                    .withMisfireHandlingInstructionDoNothing());<br>    <span class="hljs-comment">// 该触发器所关联的任务</span><br>    triggerBuilder.forJob(trigger.getJobName(), trigger.getJobGroupName());<br>    CronTrigger cronTrigger = (CronTrigger) triggerBuilder.build();<br>    <span class="hljs-comment">// 设置触发器</span><br>    scheduler.scheduleJob(cronTrigger);<br>    <span class="hljs-comment">// 当前调度器是否执行, 如果没执行, 启动该调度器</span><br>    <span class="hljs-keyword">if</span> (!scheduler.isShutdown()) &#123;<br>        scheduler.start();<br>        logger.info(<span class="hljs-string">&quot;【&quot;</span> + trigger.getTriggerName() + <span class="hljs-string">&quot;】任务调度计划启动成功!&quot;</span>);<br>    &#125;<br>&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(e);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="代码编写参考"><a href="#代码编写参考" class="headerlink" title="代码编写参考"></a>代码编写参考</h4><blockquote>
+<p>下面一切内容皆建立在Spring管理项目基础上Quartz相关内容</p>
+</blockquote>
+<h6 id="jar包下载"><a href="#jar包下载" class="headerlink" title="jar包下载"></a>jar包下载</h6><p>maven</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.quartz-scheduler<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>quartz<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="配置Quartz文件"><a href="#配置Quartz文件" class="headerlink" title="配置Quartz文件"></a>配置Quartz文件</h6><ol>
+<li>注册调度bean</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">&lt;!-- 定时任务配置 --&gt;<br>&lt;bean id=<span class="hljs-string">&quot;scheduler&quot;</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">&quot;org.springframework.scheduling.quartz.SchedulerFactoryBean&quot;</span>&gt;<br>    &lt;property name=<span class="hljs-string">&quot;dataSource&quot;</span> ref=<span class="hljs-string">&quot;dataSource&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;overwriteExistingJobs&quot;</span> value=<span class="hljs-string">&quot;true&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;startupDelay&quot;</span> value=<span class="hljs-string">&quot;10&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;autoStartup&quot;</span> value=<span class="hljs-string">&quot;true&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;applicationContextSchedulerContextKey&quot;</span> value=<span class="hljs-string">&quot;applicationContextKey&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;configLocation&quot;</span> value=<span class="hljs-string">&quot;classpath:conf/common/properties/quartz.properties&quot;</span>/&gt;<br>&lt;/bean&gt;<br><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Quartz properties(官方默认即可)</li>
+</ol>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><br><span class="hljs-comment"># Default Properties file for use by StdSchedulerFactory</span><br><span class="hljs-comment"># to create a Quartz Scheduler Instance, if a different</span><br><span class="hljs-comment"># properties file is not explicitly specified.</span><br><span class="hljs-comment">#</span><br><span class="hljs-attr">org.quartz.scheduler.instanceName</span>=XSDSQuartzScheduler<br><span class="hljs-attr">org.quartz.scheduler.instanceId</span>=AUTO<br><span class="hljs-attr">org.quartz.scheduler.rmi.export</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">org.quartz.scheduler.rmi.proxy</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">org.quartz.scheduler.wrapJobExecutionInUserTransaction</span>=<span class="hljs-literal">false</span><br><span class="hljs-attr">org.quartz.threadPool.class</span>=org.quartz.simpl.SimpleThreadPool<br><span class="hljs-attr">org.quartz.threadPool.threadCount</span>=<span class="hljs-number">20</span><br><span class="hljs-attr">org.quartz.threadPool.threadPriority</span>=<span class="hljs-number">5</span><br><span class="hljs-attr">org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread</span>=<span class="hljs-literal">true</span><br><span class="hljs-comment">#60000</span><br><span class="hljs-attr">org.quartz.jobStore.misfireThreshold</span>=<span class="hljs-number">120000</span><br><br><span class="hljs-comment">#org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore</span><br><span class="hljs-attr">org.quartz.jobStore.class</span>=org.quartz.impl.jdbcjobstore.JobStoreTX<br><span class="hljs-comment">#org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate</span><br><span class="hljs-attr">org.quartz.jobStore.driverDelegateClass</span>=com.erayt.xsds.common.schedule.core.OracleDelegate<br><span class="hljs-attr">org.quartz.jobStore.useProperties</span>=<span class="hljs-literal">false</span><br><span class="hljs-comment">#org.quartz.jobStore.dataSource = myDS</span><br><span class="hljs-attr">org.quartz.jobStore.tablePrefix</span>=QRTZ_<br><span class="hljs-attr">org.quartz.jobStore.isClustered</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">org.quartz.jobStore.clusterCheckinInterval</span>=<span class="hljs-number">30000</span><br><span class="hljs-attr">org.quartz.jobStore.maxMisfiresToHandleAtATime</span>=<span class="hljs-number">10</span><br><span class="hljs-comment">#org.quartz.jobStore.doubleCheckLockMisfireHandler=false</span><br><br><br></code></pre></td></tr></table></figure>
+
+<h6 id="代码部分"><a href="#代码部分" class="headerlink" title="代码部分"></a>代码部分</h6><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.erayt.xsds.common.schedule.core;<br><br><span class="hljs-keyword">import</span> com.erayt.xsds.common.cache.ehcache.cachedOb.SysParamList;<br><span class="hljs-keyword">import</span> com.erayt.xsds.common.domain.base.SysParam;<br><span class="hljs-keyword">import</span> com.erayt.xsds.common.utils.CronUtil;<br><span class="hljs-keyword">import</span> org.apache.log4j.Logger;<br><span class="hljs-keyword">import</span> org.quartz.*;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgo</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@package</span> com.erayt.xsds.common.schedule.service</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: 定时任务调度管理</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/9/18 16:00</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ScheduleService</span> </span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TRG_BATCHTODAY = <span class="hljs-string">&quot;当日晚间批处理任务&quot;</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TRG_SYSBATCH = <span class="hljs-string">&quot;系统隔夜批处理任务&quot;</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TRG_SYSONLINEBATCH = <span class="hljs-string">&quot;系统联机隔夜批处理任务&quot;</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Logger logger = Logger.getLogger(ScheduleService.class);<br>    <span class="hljs-meta">@Value(&quot;$&#123;TRG_GROUP_NAME&#125;&quot;)</span><br>    <span class="hljs-keyword">public</span> String triggerGroupName = <span class="hljs-string">&quot;TRIGGER_GROUP_SYSTEM&quot;</span>;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> XsdsJob xsdsJob;<br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> Scheduler scheduler;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setDemoSchedule</span><span class="hljs-params">()</span> </span>&#123;<br>        String cron = CronUtil.getCron(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-number">0</span>);<br>        addTrigger(getXsdsJobTrigger(<span class="hljs-string">&quot;这是一个测试任务&quot;</span>, cron, <span class="hljs-string">&quot;type&quot;</span>, <span class="hljs-number">1000</span>));<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 创建一个xsds任务</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">createXsdsJob</span><span class="hljs-params">()</span> </span>&#123;<br>        JobDetail jobDetail = JobBuilder.newJob(xsdsJob.getClass())<br>                .storeDurably().requestRecovery().<br>                        withIdentity(xsdsJob.getJobName(), xsdsJob.getJobGroupName()).build();<br>        <span class="hljs-keyword">try</span> &#123;<br>            scheduler.addJob(jobDetail, <span class="hljs-keyword">true</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (SchedulerException e) &#123;<br>            logger.error(<span class="hljs-string">&quot;增加XSDS基本任务异常&quot;</span>, e);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取一个XSDS任务触发器对象</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> name 创建的任务名称</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> cron 任务执行时间</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 任务执行触发器</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> XsdsJobTrigger <span class="hljs-title">getXsdsJobTrigger</span><span class="hljs-params">(String name, String cron)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> XsdsJobTrigger.Builder().jobGroupName(xsdsJob.getJobGroupName()).jobName(xsdsJob.getJobName())<br>                .triggerGroupName(triggerGroupName).triggerName(name).cron(cron);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> XsdsJobTrigger <span class="hljs-title">getXsdsJobTrigger</span><span class="hljs-params">(String name, String cron, String paramKey, Object paramValue)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> XsdsJobTrigger.Builder().jobGroupName(xsdsJob.getJobGroupName()).jobName(xsdsJob.getJobName())<br>                .triggerGroupName(triggerGroupName).triggerName(name).cron(cron).params(paramKey, paramValue);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 增加一个任务执行触发器</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> trigger 任务执行触发器</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addTrigger</span><span class="hljs-params">(AbstractTrigger trigger)</span> </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            TriggerKey triggerKey = TriggerKey.triggerKey(trigger.getTriggerName(), trigger.getTriggerGroupName());<br>            <span class="hljs-keyword">if</span> (scheduler.getTrigger(triggerKey) != <span class="hljs-keyword">null</span>) &#123;<br>                logger.error(<span class="hljs-string">&quot;当前任务【&quot;</span> + trigger.getTriggerName() + <span class="hljs-string">&quot;】已存在, 无法覆盖创建任务调度计划&quot;</span>);<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            TriggerBuilder&lt;Trigger&gt; triggerBuilder = TriggerBuilder.newTrigger();<br>            triggerBuilder.usingJobData(trigger.getParam());<br>            triggerBuilder.withIdentity(trigger.getTriggerName(), trigger.getTriggerGroupName());<br>            triggerBuilder.startNow();<br>            triggerBuilder.withSchedule(<br>                    CronScheduleBuilder.cronSchedule(trigger.getCron())<br>                            .withMisfireHandlingInstructionDoNothing());<br>            triggerBuilder.forJob(trigger.getJobName(), trigger.getJobGroupName());<br>            CronTrigger cronTrigger = (CronTrigger) triggerBuilder.build();<br>            scheduler.scheduleJob(cronTrigger);<br>            <span class="hljs-keyword">if</span> (!scheduler.isShutdown()) &#123;<br>                scheduler.start();<br>                logger.info(<span class="hljs-string">&quot;【&quot;</span> + trigger.getTriggerName() + <span class="hljs-string">&quot;】任务调度计划启动成功!&quot;</span>);<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(e);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 修改一个任务的触发时间</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> xsdsJob xsds任务类 提供触发器组, 触发器名称, 修改后的cron表达式</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">modifyJobTime</span><span class="hljs-params">(AbstractTrigger xsdsJob)</span> </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            TriggerKey triggerKey = TriggerKey.triggerKey(xsdsJob.getTriggerName(),<br>                    xsdsJob.getTriggerGroupName());<br>            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);<br>            <span class="hljs-keyword">if</span> (trigger == <span class="hljs-keyword">null</span>) &#123;<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            String oldTime = trigger.getCronExpression();<br>            <span class="hljs-keyword">if</span> (!oldTime.equalsIgnoreCase(xsdsJob.getCron())) &#123;<br>                TriggerBuilder&lt;Trigger&gt; triggerBuilder = TriggerBuilder.newTrigger();<br>                triggerBuilder.forJob(xsdsJob.getJobName(), xsdsJob.getJobGroupName());<br>                triggerBuilder.withIdentity(xsdsJob.getTriggerName(), xsdsJob.getTriggerGroupName());<br>                triggerBuilder.startNow();<br>                triggerBuilder.usingJobData(trigger.getJobDataMap());<br>                triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(xsdsJob.getCron()));<br>                trigger = (CronTrigger) triggerBuilder.build();<br>                scheduler.rescheduleJob(triggerKey, trigger);<br>                logger.info(<span class="hljs-string">&quot;【&quot;</span> + xsdsJob.getTriggerName() + <span class="hljs-string">&quot;】任务调度计划重设成功!&quot;</span>);<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(e);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 移除一个任务</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> xsdsJob xsds 任务类 提供任务名称, 任务组, 触发器名称, 触发器组</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeJob</span><span class="hljs-params">(AbstractTrigger xsdsJob)</span> </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            TriggerKey triggerKey = TriggerKey.triggerKey(xsdsJob.getTriggerName(), xsdsJob.getTriggerGroupName());<br>            scheduler.pauseTrigger(triggerKey);<br>            scheduler.unscheduleJob(triggerKey);<br>            scheduler.deleteJob(JobKey.jobKey(xsdsJob.getJobName(), xsdsJob.getJobGroupName()));<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(e);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 启动所有定时任务</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">startJobs</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            scheduler.start();<br>            logger.info(<span class="hljs-string">&quot;任务调度计划启动成功&quot;</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(e);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 关闭所有定时任务</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">shutdownJobs</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">if</span> (!scheduler.isShutdown()) &#123;<br>                scheduler.shutdown();<br>                logger.info(<span class="hljs-string">&quot;任务调度计划停止成功&quot;</span>);<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(e);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.erayt.xsds.common.schedule.core;<br><br><span class="hljs-keyword">import</span> org.quartz.JobDataMap;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgo</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@package</span> com.erayt.xsds.common.schedule.core</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: 触发器标识基础抽象类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/9/19 14:11</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AbstractTrigger</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取触发器名称</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 触发器名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title">getTriggerName</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取触发器组名称</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 触发器组名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title">getTriggerGroupName</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取cron表达式 执行时机</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> cron表达式</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title">getCron</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取任务名称</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 任务名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title">getJobName</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取任务组名称</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 任务组名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> String <span class="hljs-title">getJobGroupName</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 获取任务执行所需参数, 假如需要的话</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 任务执行所需参数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> JobDataMap <span class="hljs-title">getParam</span><span class="hljs-params">()</span></span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.erayt.xsds.common.schedule.core;<br><br><span class="hljs-keyword">import</span> com.erayt.solar2.engine.query.QueryParam;<br><span class="hljs-keyword">import</span> com.erayt.solar2.engine.query.impl.QueryEngineImpl;<br><span class="hljs-keyword">import</span> com.erayt.xsds.common.domain.base.SysParam;<br><span class="hljs-keyword">import</span> com.erayt.xsds.common.schedule.batch.FinancialOverNight;<br><span class="hljs-keyword">import</span> com.erayt.xsds.common.schedule.batch.LogInfoUtil;<br><span class="hljs-keyword">import</span> com.erayt.xsds.common.schedule.service.SysParamService;<br><span class="hljs-keyword">import</span> org.apache.log4j.Logger;<br><span class="hljs-keyword">import</span> org.quartz.JobDataMap;<br><span class="hljs-keyword">import</span> org.quartz.JobExecutionContext;<br><span class="hljs-keyword">import</span> org.quartz.JobExecutionException;<br><span class="hljs-keyword">import</span> org.quartz.SchedulerException;<br><span class="hljs-keyword">import</span> org.quartz.impl.triggers.CronTriggerImpl;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.scheduling.quartz.QuartzJobBean;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><span class="hljs-keyword">import</span> org.springframework.web.context.support.XmlWebApplicationContext;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgo</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@package</span> com.erayt.xsds.common.schedule.batch</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: xsds job 类</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/9/19 10:06</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XsdsJob</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">QuartzJobBean</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> Logger logger = Logger.getLogger(XsdsJob.class);<br>    <span class="hljs-keyword">private</span> Logger loggerBatch = Logger.getLogger(XsdsJob.class);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 任务名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Value(&quot;$&#123;XSDS_JOB&#125;&quot;)</span>  <span class="hljs-comment">// 这里读取的是配置文件, 有需要自行调整</span><br>    <span class="hljs-keyword">private</span> String jobName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 任务组名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Value(&quot;$&#123;JOB_GROUP_NAME&#125;&quot;)</span> <span class="hljs-comment">// 这里读取的是配置文件, 有需要自行调整</span><br>    <span class="hljs-keyword">private</span> String jobGroupName;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getJobName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> jobName;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getJobGroupName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> jobGroupName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">executeInternal</span><span class="hljs-params">(JobExecutionContext currentJob)</span> <span class="hljs-keyword">throws</span> JobExecutionException </span>&#123;<br>        QueryEngineImpl queryEngine = <span class="hljs-keyword">null</span>;<br>        SysParamService sysParamService = <span class="hljs-keyword">null</span>;<br>        FinancialOverNight financialOverNight = <span class="hljs-keyword">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            XmlWebApplicationContext context = (XmlWebApplicationContext) currentJob<br>                    .getScheduler().getContext().get(<span class="hljs-string">&quot;applicationContextKey&quot;</span>);<br>            queryEngine = (QueryEngineImpl) context.getBean(<span class="hljs-string">&quot;queryEngine&quot;</span>);<br>            sysParamService = (SysParamService) context.getBean(<span class="hljs-string">&quot;sysParamService&quot;</span>);<br>            financialOverNight = (FinancialOverNight) context.getBean(<span class="hljs-string">&quot;financialOverNight&quot;</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (SchedulerException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>        CronTriggerImpl trigger = (CronTriggerImpl) currentJob.getTrigger();<br>        logger.info(<span class="hljs-string">&quot;任务调度执行计划【&quot;</span> + trigger.getName() + <span class="hljs-string">&quot;】已启动&quot;</span>);<br>        JobDataMap jobDataMap = trigger.getJobDataMap();<br>        Integer type = (Integer) jobDataMap.get(<span class="hljs-string">&quot;type&quot;</span>);<br>        logger.info(<span class="hljs-string">&quot;当前执行任务type:&quot;</span> + type);<br>        <span class="hljs-keyword">switch</span> (type) &#123;<br>            <span class="hljs-keyword">case</span> <span class="hljs-number">1000</span>:<br>               System.out.println(<span class="hljs-string">&quot;测试任务正常执行&quot;</span>);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">default</span>:<br>                <span class="hljs-keyword">break</span>;<br>        &#125;<br>        logger.info(<span class="hljs-string">&quot;任务调度执行计划【&quot;</span> + trigger.getName() + <span class="hljs-string">&quot;】已结束&quot;</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.erayt.xsds.common.schedule.core;<br><br><span class="hljs-keyword">import</span> org.quartz.JobDataMap;<br><br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> lvgo</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@package</span> com.erayt.xsds.common.schedule.core</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>: xpad基础任务新增触发器类 通过 Builder 方法创建</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/9/19 14:01</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XsdsJobTrigger</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractTrigger</span> </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 任务名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String jobName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 任务组名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String jobGroupName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 触发器名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String triggerName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 触发器组名称</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String triggerGroupName;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * cron 表达式</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String cron;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 参数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> JobDataMap param = <span class="hljs-keyword">new</span> JobDataMap();<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 建议使用builder创建xsdsJOb触发器</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">XsdsJobTrigger</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getJobName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> jobName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getJobGroupName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> jobGroupName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getTriggerName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> triggerName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getTriggerGroupName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> triggerGroupName;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getCron</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> cron;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> JobDataMap <span class="hljs-title">getParam</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> param;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Builder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">XsdsJobTrigger</span> </span>&#123;<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">jobName</span><span class="hljs-params">(String jobName)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.jobName = jobName;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">jobGroupName</span><span class="hljs-params">(String jobGroupName)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.jobGroupName = jobGroupName;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">triggerName</span><span class="hljs-params">(String triggerName)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.triggerName = triggerName;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">triggerGroupName</span><span class="hljs-params">(String triggerGroupName)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.triggerGroupName = triggerGroupName;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">cron</span><span class="hljs-params">(String cron)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.cron = cron;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">params</span><span class="hljs-params">(Map&lt;String, Object&gt; param)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.param = <span class="hljs-keyword">new</span> JobDataMap(param);<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">params</span><span class="hljs-params">(String key, Object value)</span> </span>&#123;<br>            <span class="hljs-keyword">super</span>.param.put(key, value);<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Builder <span class="hljs-title">build</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#教程" >
+    <span class="tag-code">教程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/try-catch-right-operation.html">
+        <span class="nav-arrow">← </span>
+        
+          try catch 中的异常怎么处理
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/silent-first.html">
+        
+          《多线程并发任务处理组件》序章——生活不能就这样悲泣
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'b1778cdc926fe96ece65c513471c6966',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#quartz-%E9%9D%9E%E6%95%99%E5%AD%A6%E4%BB%8B%E7%BB%8D"><span class="toc-nav-text">quartz 非教学介绍</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%B8%B8%E7%94%A8%E7%B1%BB%E5%8F%8AAPI"><span class="toc-nav-text">常用类及API</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E7%9B%B8%E4%BA%92%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-nav-text">相互之间的关系</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#JobDetail"><span class="toc-nav-text">JobDetail</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#Trigger"><span class="toc-nav-text">Trigger</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-nav-text">代码示例</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99%E5%8F%82%E8%80%83"><span class="toc-nav-text">代码编写参考</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#jar%E5%8C%85%E4%B8%8B%E8%BD%BD"><span class="toc-nav-text">jar包下载</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#%E9%85%8D%E7%BD%AEQuartz%E6%96%87%E4%BB%B6"><span class="toc-nav-text">配置Quartz文件</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81%E9%83%A8%E5%88%86"><span class="toc-nav-text">代码部分</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/course-spring-quartz.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

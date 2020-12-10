@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      Java内存模型 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Java内存模型</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-09-05</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Java-内存模型-JMM"><a href="#Java-内存模型-JMM" class="headerlink" title="Java 内存模型 ( JMM )"></a>Java 内存模型 ( JMM )</h1><blockquote>
+<p>多线程场景下需关注 , 单线程数据竞争可以通过JMM的顺序一致性来保证, 不会出现数据竞争</p>
+</blockquote>
+<a id="more"></a>
+
+<p>并发编程中, 线程间通信有两种方式</p>
+<ol>
+<li>共享内存(隐式)</li>
+<li>消息传递(显式)</li>
+</ol>
+<p>而我们这里要记录的则是 Java 线程间通信使用的 <strong>共享内存</strong>, 也就是 Java 的内存是怎么样子的</p>
+<h2 id="Java-内存模型基础"><a href="#Java-内存模型基础" class="headerlink" title="Java 内存模型基础"></a>Java 内存模型基础</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><blockquote>
+<p>Java 的内存对于我们开发人员来讲, 是不可见的, 是透明的.</p>
+</blockquote>
+<p>Java 的线程间通信使用的是 共享内存 方式进行隐式通信, 所以对于我们开发人员来讲,  这部分不可见的内容存在了很多隐患问题. </p>
+<p>在 Java 中分为共享内存和私有内存, 而这些概念也是由 Java 本身自己来控制的, 并不真实存在</p>
+<p>主内存: i = 1</p>
+<p>线程A: 与 线程B:</p>
+<p>如果线程 A 与 线程 B 间想要通信, 那么必须通过 主内存(共享内存) 来实现.  Java 通过 JMM 来控制每个线程和主内存的交互, 从而来实现开发人员对内存的可见性</p>
+<h3 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h3><blockquote>
+<p>Java 执行过程中为了提高性能, 会对执行进行重新排序</p>
+</blockquote>
+<ol>
+<li>编译器重排序 (不改变语义的情况下重排序)</li>
+<li>指令并行重排序 (处理器多条指令并行时, 不存在数据依赖, 可以进行重排序)</li>
+<li>内存系统重排序 ( 内存读写缓冲行 , 可能会重排序)</li>
+</ol>
+<p>第一种为 JAVA 本身的编译器重排序, 可以通过 JMM 来进行控制, 而2,3属于CPU级重排序, Java 不能直接控制, 所以 Java 使用在生成指令时在中间插入 内存屏障指令 这种方式来实现禁止重排序.</p>
+<h3 id="happends-before"><a href="#happends-before" class="headerlink" title="happends - before"></a>happends - before</h3><blockquote>
+<p>happends - before 规则是指, 当一个操作结束后, 结果对另一个操作可见, 其中包括</p>
+</blockquote>
+<ol>
+<li>程序顺序 : 一个线程的每步操作</li>
+<li>监视器锁释放 : 一个监视器解锁应对另一个监视器加锁可见</li>
+<li>volatile变量: 一个volatile域的写, 要对其他对volatile域的读可见</li>
+<li>传递性 : A happends - before B , B happends - before C , 那么 A happends - before C</li>
+</ol>
+<h2 id="Java-顺序一致性内存模型"><a href="#Java-顺序一致性内存模型" class="headerlink" title="Java 顺序一致性内存模型"></a>Java 顺序一致性内存模型</h2><blockquote>
+<p>程序如果没有正确同步, 就会出现数据竞争问题, 相反, 如果程序设置了合理的正确同步, 那就一定不会出现数据竞争, 这一点就由JMM的顺序一致性来保证</p>
+</blockquote>
+<p>如果做了线程同步, 那就一定会有JMM的顺序一致性加持, 来保证数据的一致结果, 反之则不保证数据的一致性结果.</p>
+<p>理想状态下的数据概念模型与我们的意图完全相符, AB两条线程, 同时对数字 1 进行加1操作, 结果 为 3</p>
+<h2 id="Java-同步原语"><a href="#Java-同步原语" class="headerlink" title="Java 同步原语"></a>Java 同步原语</h2><p>Load 指令, 使缓存失效, 从主内存读取数据</p>
+<p>Store 指令, 使写操作之后将内存的值刷新到主内存当中, 保证其他内存可见</p>
+<h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h3><ul>
+<li><p>在每个volatile写操作前插入StoreStore屏障 </p>
+<p>volatile 写</p>
+<p>在写操作后插入StoreLoad屏障</p>
+</li>
+<li><p>在每个volatile读操作前插入LoadLoad屏障  </p>
+<p>volatile 读</p>
+<p>在读操作后插入LoadStore屏障</p>
+</li>
+</ul>
+<p>StoreLoad 具备其他3个屏障的所有特性, 开销较大</p>
+<p>在一个 volatile 变量读之后, 无论是什么操作, 不允许进行重排序;</p>
+<p>在一个 volatile 变量写之前, 无论是什么操作, 不允许进行重排序;</p>
+<p>在一个 volatile 变量写之后是 volatile 读, 不允许进行重排序;</p>
+<p>对一个 volatile 变量的读/写具有可见性和原子性, 但对于 volatile 变量的运算操作不具有原子性, 比如对volatile++</p>
+<blockquote>
+<p>volatile写和volatile读的内存屏障插入策略非常保守。在实际执行时，只要不改变volatile写-读的内存语义，编译器可以根据具体情况省略不必要的屏障。</p>
+</blockquote>
+<p>X86处理器仅会对写-读操作做重排序。</p>
+<p>X86不会对读-读、读-写和写-写操作做重排序，</p>
+<p>因此在X86处理器中会省略掉这3种操作类型对应的内存屏障</p>
+<h3 id="final"><a href="#final" class="headerlink" title="final"></a>final</h3><ul>
+<li>final 写操作之后插入 StoreStore屏障</li>
+<li>final 读操作之前插入 LoadLoad屏障</li>
+</ul>
+<p>对 final 域的写, 编译器和处理器遵循以下两个重排序规则</p>
+<ol>
+<li>禁止将包含final域的写入的构造函数, 与该对象的引用赋值进行重排序</li>
+<li>初次读包含final域的引用 与 读取该对象中的 final 域禁止重排序</li>
+</ol>
+<p>对于以上两个规则, 是因为, JMM禁止编译器把 final域写重排序到构造函数之后(外面), 因为在final域写之后, return 该对象执行, 会插入一条 StoreStore 屏障</p>
+<p>对于 final 域的读, JMM会进制编译器把 final 域读与之前的操作进行重排序, 在读 final 域之前会插入一个 LoadLoad 屏障, </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">例 : 对象A 定义两个变量为,  在我们使用 <br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>       	<span class="hljs-keyword">int</span> i;<br> 		<span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> j = <span class="hljs-number">10</span>; <br>        <br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">A</span> <span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;<br>        	<span class="hljs-keyword">this</span>.i = i;<br>        &#125;<br>    &#125;<br>    A a = <span class="hljs-keyword">new</span> A(<span class="hljs-number">10</span>); <br><br></code></pre></td></tr></table></figure>
+
+<p>在调用 a.i 的时候, 此时有可能读不到值, 而在读 a.j 的时候则一定可以. 原因就是因为 LoadLoad 屏障的禁止重排序.</p>
+<blockquote>
+<p>通过以上的内容, 我们知道, 当拿到一个对象的引用的时候, 在读取该对象内final域的时候, 该值一定是初始化之后的值, 而普通对象则不一定.</p>
+</blockquote>
+<h3 id="锁的内存语义"><a href="#锁的内存语义" class="headerlink" title="锁的内存语义"></a>锁的内存语义</h3><blockquote>
+<p>锁是java并发编程中最重要的同步机制。锁除了让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息</p>
+</blockquote>
+<p>当线程尝试释放锁时, JMM会将线程内的共享变量, 刷新到主内存当中.</p>
+<p>当线程尝试获取锁是, JMM会将线程内的共享变量地址设为无效.从而临界区的变量必须从主内存当中重新获取.</p>
+<p>释放锁与 volatile 写具有相同的内存语义</p>
+<p>获取锁与 volatile 读具有相同的内存语义</p>
+<p>Java中锁的内存语义可以通过一个锁的实现来理解, 那就是 ReentrantLock .</p>
+<p>ReentrantLock 依赖 Java 中的 AQS同步框架 (AbstractQueuedSynchronizer)来实现. 该框架通过使用一个 volatile 变量来代替”信号”</p>
+<p>ReentrantLock 在获取锁时, 先获取到 volatile 关键词修饰的信号 state, 在使用 CAS 将该信号量更新成已上锁的状态.在释放锁的最后, 会将这个值改为无锁状态.</p>
+<p>CAS 会调用 cmpxchg 指令进行原子操作, 同样在调用处理器指令的时候, 会根据处理器类型来决定具体的执行指令, 如果在单处理器机器上执行时, 将直接执行 cmpxchg 指令, 而在多处理器机器上执行时, 会增加 Lock 前缀, 最终执行指令为, Lock cmpxchg.</p>
+<p>关于  Lock 前缀, 这里简单总结一下. 在执行前增加 Lock 前缀</p>
+<ol>
+<li>保证了对内存操作的原子性 (通过锁内存总线来实现, 这样会使所有处理器无法访问内存数据. 所以还有另外一种情况, 即所需要操作的数据在带有 Lock 前缀指令执行之前就已经被持有该缓存行的处理器锁定, 则不会通过锁总线来完成这步指令, 因为此时的数据无法被其他处理器读取, 该操作成为缓存锁定 . 但当处理器竞争程度较高, 或指令内存地址未对齐时, 仍会锁住总线)</li>
+<li>禁止重排序</li>
+<li>写入缓存的值刷新到主内存中</li>
+</ol>
+<blockquote>
+<p>concurrent 包实现的通用化模式</p>
+<ol>
+<li>首先, 声明 volatile 共享变量</li>
+<li>然后, 使用 CAS 更新来实现线程同步</li>
+<li>同时, 配合 volatile 的读/写和CAS所具有的volatile读和写的内存语义来实现线程通信</li>
+</ol>
+</blockquote>
+<h2 id="内存模型总结"><a href="#内存模型总结" class="headerlink" title="内存模型总结"></a>内存模型总结</h2><ul>
+<li>Java 内存模型</li>
+<li>Java 顺序一致性内存模型</li>
+<li>处理器内存模型</li>
+</ul>
+<p>内存模型的强弱关系</p>
+<p>顺序一致性模型 &gt; 语言内存模型 &gt; 处理器内存模型</p>
+<p>性能关系</p>
+<p>处理器内存模型 &gt; 语言内存模型 &gt; 顺序一致性模型</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/informal-volatile.html">
+        <span class="nav-arrow">← </span>
+        
+          关于 Java volatile 的随笔记
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/java-juc-first-concept.html">
+        
+          Java并发编程
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'abc26d9158975be974426e876e3c8b63',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Java-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B-JMM"><span class="toc-nav-text">Java 内存模型 ( JMM )</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Java-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80"><span class="toc-nav-text">Java 内存模型基础</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-nav-text">基本概念</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-nav-text">重排序</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#happends-before"><span class="toc-nav-text">happends - before</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Java-%E9%A1%BA%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-nav-text">Java 顺序一致性内存模型</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Java-%E5%90%8C%E6%AD%A5%E5%8E%9F%E8%AF%AD"><span class="toc-nav-text">Java 同步原语</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#volatile"><span class="toc-nav-text">volatile</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#final"><span class="toc-nav-text">final</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%94%81%E7%9A%84%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89"><span class="toc-nav-text">锁的内存语义</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="toc-nav-text">内存模型总结</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-juc-jmm.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

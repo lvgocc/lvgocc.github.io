@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（十四）行为型之模板方法模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（十四）行为型之模板方法模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-11-24</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/11/24/65JlOrxysH82ivQ.png" alt="template-method-title.png"></p>
+<h1 id="冲啊！"><a href="#冲啊！" class="headerlink" title="冲啊！"></a>冲啊！</h1><p>最近经常看《四驱兄弟》，脑子已经被“冲啊”洗掉了。</p>
+<p>“冲啊，就让我们一路领先到底吧！”，“冲啊，看我的胜利冲锋！”，“冲啊！先驱音速！”，“去吧！三角箭！”，“冲啊！疾速斧头！”，“冲啊！二郎丸特别号！”，“冲啊！”</p>
+<p>终于来到了设计模式的“人性”部分，行为型模式，为什么说行为型模式是“人性”部分呢，因为行为型模式当中的 11 种设计模式对理解都非常的友好啊。所以接下来的内容可能让我学起来说不定更有趣些。</p>
+<h1 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h1><blockquote>
+<p>定义一个操作中的算法骨架，将算法的一些步骤延迟到子类中，使得子类在可以不改变该算法结构的情况下重定义该算法的某些特定步骤。</p>
+</blockquote>
+<h2 id="如何理解"><a href="#如何理解" class="headerlink" title="如何理解"></a>如何理解</h2><p>定义一个操作中的算法骨架，说白了这不就是一个步骤约束吗？在看第二段，将算法的一些步骤延迟到子类中，意思就是步骤里的一部分留给你了，具体怎么做看你（子类）自己了。使得子类在可以不改变该算法结构的情况下重定义该算法的某些特定步骤，这句就更好理解了，有了步骤的约束，你负责执行具体的步骤，说白了，步骤只要执行就可以，不管你怎么做，所以也就有了不改变结构的情况下可以重新定义特定的步骤，这里的特定指的就是约束步骤里留给你的那部分步骤。</p>
+<ul>
+<li><p>比如我们经常写 PPT 的小伙伴知道，在 PPT 中，点击新增一页 PPT ，创建出来的页面，大部分的布局格式都是已经设置好的，我们只需要去填充里面的内容就可以了。</p>
+</li>
+<li><p>再比如经常写需求说明书的时候，会和同事要一份“模板”，这也是一种模板方法模式的体现。</p>
+</li>
+<li><p>还有如果你使用过 maven 创建过项目，那这个你一定不陌生</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2020/11/24/1mWL2Nnue5A3yrF.png" alt="template-method-maven.png"></p>
+<h2 id="重新定义"><a href="#重新定义" class="headerlink" title="重新定义"></a>重新定义</h2><p>模板方法模式就是：提供一个具体的步骤，1,2,3,4，现在1,2,4都写好了，步骤3的实现由具体的执行者说了算，只要步骤符合要求，随你发挥。</p>
+<h2 id="模板方法模式类图-📌"><a href="#模板方法模式类图-📌" class="headerlink" title="模板方法模式类图 📌"></a>模板方法模式类图 📌</h2><p><img src="https://i.loli.net/2020/11/24/RsQzpH46XNZTWcd.png" alt="template-method"></p>
+<p>看类图就是抽象和子类的样子，而实际模板方法模式就是利用了”抽象”。是一个完全遵守开闭原则的设计模式。可以这么说，搞懂了模板方法模式，开闭原则基本就通了。</p>
+<p><strong>注意：模板方法模式中与我们平时继承抽象类有一个关键性的区别，就是入口方法，正常抽象类继承是不需要有这个所谓的入口方法，可以通过入口方法来确定算法的执行顺序，即算法骨架。</strong></p>
+<h2 id="我怎么用模板方法模式📃"><a href="#我怎么用模板方法模式📃" class="headerlink" title="我怎么用模板方法模式📃"></a>我怎么用模板方法模式📃</h2><p>模板方法模式可以说是非常简单的一种设计模式了，虽然简单，但它的作用却很大。比如我们经常使用的lock 锁，它的实现就利用了 AQS ，而 AQS 就是使用 <strong>模板方法模式</strong> 维护的一个锁框架，通过它可以快速的开发出一个锁。这步可以结合 AQS 的代码来看一看。</p>
+<p>第一步：通过 Lock 接口来约束一个锁所需要的几个关键方法（其实这也可以说是一种模板，只是约束力很小）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MutexLock</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Lock</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Sync sync = <span class="hljs-keyword">new</span> Sync();<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;<br>        sync.acquire(<span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lockInterruptibly</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        sync.acquireInterruptibly(<span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryLock</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> sync.tryAcquire(<span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryLock</span><span class="hljs-params">(<span class="hljs-keyword">long</span> time, TimeUnit unit)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123;<br>        sync.release(<span class="hljs-number">0</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Condition <span class="hljs-title">newCondition</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> sync.newCondition();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>核心代码</strong></p>
+<p>第二步：具体的锁实现，这个类的约束力比较强，因为我们想偷懒，借助 AQS 来实现一个锁，所以就要按照它所提供的模板要求来完成对应步骤的代码逻辑，也就是上面提到的（使得子类在可以不改变该算法结构的情况下重定义该算法的某些特定步骤。）这些需要我们去写的步骤就是 AQS 留给我们的 “特殊步骤”</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sync</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractQueuedSynchronizer</span> </span>&#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryAcquire</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;<br>            <span class="hljs-keyword">if</span> (compareAndSetState(<span class="hljs-number">0</span>, arg)) &#123;<br>                setExclusiveOwnerThread(Thread.currentThread());<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryRelease</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;<br>            <span class="hljs-keyword">if</span> (compareAndSetState(<span class="hljs-number">1</span>, arg)) &#123;<br>                setExclusiveOwnerThread(<span class="hljs-keyword">null</span>);<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-function">Condition <span class="hljs-title">newCondition</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ConditionObject();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>关于 AQS 留给我们的 “特殊步骤”可以在源码中看到</p>
+<p>我们自己定一个锁，然后调用 acquire 方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MutexLock</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Lock</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Sync sync = <span class="hljs-keyword">new</span> Sync();<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;<br>        sync.acquire(<span class="hljs-number">1</span>);<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>之后 AQS 按照它的模板继续执行，在需要的时候（特殊步骤）会调用我们自己提供的方法，锁具体的实现要自行实现，模板类 AQS 不提供具体实现。</p>
+<p><img src="https://i.loli.net/2020/11/24/ruJo4M3l1SF9ILO.png" alt="template-method-AQS1.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">      <span class="hljs-comment">// 重写 AQS 的特殊步骤，如果不写会抛出上述异常</span><br><span class="hljs-meta">@Override</span><br>      <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryAcquire</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;<br>          <span class="hljs-keyword">if</span> (compareAndSetState(<span class="hljs-number">0</span>, arg)) &#123;<br>              setExclusiveOwnerThread(Thread.currentThread());<br>              <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>          &#125; <span class="hljs-keyword">else</span> &#123;<br>              <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>          &#125;<br>      &#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过一个图来理解这个过程</p>
+<p><img src="https://i.loli.net/2020/11/24/Vl3LZn1STyj8MbU.png" alt="template-method-AQS2.png"></p>
+<p>其中“<strong>特殊步骤</strong>”就是 AQS 模板留给我们要实现的地方。</p>
+<p>最后，测试一下我们自己写的锁</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MutexLockTest</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> f = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        Lock lock = <span class="hljs-keyword">new</span> MutexLock();<br>        <span class="hljs-keyword">int</span> threadCount = Runtime.getRuntime().availableProcessors();<br>        CountDownLatch signal = <span class="hljs-keyword">new</span> CountDownLatch(threadCount);<br>        <span class="hljs-keyword">int</span> loop = <span class="hljs-number">100000</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; threadCount; i++) &#123;<br>            Thread thread = <span class="hljs-keyword">new</span> Thread(() -&gt; &#123;<br>                <span class="hljs-keyword">int</span> l = <span class="hljs-number">0</span>;<br>                <span class="hljs-keyword">while</span> (l &lt; loop) &#123;<br>                    lock.lock();<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        f++;<br>                    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br><br>                    &#125; <span class="hljs-keyword">finally</span> &#123;<br>                        lock.unlock();<br>                    &#125;<br>                    l++;<br>                &#125;<br>                signal.countDown();<br>            &#125;);<br>            thread.start();<br>        &#125;<br>        signal.await();<br>        Assertions.assertEquals(threadCount * loop, f);<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>运行结果</strong></p>
+<p><img src="https://i.loli.net/2020/11/24/bXn3FYOSryAseka.png" alt="template-method-test.png"></p>
+<p>这里建议大家配合源码学习，同时也能学习一些与锁实现上的一些相关知识，如果有不清楚或觉得有疑问的地方，欢迎加我微信一起讨论（lvgocc）</p>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><p>通过模版模式可以将一些我们想要约束的执行步骤固定下来，同时对于步骤中重复的内容可以进行抽象，这样就可以简化很多子类的操作，也避免了一些不必要的冗余代码产生。</p>
+<p>使用模板方法模式可以非常简单的来约束一段逻辑的执行要求。在做程序扩展限制时，非常有用。定义好具体的逻辑流程抽象类，将公共部分代码写在抽象类中，然后将其中需要使用者自行实现的方法定义为抽象方法，这样当他继承这个类的时候，只需要将对应的抽象方法实现就好了，不需要关系其具体的执行顺序。</p>
+<p>但同样的，这样会使<strong>执行顺序对使用者完全透明</strong>，如果抽象的方法较为复杂时，对于一个初次使用该逻辑的人来说，出现 bug 可能会使他很“难受”，因为他需要搞清楚整个抽象类中每个方法的执行顺序才能更好的去解决问题。这一点，<strong>增加了系统的复杂性</strong>。不过，设计模式的复杂性，是不可避免的。<strong>在功能复用、提高生产力上来说，这点复杂性的代价，还是能够接受的。</strong></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-strategy.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（十三）行为型之策略模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-observer.html">
+        
+          和 lvgo 一起学设计模式（十五）行为型之观察者模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'e896928b2ec6000b35db14dd7a3eea4f',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%B2%E5%95%8A%EF%BC%81"><span class="toc-nav-text">冲啊！</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">模板方法模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3"><span class="toc-nav-text">如何理解</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%87%8D%E6%96%B0%E5%AE%9A%E4%B9%89"><span class="toc-nav-text">重新定义</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">模板方法模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%88%91%E6%80%8E%E4%B9%88%E7%94%A8%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F%F0%9F%93%83"><span class="toc-nav-text">我怎么用模板方法模式📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-template-method.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      和 lvgo 一起学设计模式（十一）结构型之享元模式 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 lvgo 一起学设计模式（十一）结构型之享元模式</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-11-12</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/11/12/CKNbypcrJwdgflx.png" alt="flyweight-title"></p>
+<h1 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h1><blockquote>
+<p>运用共享技术来有效地支持大量细粒度对象的复用。</p>
+</blockquote>
+<p>这个设计模式在 GOF 的书中是用 flyweight 这个词来定义这种模式的，然后翻译成中文就叫 享元 了，讲真挺不自在，首先这个词是一个自造词（享元）</p>
+<p><img src="https://i.loli.net/2020/11/12/b8iZeYslH47DO6a.png" alt="flyweight-search.png"></p>
+<p>再者就是这个词语我认为用轻量化的解释更合适，不过现在被翻译成享元肯定是有他的原因的，至于为什么翻译享元已经不重要了，这都不会影响我们学习的对不对！</p>
+<h2 id="如何理解"><a href="#如何理解" class="headerlink" title="如何理解"></a>如何理解</h2><p>我们先一起来理解一下这个词的意思，然后再说这个模式解决的问题，希望我的解释能帮你快速的了解这个设计模式的意图。</p>
+<p>我是这样理解的。享元，共享单元。什么意思呢，将一些资源共享，以减少一些不必要的资源消耗。我接着举几个例子说明一下；为了代入感更强，我就拿游戏举例了。</p>
+<p><strong>声明：以下内容只为学习类比使用，并不代表游戏设计方案，游戏如何设计实现，我未参与，也未研究，感兴趣的可自行了解。</strong></p>
+<h3 id="1-我的世界"><a href="#1-我的世界" class="headerlink" title="1. 我的世界"></a>1. 我的世界</h3><p><img src="https://i.loli.net/2020/11/12/qOtZ4YdgxePj1Iy.jpg" alt="mc"></p>
+<h4 id="游戏地图"><a href="#游戏地图" class="headerlink" title="游戏地图"></a>游戏地图</h4><p>我们都知道我的世界是一个自由度超高的沙盒游戏。进到游戏之后我们应该会看到一个画面，就是地图在不断的渲染。这里可能以前玩的时候大家都没有注意过，只是觉得游戏好大，但是不怎么卡。不卡的原因有很多。我们今天要说的就是如何通过享元模式来减少资源负担。</p>
+<p>假如我的世界地图中每个单位格子的内容大小为1kb，粗略估计一个画面内格子的数量为1,000,000，此时加载地图需要 1GB 的内存，如果每个格子2kb则 2GB。如果一个单元格内容所用的贴画是 10kb 呢。目前来看 10G 内存也都能接受，可这款游戏放在当年的话，估计不会有人玩了。</p>
+<h4 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h4><p>其实这个方案非常的正常，也非常的简单。首先我们可以这样做，事先将需要用到的格子贴画统计好，然后一次加载到内存中，记录一下内存的地址，需要用的时候，直接取出来渲染就好了。他们的样子都差不多，只是摆放的位置不同。还有一种方式呢，就是我用一个先去我的 <strong>资源库</strong> 找，找不到就创建一个放到资源库中，如果能够找到，就直接返回。这两种方式都可以。第一种方式将压力放在了启动过程，第二种的方式将压力放在第一次渲染的过程。而一般情况下，游戏的开发都是用第一种方式，也就是我们所说的“过图”，”地图加载“。这个时候去做的，因为一次卡顿加载完和你走着走着卡一下当然第一种更容易接受。</p>
+<h3 id="2-英雄联盟"><a href="#2-英雄联盟" class="headerlink" title="2.英雄联盟"></a>2.英雄联盟</h3><p><img src="https://i.loli.net/2020/11/12/Wxw5741lX6ThejY.jpg" alt="lol"></p>
+<p>英雄联盟这款游戏大家应该并不陌生，S10 刚刚结束（10月31日全球总决赛），SN来年再战，加油。</p>
+<h4 id="“兵线”"><a href="#“兵线”" class="headerlink" title="“兵线”"></a>“兵线”</h4><p>游戏中一共有 3 路兵线，每次出现几只我不清楚，8只好了。 3路乘以2（双方）然后在乘以8，这应该是48个对象。而且他们还包含各自的动作，比如魔法兵吐得“口水“，炮车喝奶茶吐的“珍珠”等等，如果是你在开发兵线系统的时候，内存爆炸了，比如有的玩家搞怪，不杀小兵，积攒了很多小兵，然后他卡了，说你游戏垃圾。你该如何去做呢。</p>
+<p>其实我们分析下来的话，这里只会出现三种不同的兵种，步兵、魔法兵、炮车。然后再分为红蓝两方。在加上两个子弹。是不是就只有这8个对象呢，至于他们的轨迹，那些是每个对象的<strong>“外部状态”</strong></p>
+<h2 id="如何构成"><a href="#如何构成" class="headerlink" title="如何构成"></a>如何构成</h2><p>知道了这种设计模式思路，就要继续了解一下享元模式具体的构成角色都有哪些了。比如以英雄联盟的兵线为例吧。</p>
+<p><strong>客户端</strong></p>
+<p>首先有一个客户端，负责获取对象，然后渲染，这里我们通过#get、#draw(x,y)来表示获取和画来代替这步动作，（x，y）表示渲染出来的对象坐标。</p>
+<p><strong>享元工厂</strong></p>
+<p>然后还有一个为我们提供小兵的统一接口，这里使用的就是我们前面学习的工厂方法，小兵工厂。这里顺便复习一下之前的工厂和抽象工厂两个设计模式。如果我通过一个工厂来实现小兵对象的创建，那么就是一个工厂模式，但是我现在想在应用的时候，在灵活一些，我们可以从小兵身上抽取特征，比如步兵、魔法兵、炮车、这是小兵类别，但我们有两个不同的作战方，红方和蓝方，所以此时可以使用抽象工厂模式来生产小兵，红方小兵工厂生产出来的都是红方的步兵、魔法兵、炮车。蓝方生产出来的就是蓝方的步兵、魔法兵、炮车。</p>
+<p><strong>享元对象</strong></p>
+<p>有了工厂之后，我们就要有具体的共享对象了，共享对象就是我们上面所说的那 8 个。</p>
+<p>下面这个类图顺便复习了一下 <strong>抽象工厂模式</strong>。</p>
+<p><img src="https://i.loli.net/2020/11/12/dKDUbQ9sJRvFmTA.png" alt="flyweight-bingxian"></p>
+<h2 id="享元模式类图-📌"><a href="#享元模式类图-📌" class="headerlink" title="享元模式类图 📌"></a>享元模式类图 📌</h2><p><img src="https://i.loli.net/2020/11/12/YgS7J51GWuwZPBX.png" alt="flyweight.png"></p>
+<h2 id="代码-📃"><a href="#代码-📃" class="headerlink" title="代码 📃"></a>代码 📃</h2><p>下面就使用 <strong>享元模式</strong> 来模拟一下英雄联盟的兵线的开发。</p>
+<p><img src="https://i.loli.net/2020/11/12/stDkSmh83HpK1TV.png" alt="flyweight-coder.png"></p>
+<p><img src="https://i.loli.net/2020/11/12/Yrh3FlIOuH5jREd.png" alt="flyweight-test.png"></p>
+<blockquote>
+<p>关注回复 “源码” 获取享元模式创建LOL兵线代码。</p>
+</blockquote>
+<h2 id="总结-📚"><a href="#总结-📚" class="headerlink" title="总结 📚"></a>总结 📚</h2><ol>
+<li>通过享元模式可以让我们用更小的空间来构造一个更大对象。这也是利用了池技术来实现的。</li>
+<li>使用享元模式可以有效的缓解内存使用的问题。</li>
+<li>你会发现，当你有外部状态的时候（具体体现在红蓝两方在创建小兵对象的时候，需要指定颜色），享元模式会变得稍显复杂。</li>
+</ol>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#设计模式" >
+    <span class="tag-code">设计模式</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-facade.html">
+        <span class="nav-arrow">← </span>
+        
+          和 lvgo 一起学设计模式（十）结构型之外观模式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-design-patterns-composite.html">
+        
+          和 lvgo 一起学设计模式（十二）结构型之组合模式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '2e9ed7bae13ae6d952b974f74c929275',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">享元模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3"><span class="toc-nav-text">如何理解</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-%E6%88%91%E7%9A%84%E4%B8%96%E7%95%8C"><span class="toc-nav-text">1. 我的世界</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%B8%B8%E6%88%8F%E5%9C%B0%E5%9B%BE"><span class="toc-nav-text">游戏地图</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3"><span class="toc-nav-text">如何解决</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F"><span class="toc-nav-text">2.英雄联盟</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E2%80%9C%E5%85%B5%E7%BA%BF%E2%80%9D"><span class="toc-nav-text">“兵线”</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E6%9E%84%E6%88%90"><span class="toc-nav-text">如何构成</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F%E7%B1%BB%E5%9B%BE-%F0%9F%93%8C"><span class="toc-nav-text">享元模式类图 📌</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%A3%E7%A0%81-%F0%9F%93%83"><span class="toc-nav-text">代码 📃</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93-%F0%9F%93%9A"><span class="toc-nav-text">总结 📚</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-design-patterns-flyweight.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

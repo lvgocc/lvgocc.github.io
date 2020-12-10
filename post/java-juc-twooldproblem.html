@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      并发的两个&#39;老&#39;问题 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>并发的两个'老'问题</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-07-31</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="并发的两个‘老’问题"><a href="#并发的两个‘老’问题" class="headerlink" title="并发的两个‘老’问题"></a>并发的两个‘老’问题</h1><p>上一篇文章我们认识了什么是并发编程，随着并发编程而来的则是并发带来的各种问题，死锁和资源问题，那这一篇我们继续跟着作者去看一看这两个‘老‘问题。</p>
+<a id="more"></a>
+
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><blockquote>
+<p>我理解的死锁是指 “无外界条件干预无法自行解决的一种状态”</p>
+</blockquote>
+<p>这种状态一旦出现会导致程序逻辑问题，资源占用问题等很严重的问题。</p>
+<p>下面这段代码截自书中的代码, 演示了死锁的场景</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DeadLockDemo</span> </span>&#123;<br>    privat <span class="hljs-keyword">static</span> String A = <span class="hljs-string">&quot;A&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String B = <span class="hljs-string">&quot;B&quot;</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>              <span class="hljs-keyword">new</span> DeadLockDemo().deadLock();<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">deadLock</span><span class="hljs-params">()</span> </span>&#123;<br>              Thread t1 = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>                        <span class="hljs-meta">@Override</span><br>                        <span class="hljs-function">publicvoid <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                                  <span class="hljs-keyword">synchronized</span> (A) &#123;<br>                                          <span class="hljs-keyword">try</span> &#123; Thread.currentThread().sleep(<span class="hljs-number">2000</span>);<br>                                          &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                                                    e.printStackTrace();<br>                                          &#125;<br>                                          <span class="hljs-keyword">synchronized</span> (B) &#123;<br>                                                    System.out.println(<span class="hljs-string">&quot;1&quot;</span>);<br>                                          &#125;<br>                                  &#125;<br>                        &#125;<br>              &#125;);<br>              Thread t2 = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>                        <span class="hljs-meta">@Override</span><br>                        <span class="hljs-function">publicvoid <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>                                  <span class="hljs-keyword">synchronized</span> (B) &#123;<br>                                          <span class="hljs-keyword">synchronized</span> (A) &#123;<br>                                            System.out.println(<span class="hljs-string">&quot;2&quot;</span>);<br>                                    &#125;<br>                          &#125;<br>                &#125;<br>      &#125;);<br>      t1.start();<br>      t2.start();<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>当出现死锁的时候, 线上的业务是可以反馈出来的, 同时我们通过线程 dump 是可以查询到具体的死锁地方.</p>
+<p>当我们知道什么是死锁问题后, 那就应该在开发阶段首先去考虑并且避免这种场景</p>
+<ul>
+<li>避免一个线程获取多个锁</li>
+<li>避免一个线程在锁内占用多个资源</li>
+<li>如果可以的话尝试使用 tryLock(time) 定时锁</li>
+<li>数据库锁, 加锁和解锁在一个连接, 否则可能出现解锁失败</li>
+</ul>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>什么是资源，对于软件程序来说资源就是</p>
+<ul>
+<li>网络带宽</li>
+<li>内存容量</li>
+<li>cpu</li>
+<li>······</li>
+</ul>
+<p><strong>问</strong> ：那什么情况会出现资源问题呢？</p>
+<p><strong>答</strong> ：不合理的分配情况下</p>
+<p>怎么做才能做到合理分配是我们在做程序设计时需要考虑的，比如软件运行的网络环境，磁盘大小，内存大小，系统的cpu能力、核心数等等</p>
+<p>一般在资源分配上遵循两种任务情况来决定，1 是 IO密集型任务 2 是 CPU密集型任务。再简单一点就是你的任务是需要数据的还是需要计算的。需要数据的就是IO，需要计算的就是CPU， 根据这两种情况来指定我们的资源分配。推荐一篇文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/youanyyou/article/details/78990156">https://blog.csdn.net/youanyyou/article/details/78990156</a></p>
+<p>合理的资源分配，可以将系统的性能发挥的更好，反之更坏。所以线程不是创建的越多越好。</p>
+<p>线程池的线程复用，根据资源合理的分配线程数，都可以帮我们有效的解决资源问题。线程数的大小设置。</p>
+<p><strong>建议</strong></p>
+<p>CPU密集型任务，最佳线程数设置为 CPU数+1</p>
+<p>IO密集型任务， 最佳线程数目 = （（线程等待时间 + 线程CPU时间）/ 线程CPU时间 ）* CPU数目 </p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#并发编程" >
+    <span class="tag-code">并发编程</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/java-juc-first-meet.html">
+        <span class="nav-arrow">← </span>
+        
+          初识并发编程
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/java-juc-theory.html">
+        
+          并发机制的底层实现原理
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '139f007c02b30e76b8d71e79ba63fb99',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E4%B8%A4%E4%B8%AA%E2%80%98%E8%80%81%E2%80%99%E9%97%AE%E9%A2%98"><span class="toc-nav-text">并发的两个‘老’问题</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%AD%BB%E9%94%81"><span class="toc-nav-text">死锁</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%B5%84%E6%BA%90"><span class="toc-nav-text">资源</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/java-juc-twooldproblem.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

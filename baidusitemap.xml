@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://lvgo.org//post/code-for-machine.html</loc>
+    <lastmod>2021-04-13</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/code-for-people.html</loc>
+    <lastmod>2021-02-27</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/mychat-01.html</loc>
+    <lastmod>2021-02-06</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-09.html</loc>
+    <lastmod>2021-01-24</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-08.html</loc>
+    <lastmod>2021-01-10</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-07.html</loc>
+    <lastmod>2021-01-01</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-06.html</loc>
+    <lastmod>2020-12-27</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-05.html</loc>
+    <lastmod>2020-12-26</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-04.html</loc>
+    <lastmod>2020-12-25</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-03.html</loc>
+    <lastmod>2020-12-24</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-02.html</loc>
+    <lastmod>2020-12-23</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-jvm-01.html</loc>
+    <lastmod>2020-12-22</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/lvgo-design-patterns-pdf.html</loc>
+    <lastmod>2020-12-20</lastmod>
+  </url>
+  <url>
     <loc>http://lvgo.org//post/lvgo-design-patterns-interpreter.html</loc>
     <lastmod>2020-12-07</lastmod>
   </url>
@@ -163,6 +215,10 @@
   <url>
     <loc>http://lvgo.org//post/course-spring-quartz.html</loc>
     <lastmod>2019-09-30</lastmod>
+  </url>
+  <url>
+    <loc>http://lvgo.org//post/spring-transaction-02.html</loc>
+    <lastmod>2019-09-12</lastmod>
   </url>
   <url>
     <loc>http://lvgo.org//post/try-catch-right-operation.html</loc>

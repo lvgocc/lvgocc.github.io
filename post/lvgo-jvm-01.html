@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="后面的跟上，赶紧的！">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      JVM 你知道不？一起来学啊 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>JVM 你知道不？一起来学啊</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-22</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="lvgo-的-JVM-学习笔记"><a href="#lvgo-的-JVM-学习笔记" class="headerlink" title="lvgo 的 JVM 学习笔记"></a>lvgo 的 JVM 学习笔记</h1><p>实不相瞒，这份 JVM 学习笔记，可以说很香。</p>
+<blockquote>
+<p>大家好，我是 lvgo，如果你之前看过我写的《和 lvgo 一起学习设计模式》.PDF，应该知道了 lvgo 的意思了，相信你知道它是什么意思后，会加深你对 lvgo 的印象。</p>
+</blockquote>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>关于 Java 虚拟机的学习，无论从业务开发上来说，还是从解决问题的角度上来看。我认为都是一个 Java 程序员必会的一个知识体系，为什么这么说呢？还是那句耳朵已经听起茧的话 ”知其然，而知其所以然“。</p>
+<h1 id="知其然，而知其所以然"><a href="#知其然，而知其所以然" class="headerlink" title="知其然，而知其所以然"></a>知其然，而知其所以然</h1><p>我见过因为不清楚技术底层原理乱用的开发人员，也见过不懂技术原理所以害怕其出现问题的领导拒绝开发人员应有新技术。</p>
+<p>举个例子：如果有 10 个人，给他们每个人一把刀，叫他们去山上砍柴，那这 10 个人假如都是第一次接触”刀“这个物品的话。那么就一定有人用刀背砍东西，有人用刀刃砍石头，而真正能正确使用的人它一定清楚这个物品哪里手可以握，哪里锋利，哪里可以砍树不能砍石头。（例子可能不恰当，说明意思即可）</p>
+<p>Java 虚拟机的这个知识点，我觉得最重要的不是调优部分，而是编译优化的那部分。之前听郑雨迪（Oracle 高级研究员，hotspot 开发者）说他现在在做 graal 编译器的工作内容就是想办法优化业务代码，让他们跑的更快。那我们能不能直接写出来无需优化，或减少编译优化阶段的工作呢？答案是可以的，但也只能做到编码部分的优化，关于虚拟机的优化内容慢慢会在我的笔记中了解到。</p>
+<h1 id="学习过程"><a href="#学习过程" class="headerlink" title="学习过程"></a>学习过程</h1><p>在学习 Java 虚拟机的这个过程是及其枯燥的，18 年我看完了周老师的《深入理解 Java 虚拟机》（第二版），大概只用了 10 几个小时。不过这 10 几个小时却花了我 1 年多的时间才消化掉。去年年底，也就是 19 年 11 月，周老师出了《深入理解 Java 虚拟机》（第三版），我是到今年 9 月份才开始读这本书的。大概还是只用了 10 几个小时就读完了，这次很明显感觉不一样了。而且这次一起看了很多关于虚拟机的内容，包括 JSR 和 虚拟机规范，还有 R 大的一些博客。</p>
+<p><img src="https://i.loli.net/2020/12/22/zWFAnxNPhs7t1iq.png" alt="微信读书"></p>
+<h1 id="学习目标"><a href="#学习目标" class="headerlink" title="学习目标"></a>学习目标</h1><p>系统的学习使我对 Java 虚拟机有了一定的理解，但究其深处还有很多可以探索的内容，其中执行引擎就是一个 “巨坑” ，不过这里并不是我们学习的目的，我们要学习的是<strong>我们写的代码在虚拟机里都干了什么</strong>，而不是执行引擎到底是怎么执行的指令，明确的了我们学习目标，那就好办了。</p>
+<h1 id="接下来的事"><a href="#接下来的事" class="headerlink" title="接下来的事"></a>接下来的事</h1><p>明确了学习的目标，再去学习就会相对清晰了很多，可以避开不是当前学习计划的内容，因为虚拟机的东西还是比较多。我根据周老师的书中内容，将虚拟机整理成如下几个知识点</p>
+<ol>
+<li>自动内存管理</li>
+<li>虚拟机的执行</li>
+<li>程序编译和代码优化</li>
+<li>“高”并发</li>
+</ol>
+<p><img src="https://i.loli.net/2020/12/22/dKlebYpL5VxM3jW.png" alt="JVM"></p>
+<p>这里面的第 3 点尤为重要，我觉得其他的都不懂这个都要懂。</p>
+<p>很多面试或者文章中说虚拟机调优多么多么重要，之前看过廖神（廖雪峰）写的一个 JVM 调优的内容，我觉得很有道理。JVM 每天跑着几百万、几千万的程序，经历了无数次的考验。有问题的可能性不大，换句话说，如果想要调优虚拟机，先调优你的代码。</p>
+<h1 id="欢迎关注"><a href="#欢迎关注" class="headerlink" title="欢迎关注"></a>欢迎关注</h1><p>接下来我会以日更或半周更的形式，以周老师的书籍为主线，其他资料的辅助将这本国内口碑极佳的《深入理解 Java 虚拟机》以极简的形式输出出来，让更多想要学习虚拟机，但碍于枯燥晦涩（周老师书其实说的一点都不晦涩难懂）而放弃学习 Java 虚拟机的开发者们能够一起来学习虚拟机的相关知识。</p>
+<hr>
+<p><img src="https://i.loli.net/2020/12/22/2CzWEr1ueBoQ8gl.jpg" alt="jvm笔记"></p>
+<p>也欢迎大家一起加群交流学习，关注回复<strong>加群</strong>一起在这个寒冷的冬天啃完这块重要的内容。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-design-patterns-pdf.html">
+        <span class="nav-arrow">← </span>
+        
+          《和 lvgo 一起学设计模式》.PDF
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-jvm-02.html">
+        
+          你创建的Java对象搁哪了？
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '5c218a411d4c708f414b77c52e2240e1',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#lvgo-%E7%9A%84-JVM-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-nav-text">lvgo 的 JVM 学习笔记</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-nav-text">写在前面</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E7%9F%A5%E5%85%B6%E7%84%B6%EF%BC%8C%E8%80%8C%E7%9F%A5%E5%85%B6%E6%89%80%E4%BB%A5%E7%84%B6"><span class="toc-nav-text">知其然，而知其所以然</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B"><span class="toc-nav-text">学习过程</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="toc-nav-text">学习目标</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E7%9A%84%E4%BA%8B"><span class="toc-nav-text">接下来的事</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%AC%A2%E8%BF%8E%E5%85%B3%E6%B3%A8"><span class="toc-nav-text">欢迎关注</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-jvm-01.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

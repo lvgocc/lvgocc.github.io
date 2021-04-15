@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="这将会是你编程生涯很有意义的10分钟">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      一篇浅文让你摆脱事务困扰 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>一篇浅文让你摆脱事务困扰</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2019-09-12</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#Spring" >
+    <span class="tag-code">Spring</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>这将会是你编程生涯很有意义的10分钟</p>
+<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>反对枯燥的技术学习，拒绝从入门到放弃，从删库到跑路。<br>拒绝！大声跟我念！拒绝！</p>
+<h4 id="啥是事务"><a href="#啥是事务" class="headerlink" title="啥是事务"></a>啥是事务</h4><p><del>事物指的是逻辑上的一组操作，这组操作要么全部成功，要么全部失败</del><br>同生共死</p>
+<h4 id="事务的四个特性-ACID"><a href="#事务的四个特性-ACID" class="headerlink" title="事务的四个特性 ACID"></a>事务的四个特性 ACID</h4><p>原子性（Atomicity）：事物是一个不可分割的工作单位，事物中的操作要么都发生，要么都不发生</p>
+<p>一致性（Consistency）：事物前后数据的完整性必须保持一致</p>
+<p>隔离性（Isolation）：指多个用户并发访问数据库时，一个用户的事物不能被其他用户的事物所干扰，多个并发事物之间数据要相互隔离。</p>
+<p>持久性（Durability）：一个事物一旦被提交，它对数据库中数据的改变就是永久性的，即使数据库发生故障也不应该对其有任何影响。</p>
+<h5 id="事务的7种传播行为"><a href="#事务的7种传播行为" class="headerlink" title="事务的7种传播行为"></a>事务的7种传播行为</h5><p>这里我看到好多官方或者博文写的基本都是差不多. 如果我会用的话, 我可能不会去翻书翻博文找答案. 那既然翻书的和找答案的都是不会用的. 那怎么能让寻求答案的人, 一眼就看到自己想要的东西呢?</p>
+<h5 id="首先7种传播行为分别为"><a href="#首先7种传播行为分别为" class="headerlink" title="首先7种传播行为分别为:"></a>首先7种传播行为分别为:</h5><p><em>名字有可能和大家看到其他的文章内容不一样. 个人理解. 不影响阅读</em></p>
+<ol>
+<li>默认事务  <strong>REQUIRED</strong>(开启事务后不做任何传播行为说明的)</li>
+<li>新启事务  <strong>REQUIRES_NEW</strong></li>
+<li>嵌套事务  <strong>NESTED</strong></li>
+<li>依赖事务  <strong>SUPPORTS</strong></li>
+<li>非事务  <strong>NOT_SUPPORTED</strong></li>
+<li>必须非事务  <strong>NEVER</strong></li>
+<li>必须以事务  <strong>MANDATORY</strong></li>
+</ol>
+<p>那这7个分别对应的是什么情景, 我们来用最直白, 最简单的话来说明一下.</p>
+<h6 id="1-默认事务-REQUIRED"><a href="#1-默认事务-REQUIRED" class="headerlink" title="1. 默认事务 REQUIRED"></a>1. 默认事务 REQUIRED</h6><p>顾名思义, 当你对某个方法开启了事务, 但又不去指定它的传播行为时, 此时的事务管理会默认分配给他一个事务. 那就是调用者如果有事务便加入其中, 否则自身新启事务. 什么意思</p>
+<p>你去小李家玩, 玩累了, 想吃饭, <strong>如果小李家可以吃饭, 那就在小李家一起吃, 否则你就自己吃.</strong></p>
+<h6 id="2-新启事务-REQUIRES-NEW"><a href="#2-新启事务-REQUIRES-NEW" class="headerlink" title="2. 新启事务 REQUIRES_NEW"></a>2. 新启事务 REQUIRES_NEW</h6><p>与默认事务中的第二种情况相同. 只不过, 此时无论小李家可不可以吃饭, 你都要自己吃, 不过还有一种情况, 就是如果调用者存在事务, 那该事务需要挂起.也就是说. 小李家如果可以吃饭, 那他们家人要等你吃完以后才能吃, 相当于暂停. 但是大家要切记, 这段时间只是时间暂停, 资源是在继续使用的. 也就是说, 外层事务挂起时, 数据库连接是一直持有状态. 所以你吃饭要快点. 不然等你吃的太久, 小李家其他人一直在等他们的餐桌吃饭可是要一直等下去的. <strong><code>此时说的是事务挂起的情况</code></strong></p>
+<h6 id="3-嵌套事务-NESTED"><a href="#3-嵌套事务-NESTED" class="headerlink" title="3. 嵌套事务  NESTED"></a>3. 嵌套事务  NESTED</h6><p>厉害的来了, 这个事务比较特殊, 适用的场景大家根据我后面的说明自行 决断;<br>当前存在事务, 加入到这个事务中作为一个附属事务.  如果不存在, 则以默认事务执行, 其实也就是以新启事务执行;</p>
+<p>解释一下附属事务的情况是什么意思. 附属, 归属,具体表现为我们的县城, 归属市区管辖, 但自己又独立. 当市级A()派遣任务给县城B(), 与它一同协作完成. 如果县城B()没有预期完成任务,我们说的抛出异常, 那市级A()会继续执行该市的其他任务. 如果市级预期完成, 那么县城的任务失败, 市级负责的部分任务完成. 此时事务A()提交. 县城事务B()回滚.<br>但, 如果县城B()按期完成任务, 市级A()任务没有完成. 那县城B()的事务要同A()一起回滚.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 独立事务</span><br>a() &#123;<br>	<span class="hljs-comment">// 嵌套事务</span><br>	b();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>a调用b , a 为独立事务 b 为嵌套事务<br>当执行到方法b时, a事务被挂起. 方法 b 无论成功失败, a继续执行<br>a执行成功 a与b 事务提交<br>a执行失败 无论b事务是否完成 与a一同回滚</strong></p>
+<p>嵌套事务只影响本身事务, 不能影响外层事务. 同时受外层事务影响<br>a可以影响b , 但b不能影响a</p>
+<p><strong>顺便提一点</strong> 如果b为默认事务, 此时 b 如果出现异常, 整个事务执行回滚, 不能对b做异常捕获不抛出异常. 否则会出现事务提交异常, 因为此时 a 与 b 同处一个事务中, 要么同时提交, 要么同时回滚.</p>
+<hr>
+<p><strong>上面讲的就是我们最常用的三种传播行为, 下面再看看其他4种不常用的</strong></p>
+<h6 id="4-依赖事务-SUPPORTS"><a href="#4-依赖事务-SUPPORTS" class="headerlink" title="4. 依赖事务  SUPPORTS"></a>4. 依赖事务  SUPPORTS</h6><p>这种事务情况为, 如果调用者有事务我就加入, 没有我就以非事务执行<br>小李家有饭我就吃, 没有我就不吃了</p>
+<h6 id="5-非事务-NOT-SUPPORTED"><a href="#5-非事务-NOT-SUPPORTED" class="headerlink" title="5. 非事务 NOT_SUPPORTED"></a>5. 非事务 NOT_SUPPORTED</h6><p>如果调用者有事务我就把他挂起, 然后以非事务执行<br>小李家有饭我就让他暂停, 然后我做我的事,做完后恢复挂起事务继续执行</p>
+<h6 id="6-必须非事务-NEVER"><a href="#6-必须非事务-NEVER" class="headerlink" title="6. 必须非事务  NEVER"></a>6. 必须非事务  NEVER</h6><p>如果调用者<strong>有事务</strong>我就抛出异常. 不再继续执行<br>小李家<strong>有饭</strong>我就报警, 谁都别想动</p>
+<h6 id="7-必须以事务-MANDATORY"><a href="#7-必须以事务-MANDATORY" class="headerlink" title="7. 必须以事务  MANDATORY"></a>7. 必须以事务  MANDATORY</h6><p>如果调用者<strong>没有事务</strong>我就抛出异常. 不再继续执行<br>小李家<strong>没有饭</strong>我就报警, 谁都别想动</p>
+<hr>
+<h4 id="接下来你应该知道的"><a href="#接下来你应该知道的" class="headerlink" title="接下来你应该知道的"></a>接下来你应该知道的</h4><p>说了基本概念, 我觉得既然是最简单的事务学习, 那一定是要跟大家讲怎么使用事务.具体怎么去配置事务大家随便百度吧. 就不赘述了.</p>
+<p>当你将你的方法配置好事务后. 有几个基础的东西你一定要知道, 当然现在用的事务都是spring的事务.</p>
+<h4 id="1-同方法内-被调用的事务不会生效"><a href="#1-同方法内-被调用的事务不会生效" class="headerlink" title="1. 同方法内, 被调用的事务不会生效"></a>1. 同方法内, 被调用的事务不会生效</h4><p>举例</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceA</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">A</span>() 配有独立事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">A</span>()</span>&#123;<br>		<span class="hljs-comment">// 调用 方法B(), 记笔记. 此时 B 的独立事务不生效</span><br>		B();<br>	&#125;<br>	<span class="hljs-comment">// 方法 B() 配有独立事务</span><br>	<span class="hljs-function">fun <span class="hljs-title">B</span><span class="hljs-params">()</span></span>&#123;<br><br>	&#125;<br>)<br><br></code></pre></td></tr></table></figure>
+
+<p>该问题比较好理解. 原因是由于spring的事务管理是基于 spring 的 AOP 实现的. 而方法增强需要通过调用时执行切点方法才能实现增强. 所以此时的方法B就是正常的一段方法加入到了方法A中, 与 A同事务.</p>
+<h4 id="2-默认事务的异常处理-重点"><a href="#2-默认事务的异常处理-重点" class="headerlink" title="2. 默认事务的异常处理*[重点]"></a>2. 默认事务的异常处理*[重点]</h4><p>我现在有以下几个方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceA</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">A</span>() 配有默认事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">A</span>()</span>&#123;<br>		<span class="hljs-comment">// 调用 方法B()</span><br>		ServiceB.B();<br>	&#125;<br>)<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceB</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">B</span>() 配有默认事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">B</span>()</span>&#123;<br>		<span class="hljs-comment">// 调用 方法C()</span><br>		<span class="hljs-keyword">try</span>&#123;<br>			ServiceC.C();<br>		&#125; <span class="hljs-keyword">catch</span>()&#123;&#125;<br>	&#125;<br>	<br>)<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceC</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">C</span>() 配有默认事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">C</span>()</span>&#123;<br>		<br>	&#125;<br>)<br><br></code></pre></td></tr></table></figure>
+
+<p>我将Service类A B C 都增加了事务. 但没配置具体事务传播行为. 所以为默认事务.<br>默认事务为: 谁用谁管. 不管我就自己管自己</p>
+<p>此时的情况为, A在调用的时候没有事务, 所以他自己新启了事务, 当它调用B的时候, B发现A存在独立事务, 那么B加入到了A的事务中, 同样 B在调用C的时候已经加入到了A的事务中, 那么C在执行的时候加入到了A的事务中.</p>
+<p>调用者有事务, 我加入,<br>调用者没有, 我新启.</p>
+<p>此时情况. 正常运行, 为独立事务没有问题.</p>
+<p>但当方法 C()出现异常时. 被方法 B()捕获并未抛出.<br>当方法执行结束后, 会出现<br><code>Transaction has been rolled back because it has been marked as rollback</code></p>
+<p>原因为上面提到的</p>
+<p><strong>原子性（Atomicity）：事物是一个不可分割的工作单位，事物中的操作要么都发生，要么都不发生</strong></p>
+<p>方法C()不发生, 其他也不能继续发生 . 所以当C()出现问题时, B() 把它包庇了下来. 当时A()不知道, 还继续做提交, 说我们的事务都提交了. 其实C()回滚了. 最后来事情暴露了. 程序执行中断. 这个锅. B 必须背. 因为当它捕获了异常后, 应将异常继续抛出. 让程序正常中断. 不然就是意外退出.</p>
+<p><strong>切记 – 知识点, 记笔记</strong></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Spring" >
+    <span class="tag-code">Spring</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/try-catch-right-operation.html">
+        <span class="nav-arrow">← </span>
+        
+          try catch 中的异常怎么处理
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/course-spring-quartz.html">
+        
+          Spring中Quartz2.2.2的使用
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'd9cdcf1110f32d6b18e7a1c0188db161',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-nav-text">背景</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%95%A5%E6%98%AF%E4%BA%8B%E5%8A%A1"><span class="toc-nav-text">啥是事务</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%89%B9%E6%80%A7-ACID"><span class="toc-nav-text">事务的四个特性 ACID</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%847%E7%A7%8D%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA"><span class="toc-nav-text">事务的7种传播行为</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E9%A6%96%E5%85%887%E7%A7%8D%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA%E5%88%86%E5%88%AB%E4%B8%BA"><span class="toc-nav-text">首先7种传播行为分别为:</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#1-%E9%BB%98%E8%AE%A4%E4%BA%8B%E5%8A%A1-REQUIRED"><span class="toc-nav-text">1. 默认事务 REQUIRED</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#2-%E6%96%B0%E5%90%AF%E4%BA%8B%E5%8A%A1-REQUIRES-NEW"><span class="toc-nav-text">2. 新启事务 REQUIRES_NEW</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#3-%E5%B5%8C%E5%A5%97%E4%BA%8B%E5%8A%A1-NESTED"><span class="toc-nav-text">3. 嵌套事务  NESTED</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#4-%E4%BE%9D%E8%B5%96%E4%BA%8B%E5%8A%A1-SUPPORTS"><span class="toc-nav-text">4. 依赖事务  SUPPORTS</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#5-%E9%9D%9E%E4%BA%8B%E5%8A%A1-NOT-SUPPORTED"><span class="toc-nav-text">5. 非事务 NOT_SUPPORTED</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#6-%E5%BF%85%E9%A1%BB%E9%9D%9E%E4%BA%8B%E5%8A%A1-NEVER"><span class="toc-nav-text">6. 必须非事务  NEVER</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#7-%E5%BF%85%E9%A1%BB%E4%BB%A5%E4%BA%8B%E5%8A%A1-MANDATORY"><span class="toc-nav-text">7. 必须以事务  MANDATORY</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84"><span class="toc-nav-text">接下来你应该知道的</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-%E5%90%8C%E6%96%B9%E6%B3%95%E5%86%85-%E8%A2%AB%E8%B0%83%E7%94%A8%E7%9A%84%E4%BA%8B%E5%8A%A1%E4%B8%8D%E4%BC%9A%E7%94%9F%E6%95%88"><span class="toc-nav-text">1. 同方法内, 被调用的事务不会生效</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2-%E9%BB%98%E8%AE%A4%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E9%87%8D%E7%82%B9"><span class="toc-nav-text">2. 默认事务的异常处理*[重点]</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/spring-transaction-02.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

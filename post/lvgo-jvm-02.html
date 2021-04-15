@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="你定义的类又搁哪了">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      你创建的Java对象搁哪了？ | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>你创建的Java对象搁哪了？</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-23</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="关注我一起学习，悄悄超过他"><a href="#关注我一起学习，悄悄超过他" class="headerlink" title="关注我一起学习，悄悄超过他"></a>关注我一起学习，悄悄超过他</h3><h1 id="拒绝做知识“收藏家”"><a href="#拒绝做知识“收藏家”" class="headerlink" title="拒绝做知识“收藏家”"></a>拒绝做知识“收藏家”</h1><p>答应我，跟我一起学习吧，别再做知识收藏家了，把《深入理解 Java 虚拟机》书拿出来，翻它，盘它，磋磨它。</p>
+<h1 id="你创建的-Java-对象搁哪了"><a href="#你创建的-Java-对象搁哪了" class="headerlink" title="你创建的 Java 对象搁哪了"></a>你创建的 Java 对象搁哪了</h1><p><img src="https://i.loli.net/2020/12/23/hzSZBMDYPG9pO5r.png" alt="运行时数据区域"></p>
+<p>今天学习的内容是 JVM 自动内存管理中的 <code>运行时数据区域</code> 内容。</p>
+<h1 id="自动内存管理"><a href="#自动内存管理" class="headerlink" title="自动内存管理"></a>自动内存管理</h1><blockquote>
+<p>Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的高墙，墙外面的人想进去，墙里面的人却想出来。<br>—— 出自周志明《深入理解 Java 虚拟机》</p>
+</blockquote>
+<p>Java 的内存区域与内存溢出。</p>
+<p>对于 Java 程序来讲，内存是由虚拟机的内存自动管理机制<em>垃圾回收</em>来进行管理的。这样便使得程序不容易出现内存溢出和内存泄漏问题。但是一旦出现内存问题，排查和解决起来便不是一件容易的事。</p>
+<h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><ul>
+<li>程序计数器</li>
+<li>虚拟机栈</li>
+<li>本地方法栈</li>
+<li>堆</li>
+<li>方法区 - 运行时常量池</li>
+<li>直接内存</li>
+</ul>
+<h3 id="PC寄存器（程序计数器）"><a href="#PC寄存器（程序计数器）" class="headerlink" title="PC寄存器（程序计数器）"></a>PC寄存器（程序计数器）</h3><ul>
+<li><strong>线程私有</strong></li>
+<li>存储<strong>当前方法的字节码位置</strong>，如果是<strong>本地方法则存储 undefined</strong></li>
+<li>唯一一个不会出现 <strong>OOM</strong> 的位置</li>
+<li>方法执行时使用；</li>
+</ul>
+<h3 id="Java-虚拟机栈"><a href="#Java-虚拟机栈" class="headerlink" title="Java 虚拟机栈"></a>Java 虚拟机栈</h3><ul>
+<li><strong>线程私有</strong></li>
+<li>存储程序方法执行时的 <strong>栈帧</strong></li>
+<li>达到栈允许最大容量抛出 <strong>StackOverflow Error</strong> 栈溢出</li>
+<li>允许动态扩展，申请不到内存时抛出 <strong>OOM</strong>。（允许动态扩展由虚拟机实现方自行选择，hotspot选择的则是不允许动态扩展）</li>
+<li>不需要保证连续的内存</li>
+<li>方法执行时使用；</li>
+</ul>
+<p><em>注：在 hotspot 中不允许扩展栈内存，但同样会发生 OOM ，这是发生在创建线程内存申请时内存不足抛出的OOM，这里也属于栈原因引起的。</em></p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>同上</p>
+<p><em>注：说明两者服务对象，虚拟机栈服务于 Java 程序，本地方法栈服务于 JVM 程序（native 方法）。</em></p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><ul>
+<li>线程共享</li>
+<li>存储类实例、数组对象</li>
+<li>容量超过允许最大值时抛出 <strong>OOM</strong> 异常（允许动态扩展）</li>
+<li>不需要保证连续的内存</li>
+<li>创建对象时使用</li>
+</ul>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><ul>
+<li>线程共享</li>
+<li>存储类的结构信息（方法、字段、构造函数）、运行时常量池</li>
+<li>容量超过允许最大值时抛出 <strong>OOM</strong> 异常（允许动态扩展）</li>
+<li>不需要保证连续的内存</li>
+<li>虚拟机启动时创建</li>
+<li>后被替换为元空间（这里的内容要和 hotspot 的“永久代“一起理解）</li>
+</ul>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>（这部分内存区域同在方法区中体现）</p>
+<ul>
+<li>线程共享</li>
+<li>存储接口或类的常量池（字面量 与 <strong>符号</strong>引用<code>类的全部限定名等信息</code>）</li>
+<li>类加载时创建</li>
+<li>创建过程使用的方法区内存大小，可能出现 <strong>OOM</strong> 异常</li>
+</ul>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>（这部分为延展内容）</p>
+<ul>
+<li>不受虚拟机参数控制，直接使用主机内存，受主机内存大小限制；</li>
+<li>JDK4中的 NIO 首次使用；</li>
+<li>在设置JVM参数时，需考虑直接内存的使用大小，防止其过渡使用出现 <strong>OOM</strong>；</li>
+<li>JDK7开始将方法区移到这部分区域（永久代内容），直到 JDK8 全部移入元空间（这里指 hotspot 虚拟机）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>作用\名称</th>
+<th>PC寄存器（程序计数器）</th>
+<th>Java虚拟机、本地方法栈</th>
+<th>Java 堆</th>
+<th>方法区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>异常情况</td>
+<td>无</td>
+<td>栈溢出、堆溢出</td>
+<td>堆溢出</td>
+<td>堆溢出</td>
+</tr>
+<tr>
+<td>需要连续内存</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>存储内容</td>
+<td>在执行 Java 代码时，存储字节码地址。<br>在执行本地方法时，存储 undefined</td>
+<td>栈帧（每个栈帧以方法为单位）</td>
+<td>类实例、数组对象</td>
+<td>类的结构信息、字段、方法等</td>
+</tr>
+<tr>
+<td>使用时机</td>
+<td>方法执行时</td>
+<td>方法执行时</td>
+<td>创建对象时</td>
+<td>类被加载时</td>
+</tr>
+<tr>
+<td>线程私有</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>Java 的对象搁哪现在你清楚了吗？每天一点点，啃完虚拟机。欢迎加群一起讨论学习，大家一起学习效率很高哦</p>
+<hr>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-jvm-01.html">
+        <span class="nav-arrow">← </span>
+        
+          JVM 你知道不？一起来学啊
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-jvm-03.html">
+        
+          JVM 中对象咋创建啊，又怎么访问啊
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '148996d99313844c2a3eb27016b640e1',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91%E4%B8%80%E8%B5%B7%E5%AD%A6%E4%B9%A0%EF%BC%8C%E6%82%84%E6%82%84%E8%B6%85%E8%BF%87%E4%BB%96"><span class="toc-nav-text">关注我一起学习，悄悄超过他</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E6%8B%92%E7%BB%9D%E5%81%9A%E7%9F%A5%E8%AF%86%E2%80%9C%E6%94%B6%E8%97%8F%E5%AE%B6%E2%80%9D"><span class="toc-nav-text">拒绝做知识“收藏家”</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E4%BD%A0%E5%88%9B%E5%BB%BA%E7%9A%84-Java-%E5%AF%B9%E8%B1%A1%E6%90%81%E5%93%AA%E4%BA%86"><span class="toc-nav-text">你创建的 Java 对象搁哪了</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E8%87%AA%E5%8A%A8%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-nav-text">自动内存管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F"><span class="toc-nav-text">运行时数据区域</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#PC%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%88%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%EF%BC%89"><span class="toc-nav-text">PC寄存器（程序计数器）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Java-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="toc-nav-text">Java 虚拟机栈</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-nav-text">本地方法栈</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%A0%86"><span class="toc-nav-text">堆</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-nav-text">方法区</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-nav-text">运行时常量池</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98"><span class="toc-nav-text">直接内存</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-nav-text">写在最后</span></a>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-jvm-02.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

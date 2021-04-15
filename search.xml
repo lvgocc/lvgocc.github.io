@@ -205,51 +205,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Android 显示图片的指定位置图像 ImageView ImageButton</title>
-    <url>//post/problem-android-imageView.html</url>
-    <content><![CDATA[<h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>UI提供了一些图标素材，但是是在一张图片上 如图：</p>
-<a id="more"></a>
-
-<p><img src="/images/posts/problem-android-imageView/20180812183216164.png" alt="UI提供的图"></p>
-<p><code>产品需要在页面下方横排显示三个按钮</code></p>
-<p><img src="/images/posts/problem-android-imageView/2018-08-12_183322.png" alt="产品需要的图"></p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>废话不多说，网上搜了一下，大多都是通过代码重新绘制。因为我比较粗俗，所以自己找到了一种解决办法。</p>
-<h4 id="心历路程"><a href="#心历路程" class="headerlink" title="心历路程"></a>心历路程</h4><blockquote>
-<p>设置scaleType的值来实现</p>
-</blockquote>
-<p>根据查阅资料了解Image相关view的属性值了解到</p>
-<p>对于android:scaleType属性，因为关于图像在ImageView中的显示效果，所以有如下属性值可以选择：</p>
-<ul>
-<li>matrix：使用matrix方式进行缩放。</li>
-<li>fitXY：横向、纵向独立缩放，以适应该ImageView。</li>
-<li>fitStart:保持纵横比缩放图片，并且将图片放在ImageView的左上角。</li>
-<li>fitCenter：保持纵横比缩放图片，缩放完成后将图片放在ImageView的中央。</li>
-<li>fitEnd：保持纵横比缩放图片，缩放完成后将图片放在ImageView的右下角。</li>
-<li>center：把图片放在ImageView的中央，但是不进行任何缩放。</li>
-<li>centerCrop：保持纵横比缩放图片，以使图片能完全覆盖ImageView。</li>
-<li>centerInside：保持纵横比缩放图片，以使得ImageView能完全显示该图片。</li>
-</ul>
-<p>由于我这里UI提供的图片比较特殊，所以第一张和第二张的图片分别可以通过设置 <code>matrix</code>和<code>center</code>获取到</p>
-<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>      android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>      android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>      android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;&quot;</span><br>      android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/qq_login_content_description&quot;</span><br>      android:<span class="hljs-attribute">scaleType</span>=<span class="hljs-string">&quot;matrix&quot;</span><br>      app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>      app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>      app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
-<p><img src="/images/posts/problem-android-imageView/2018-08-12_184259.png"></p>
-<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wx_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wb_login_content_description&quot;</span><br>    android:<span class="hljs-attribute">scaleType</span>=<span class="hljs-string">&quot;centerCrop&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toStartOf</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toEndOf</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br></code></pre></td></tr></table></figure>
-
-<p><img src="/images/posts/problem-android-imageView/2018-08-12_184312.png"></p>
-<p>到上面的时候,心里还是美滋滋,只要这样下去,不超过5分钟,我的图就画好了.<strong>可是接着尴尬的问题出现了</strong></p>
-<p>第三张的图片怎么取?? WTF??? <s>此处省略18分钟</s></p>
-<hr>
-<h4 id="终极方案-完美解决"><a href="#终极方案-完美解决" class="headerlink" title="终极方案,完美解决"></a>终极方案,完美解决</h4><figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">paddingTop</span>=<span class="hljs-string">&quot;94dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/qq_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br>&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wx_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wx_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toStartOf</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toEndOf</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br>&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">paddingBottom</span>=<span class="hljs-string">&quot;94dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wb_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toEndOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
-<p><img src="/images/posts/problem-android-imageView/2018-08-12_191847.png" alt="最终效果"></p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-        <category>问题解决</category>
-      </categories>
-      <tags>
-        <tag>Android</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>AQS及相关内容</title>
     <url>//post/java-juc-aqs.html</url>
     <content><![CDATA[<h1 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h1><p>源码位置 : java.util.concurrent.locks.AbstractQueuedSynchronizer</p>
@@ -330,6 +285,51 @@
       </categories>
       <tags>
         <tag>并发编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Android 显示图片的指定位置图像 ImageView ImageButton</title>
+    <url>//post/problem-android-imageView.html</url>
+    <content><![CDATA[<h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>UI提供了一些图标素材，但是是在一张图片上 如图：</p>
+<a id="more"></a>
+
+<p><img src="/images/posts/problem-android-imageView/20180812183216164.png" alt="UI提供的图"></p>
+<p><code>产品需要在页面下方横排显示三个按钮</code></p>
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_183322.png" alt="产品需要的图"></p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>废话不多说，网上搜了一下，大多都是通过代码重新绘制。因为我比较粗俗，所以自己找到了一种解决办法。</p>
+<h4 id="心历路程"><a href="#心历路程" class="headerlink" title="心历路程"></a>心历路程</h4><blockquote>
+<p>设置scaleType的值来实现</p>
+</blockquote>
+<p>根据查阅资料了解Image相关view的属性值了解到</p>
+<p>对于android:scaleType属性，因为关于图像在ImageView中的显示效果，所以有如下属性值可以选择：</p>
+<ul>
+<li>matrix：使用matrix方式进行缩放。</li>
+<li>fitXY：横向、纵向独立缩放，以适应该ImageView。</li>
+<li>fitStart:保持纵横比缩放图片，并且将图片放在ImageView的左上角。</li>
+<li>fitCenter：保持纵横比缩放图片，缩放完成后将图片放在ImageView的中央。</li>
+<li>fitEnd：保持纵横比缩放图片，缩放完成后将图片放在ImageView的右下角。</li>
+<li>center：把图片放在ImageView的中央，但是不进行任何缩放。</li>
+<li>centerCrop：保持纵横比缩放图片，以使图片能完全覆盖ImageView。</li>
+<li>centerInside：保持纵横比缩放图片，以使得ImageView能完全显示该图片。</li>
+</ul>
+<p>由于我这里UI提供的图片比较特殊，所以第一张和第二张的图片分别可以通过设置 <code>matrix</code>和<code>center</code>获取到</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>      android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>      android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>      android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>      android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;&quot;</span><br>      android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/qq_login_content_description&quot;</span><br>      android:<span class="hljs-attribute">scaleType</span>=<span class="hljs-string">&quot;matrix&quot;</span><br>      app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>      app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>      app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_184259.png"></p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wx_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wb_login_content_description&quot;</span><br>    android:<span class="hljs-attribute">scaleType</span>=<span class="hljs-string">&quot;centerCrop&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toStartOf</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toEndOf</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_184312.png"></p>
+<p>到上面的时候,心里还是美滋滋,只要这样下去,不超过5分钟,我的图就画好了.<strong>可是接着尴尬的问题出现了</strong></p>
+<p>第三张的图片怎么取?? WTF??? <s>此处省略18分钟</s></p>
+<hr>
+<h4 id="终极方案-完美解决"><a href="#终极方案-完美解决" class="headerlink" title="终极方案,完美解决"></a>终极方案,完美解决</h4><figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">paddingTop</span>=<span class="hljs-string">&quot;94dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/qq_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br>&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wx_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginLeft</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginStart</span>=<span class="hljs-string">&quot;8dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wx_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toStartOf</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintStart_toEndOf</span>=<span class="hljs-string">&quot;@+id/qq_login&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br><br>&lt;ImageButton<br>    android:<span class="hljs-attribute">id</span>=<span class="hljs-string">&quot;@+id/wb_login&quot;</span><br>    android:<span class="hljs-attribute">layout_width</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_height</span>=<span class="hljs-string">&quot;47dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginBottom</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginEnd</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">layout_marginRight</span>=<span class="hljs-string">&quot;100dp&quot;</span><br>    android:<span class="hljs-attribute">paddingBottom</span>=<span class="hljs-string">&quot;94dp&quot;</span><br>    android:<span class="hljs-attribute">background</span>=<span class="hljs-string">&quot;@null&quot;</span><br>    android:<span class="hljs-attribute">contentDescription</span>=<span class="hljs-string">&quot;@string/wb_login_content_description&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">layout_constraintEnd_toEndOf</span>=<span class="hljs-string">&quot;parent&quot;</span><br>    app:<span class="hljs-attribute">srcCompat</span>=<span class="hljs-string">&quot;@drawable/login&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p><img src="/images/posts/problem-android-imageView/2018-08-12_191847.png" alt="最终效果"></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>问题解决</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
       </tags>
   </entry>
   <entry>
@@ -476,12 +476,428 @@
 <li><a href="https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612">Design Patterns: Elements of Reusable Object-Oriented Software 1st Edition</a></li>
 </ul>
 ]]></content>
+  </entry>
+  <entry>
+    <title>JVM 中对象咋创建啊，又怎么访问啊</title>
+    <url>//post/lvgo-jvm-03.html</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2020/12/24/NxJUsyce3If1wdh.png" alt="对象的创建与访问"></p>
+<h2 id="JVM-中对象咋创建啊，又怎么访问啊"><a href="#JVM-中对象咋创建啊，又怎么访问啊" class="headerlink" title="JVM 中对象咋创建啊，又怎么访问啊"></a>JVM 中对象咋创建啊，又怎么访问啊</h2><blockquote>
+<p>虚拟机遇到 new 指令，会根据指令参数去常量池找对应类的符号引用，如果没找到会进行类加载，此时会执行类构造器指令<clinit>。类加载完成之后，初始化之前，开始进行对象内存分配，分配好之后将内存区域的值全部置为0（成员变量初始化），之后执行实例构造器指令 <init>，完成后返回对象引用。</p>
+</blockquote>
+<h3 id="对象是怎么完成创建的？"><a href="#对象是怎么完成创建的？" class="headerlink" title="对象是怎么完成创建的？"></a>对象是怎么完成创建的？</h3><p>对象的创建一共有四种方式</p>
+<ul>
+<li>new 关键字</li>
+<li>复制（clone操作）</li>
+<li>序列化（另类操作）</li>
+<li>反射（另类）</li>
+</ul>
+<h4 id="※new-关键字创建普通-java-对象的过程"><a href="#※new-关键字创建普通-java-对象的过程" class="headerlink" title="※new 关键字创建普通 java 对象的过程"></a>※new 关键字创建普通 java 对象的过程</h4><ol>
+<li>在常量池中查找类信息（根据全部限定名），如果没有先进行类加载（后面在虚拟机执行章节中有具体的加载过程笔记），然后检验其是否被初始化（这个初始化是指的类初始化，也就是执行<clinit>）过</li>
+<li>类加载完成确定类的内存大小</li>
+<li>在新生代分配内存</li>
+<li>执行构造函数，返回引用地址</li>
+</ol>
+<p>简单总结：类初始化 - 分配内存 - 实例初始化 - 返回引用地址</p>
+<p><em>多学一点，这里的几个步骤涉及多个指令操作，所以就有了 DCL 单例使用 volatile 来禁止指令重排来保证单例模式的实例同步</em></p>
+<blockquote>
+<p>class 文件中的 static 关键字修饰的方法或变量成为类变量，没有被 static 修饰的部分称为实例变量</p>
+</blockquote>
+<p><strong>下面是对象创建细节的拆分</strong></p>
+<h4 id="怎么分配内存"><a href="#怎么分配内存" class="headerlink" title="怎么分配内存"></a>怎么分配内存</h4><ul>
+<li><p>指针碰撞</p>
+<p>如果内存中现有的分配情况为整齐分布，则会有一个 <em>分界点指示器</em> 在 <em>已用内存</em> 和 <em>未用内存</em> 之间。对于这种情况，只需要将该指示器的位置向后移动当前对象的内存大小位置即可。</p>
+</li>
+<li><p>空闲列表</p>
+<p>更多情况下，内存的使用是不连续的，所以在 JVM 中有一个对于当前内存情况管理的一个列表，称为 <em>空闲列表</em> ，可以通过查询该表来完成对象的内存的分配。</p>
+</li>
+</ul>
+<p>使用 <strong>指针碰撞</strong> 的前提是堆内存空间完整，而内存空间完整的前提是垃圾收集器是否有空间压缩整理能力。</p>
+<p><em>Serial</em> 和 <em>ParNew</em> 垃圾回收器是带有压缩整理能力的，其可以使用指针碰撞的分配方式</p>
+<p><em>CMS</em> 是不具有压缩整理能力的，所以其使用的是空闲列表方式，但在 <em>CMS</em> 垃圾回收器中，它仍然可以使用类似 <code>指针碰撞</code> 的功能，其在空闲列表中申请内存时会申请较大的一块区域，然后对这块区域是 <code>指针碰撞</code> 来分配。</p>
+<p><em>注：指针碰撞在极客时间郑雨迪的《深入拆解Java虚拟机》中翻译成指针加法</em></p>
+<blockquote>
+<p>我猜测会有留言问为什么不把 bump the pointer 翻译成指针碰撞。这里先解释一下，在英语中我们通常省略了 bump up the pointer 中的 up。在这个上下文中 bump 的含义应为“提高”。另外一个例子是当我们发布软件的新版本时，也会说 bump the version number。</p>
+</blockquote>
+<h4 id="内存分配的并发问题"><a href="#内存分配的并发问题" class="headerlink" title="内存分配的并发问题"></a>内存分配的并发问题</h4><p>由于多线程情况，有可能刚申请的内存被其他线程提前写入，导致内存分配出现问题。所以 JVM 提出了两种解决方案。</p>
+<ol>
+<li>使用 CAS + 失败重试；</li>
+<li>为本地线程分配缓冲区 <em>TLAB</em> （通过参数可选 -Xx : - UseTLAB）缓冲区用完之后在使用 CAS + 失败重试分配内存；</li>
+</ol>
+<blockquote>
+<p>TLAB : 线程需要维护两个指针（实际上可能更多，但重要也就两个），一个指向 TLAB 中空余内存的起始位置，一个则指向 TLAB 末尾。接下来的 new 指令，便可以直接通过指针加法（bump the pointer）来实现，即把指向空余内存位置的指针加上所请求的字节数。如果加法后空余内存指针的值仍小于或等于指向末尾的指针，则代表分配成功。否则，TLAB 已经没有足够的空间来满足本次新建操作。这个时候，便需要当前线程重新申请新的 TLAB。</p>
+</blockquote>
+<h4 id="使用内存"><a href="#使用内存" class="headerlink" title="使用内存"></a>使用内存</h4><p>内存分配完之后， JVM 会将这部分区域的值置为0（这就是基本数据类型的默认值的实现），如果使用的是本地线程缓冲区的方案，在分配缓冲区时即已经置为了0，然后开始设置对象头的信息，包括类信息、元数据地址、GC分代年龄、偏向锁等信息，其中哈希值延迟到调用时才会计算并设置。</p>
+<p>至此对象在内存中”完成创建”，但此时的对象并不能使用，接着会继续执行构造函数中的内容，来完成对象程序中的初始化步骤，构造函数执行结束后，对象完成创建。</p>
+<p><em>注：以上对象创建过程代码在 hotspot 虚拟机 bytecodeInterpreter.cpp  line:2179</em></p>
+<h3 id="对象在内存中都存了什么？"><a href="#对象在内存中都存了什么？" class="headerlink" title="对象在内存中都存了什么？"></a>对象在内存中都存了什么？</h3><ul>
+<li>对象头</li>
+<li>实例数据</li>
+<li>对齐填充</li>
+</ul>
+<h4 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h4><ol>
+<li>MarkWord —— 对象自身运行时数据</li>
+<li>类型指针 —— 对象的类型元数据指针</li>
+<li>数组长度 —— 如果是数组对象的话</li>
+</ol>
+<p><strong>MarkWord</strong></p>
+<ul>
+<li>哈希码</li>
+<li>GC分代年龄</li>
+<li>锁标志</li>
+<li>线程持有的锁</li>
+<li>偏向锁持有线程ID</li>
+<li>偏向时间戳</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>存储内容</th>
+<th>锁标志</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>哈希码、分代年龄</td>
+<td>01</td>
+<td>未锁定</td>
+</tr>
+<tr>
+<td>指向锁记录的指针</td>
+<td>00</td>
+<td>轻量级锁</td>
+</tr>
+<tr>
+<td>指向重量级锁的指针</td>
+<td>10</td>
+<td>重量级锁</td>
+</tr>
+<tr>
+<td>空</td>
+<td>11</td>
+<td>GC标记</td>
+</tr>
+<tr>
+<td>持有偏向锁的线程ID、时间戳</td>
+<td>01</td>
+<td>偏向锁</td>
+</tr>
+</tbody></table>
+<p><strong>类型指针</strong></p>
+<p>JVM 通过类型指针来确定当前对象的类型。这个类型指针指向方法区中该对象的元空间数据。</p>
+<p><strong>数组长度</strong></p>
+<p>之所以会单独区分出数组的长度信息，是因为 JVM 无法通过类的元空间数据得出对象的大小，所以单独记录数组对象的长度信息在对象头中。</p>
+<p><em>HotSpot虚拟机代表Mark Word中的代码（markOop.cpp）注释片段，它描述了32位虚拟机MarkWord的存储布局</em></p>
+<h4 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h4><p>无论是从父类继承下来的，还是在子类中定义的字段存储顺序会受到虚拟机分配策略参数</p>
+<p><strong>（-XX：FieldsAllocationStyle参数）</strong> 和字段在Java源码中定义顺序的影响。</p>
+<p>HotSpot虚拟机默认的分配顺序为</p>
+<ol>
+<li>longs/doubles</li>
+<li>ints</li>
+<li>shorts/chars</li>
+<li>bytes/booleans</li>
+<li>oops（Ordinary Object Pointers，OOPs）</li>
+</ol>
+<p>从以上默认的分配策略中可以看到，相同宽度的字段总是被分配到一起存放，在满足这个前提条件的情况下，在父类中定义的变量会出现在子类之前。</p>
+<p>如果HotSpot虚拟机的 <strong>+XX：CompactFields</strong> 参数值为true（默认就为true），那子类之中较窄的变量也允许插入父类变量的空隙之中，以节省出一点点空间。</p>
+<h4 id="对齐填充"><a href="#对齐填充" class="headerlink" title="对齐填充"></a>对齐填充</h4><p>hotspot 实现的虚拟机，对对象的起始地址有要求，需要是8字节的整数倍，所以对象的大小就必须是8字节的整数倍，如果不足便需要通过占位符来补充至8字节的倍数。</p>
+<h3 id="怎么在内存中定位访问一个对象？"><a href="#怎么在内存中定位访问一个对象？" class="headerlink" title="怎么在内存中定位访问一个对象？"></a>怎么在内存中定位访问一个对象？</h3><p>Java 程序通过栈上的 reference 数据来操作堆上的对象。</p>
+<p>《Java虚拟机规范》没有说明和约束 reference 的实现方式，所以具体的实现由虚拟机决定。</p>
+<p>通常由下面两种方式实现</p>
+<h4 id="句柄"><a href="#句柄" class="headerlink" title="句柄"></a>句柄</h4><p>句柄保存在句柄池中</p>
+<p>句柄保存对象数据的地址和对象类型信息的地址，多进行一次操作。但在 GC 做标记-整理操作时，无需关心对象内存地址的信息变化。</p>
+<h4 id="直接指针"><a href="#直接指针" class="headerlink" title="直接指针"></a>直接指针</h4><p>保存对象的数据信息和对象类型信息的地址，可以直接访问到对象数据。当需要使用类信息的时候，需要在进行一次查找。</p>
+<p><img src="https://i.loli.net/2020/12/24/KsRq1Lk9e4pmxYC.jpg" alt="句柄"></p>
+<p><img src="https://i.loli.net/2020/12/24/CtlidYOgJ4VweTn.jpg" alt="直接指针"></p>
+<blockquote>
+<p>图片来自《深入理解 Java 虚拟机》（第三版）周志明</p>
+</blockquote>
+<p>（正文完）</p>
+<p>下一篇学习对象是怎么回收的，非常欢迎关注加群一起学习，一起学劲儿大！</p>
+]]></content>
       <categories>
-        <category>Java</category>
-        <category>版本特性</category>
+        <category>虚拟机</category>
       </categories>
       <tags>
-        <tag>JDK8</tag>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 你知道不？一起来学啊</title>
+    <url>//post/lvgo-jvm-01.html</url>
+    <content><![CDATA[<h1 id="lvgo-的-JVM-学习笔记"><a href="#lvgo-的-JVM-学习笔记" class="headerlink" title="lvgo 的 JVM 学习笔记"></a>lvgo 的 JVM 学习笔记</h1><p>实不相瞒，这份 JVM 学习笔记，可以说很香。</p>
+<blockquote>
+<p>大家好，我是 lvgo，如果你之前看过我写的《和 lvgo 一起学习设计模式》.PDF，应该知道了 lvgo 的意思了，相信你知道它是什么意思后，会加深你对 lvgo 的印象。</p>
+</blockquote>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>关于 Java 虚拟机的学习，无论从业务开发上来说，还是从解决问题的角度上来看。我认为都是一个 Java 程序员必会的一个知识体系，为什么这么说呢？还是那句耳朵已经听起茧的话 ”知其然，而知其所以然“。</p>
+<h1 id="知其然，而知其所以然"><a href="#知其然，而知其所以然" class="headerlink" title="知其然，而知其所以然"></a>知其然，而知其所以然</h1><p>我见过因为不清楚技术底层原理乱用的开发人员，也见过不懂技术原理所以害怕其出现问题的领导拒绝开发人员应有新技术。</p>
+<p>举个例子：如果有 10 个人，给他们每个人一把刀，叫他们去山上砍柴，那这 10 个人假如都是第一次接触”刀“这个物品的话。那么就一定有人用刀背砍东西，有人用刀刃砍石头，而真正能正确使用的人它一定清楚这个物品哪里手可以握，哪里锋利，哪里可以砍树不能砍石头。（例子可能不恰当，说明意思即可）</p>
+<p>Java 虚拟机的这个知识点，我觉得最重要的不是调优部分，而是编译优化的那部分。之前听郑雨迪（Oracle 高级研究员，hotspot 开发者）说他现在在做 graal 编译器的工作内容就是想办法优化业务代码，让他们跑的更快。那我们能不能直接写出来无需优化，或减少编译优化阶段的工作呢？答案是可以的，但也只能做到编码部分的优化，关于虚拟机的优化内容慢慢会在我的笔记中了解到。</p>
+<h1 id="学习过程"><a href="#学习过程" class="headerlink" title="学习过程"></a>学习过程</h1><p>在学习 Java 虚拟机的这个过程是及其枯燥的，18 年我看完了周老师的《深入理解 Java 虚拟机》（第二版），大概只用了 10 几个小时。不过这 10 几个小时却花了我 1 年多的时间才消化掉。去年年底，也就是 19 年 11 月，周老师出了《深入理解 Java 虚拟机》（第三版），我是到今年 9 月份才开始读这本书的。大概还是只用了 10 几个小时就读完了，这次很明显感觉不一样了。而且这次一起看了很多关于虚拟机的内容，包括 JSR 和 虚拟机规范，还有 R 大的一些博客。</p>
+<p><img src="https://i.loli.net/2020/12/22/zWFAnxNPhs7t1iq.png" alt="微信读书"></p>
+<h1 id="学习目标"><a href="#学习目标" class="headerlink" title="学习目标"></a>学习目标</h1><p>系统的学习使我对 Java 虚拟机有了一定的理解，但究其深处还有很多可以探索的内容，其中执行引擎就是一个 “巨坑” ，不过这里并不是我们学习的目的，我们要学习的是<strong>我们写的代码在虚拟机里都干了什么</strong>，而不是执行引擎到底是怎么执行的指令，明确的了我们学习目标，那就好办了。</p>
+<h1 id="接下来的事"><a href="#接下来的事" class="headerlink" title="接下来的事"></a>接下来的事</h1><p>明确了学习的目标，再去学习就会相对清晰了很多，可以避开不是当前学习计划的内容，因为虚拟机的东西还是比较多。我根据周老师的书中内容，将虚拟机整理成如下几个知识点</p>
+<ol>
+<li>自动内存管理</li>
+<li>虚拟机的执行</li>
+<li>程序编译和代码优化</li>
+<li>“高”并发</li>
+</ol>
+<p><img src="https://i.loli.net/2020/12/22/dKlebYpL5VxM3jW.png" alt="JVM"></p>
+<p>这里面的第 3 点尤为重要，我觉得其他的都不懂这个都要懂。</p>
+<p>很多面试或者文章中说虚拟机调优多么多么重要，之前看过廖神（廖雪峰）写的一个 JVM 调优的内容，我觉得很有道理。JVM 每天跑着几百万、几千万的程序，经历了无数次的考验。有问题的可能性不大，换句话说，如果想要调优虚拟机，先调优你的代码。</p>
+<h1 id="欢迎关注"><a href="#欢迎关注" class="headerlink" title="欢迎关注"></a>欢迎关注</h1><p>接下来我会以日更或半周更的形式，以周老师的书籍为主线，其他资料的辅助将这本国内口碑极佳的《深入理解 Java 虚拟机》以极简的形式输出出来，让更多想要学习虚拟机，但碍于枯燥晦涩（周老师书其实说的一点都不晦涩难懂）而放弃学习 Java 虚拟机的开发者们能够一起来学习虚拟机的相关知识。</p>
+<hr>
+<p><img src="https://i.loli.net/2020/12/22/2CzWEr1ueBoQ8gl.jpg" alt="jvm笔记"></p>
+<p>也欢迎大家一起加群交流学习，关注回复<strong>加群</strong>一起在这个寒冷的冬天啃完这块重要的内容。</p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 把内存”收“回来用的是什么法器</title>
+    <url>//post/lvgo-jvm-05.html</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2020/12/26/3TyocWXgxpJv78L.png" alt="垃圾收集"></p>
+<blockquote>
+<p>上一篇我们知道了内存回收是指那些在堆或方法区中不在引用或使用的对象被回收掉，以保证后面的对象能够顺利的被分配。但是随之出现一个问题，就是虚拟机是怎么知道某个对象不使用了呢？今天就一起来看看虚拟机是怎么来判断一个对象是否存活的。</p>
+</blockquote>
+<h2 id="目录："><a href="#目录：" class="headerlink" title="目录："></a>目录：</h2><ol>
+<li>垃圾收集算法分类</li>
+<li>分代收集的概念</li>
+<li>主流 JVM 中的回收算法</li>
+</ol>
+<h2 id="垃圾收集"><a href="#垃圾收集" class="headerlink" title="垃圾收集"></a>垃圾收集</h2><p>垃圾收集算法可以从如何判断对象消亡分为两类</p>
+<ol>
+<li>引用计数式垃圾收集（Reference Counting GC）</li>
+<li>追踪式垃圾收集（Tracing GC）</li>
+</ol>
+<p>在主流的 JVM 中，使用的是第二种 <code>追踪式垃圾收集</code> 算法。</p>
+<blockquote>
+<p>更多内容推荐阅读Richard Jones撰写的《垃圾回收算法手册》的第2～4章的相关内容。</p>
+</blockquote>
+<p><em>多学一点：大多 JVM 不使用第一种方式的原因是因为引用计数的办法会导致两个对象在互相引用时，计数器的值均不为零，从而导致内存回收出现问题，进而导致内存泄漏。</em></p>
+<h3 id="分代收集"><a href="#分代收集" class="headerlink" title="分代收集"></a>分代收集</h3><p>因为大部分对象都是短暂存活后就死亡了，所以根据每次 GC 对对象进行年龄的划分来区别对待。</p>
+<p>根据理论和实践数据，“垃圾们” 被分为了两个年龄阶段</p>
+<ul>
+<li>新生代</li>
+<li>老年代</li>
+</ul>
+<p>对于不同区域的内存回收（部分收集 <strong>Partial GC</strong>）， GC 也因此分为了</p>
+<ul>
+<li>MinorGC（Young GC）新生代的垃圾收集。</li>
+<li>Major GC（Old GC CMS独有）老年代的垃圾收集。</li>
+<li>Mixed GC（G1中独有）收集整个新生代以及部分老年代的垃圾收集。</li>
+<li>Full GC（收集整个Java堆和方法区的垃圾收集。）</li>
+</ul>
+<p><strong>这里要知道，分代收集的思想不是凭空出现，而是根据理论是实践之后的数据得出</strong></p>
+<blockquote>
+<p>对于理论和实践的内容补充，理论这一块，最早的时候，人们认为，大部分对象存在很短的一段时间就会消失，这就是弱分代假说。而与之对应的强分代假说就是如果一个对象经过多次 GC 之后仍然存活，那就认为其很难消亡。事实上这一块不只一方拿出来实际的数据，这里包括个人或组织，其中业内具有影响力的 IBM 曾经公布一个数据，98% 的新对象会在第一次 GC 被回收掉。</p>
+</blockquote>
+<p><em>多学一点：在强弱分代假说的基础上，引申出一个新的假说，就是跨代引用假说。比如一个新生代对象被老年代所引用，那么你便不得不去在每次新生代 GC （minor gc）时去扫描全部的老年代对象。基于这个问题提出了记忆集与卡表的概念，这个数据结构专门用来表示老年代的数据区域，在（minor gc）时会只会扫描某个数据区域内的老年代对象即可。（关于这部分内容因为涉及垃圾回收器的实现细节，所以本篇暂不过多讨论，后续会专门整理一篇关于虚拟机垃圾回收实现细节的内容，欢迎关注催更）</em></p>
+<h3 id="回收算法"><a href="#回收算法" class="headerlink" title="回收算法"></a>回收算法</h3><p>上面我们知道虚拟机对内存进行的不同的区域划分，于是针对不同的区域也拥有了不同的处理方法。</p>
+<p><strong>“标记-清除算法”</strong>   <strong>“标记-复制算法”</strong> <strong>“标记-整理算法”</strong> 。</p>
+<h4 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h4><p>分为两步，首先通过可达性分析将需要清理的对象标记出来，之后将其清除。</p>
+<p>不过这种方式的缺点很明显，有两个：</p>
+<ol>
+<li>当对象过多时需要遍历的量变多。</li>
+<li>这种方式会产生大量碎片空间。</li>
+</ol>
+<blockquote>
+<p>图片来自周志明《深入理解 Java 虚拟机（第三版）》3.3.2 标记-清除算法</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/12/26/ZdAqrjtYV6Fv5gi.jpg" alt="标记-清除"></p>
+<h4 id="标记-复制算法-（新生代）"><a href="#标记-复制算法-（新生代）" class="headerlink" title="标记-复制算法 （新生代）"></a>标记-复制算法 （新生代）</h4><blockquote>
+<p>图片来自周志明《深入理解 Java 虚拟机（第三版）》3.3.3 标记-复制算法</p>
+</blockquote>
+<p>这种算法将新生代直接一份为二，每次只使用一半，一面用完以后，将存活的对象复制到另外一半空间上去，将当前空间全部清除</p>
+<p><img src="https://i.loli.net/2020/12/26/ceU9bP4BaXnAEpK.jpg" alt="标记-复制"></p>
+<p>不过这种方式导致空间利用率低下，并且上面我们也提过有实践证明大部分对象在第一次 GC 会被回收掉，<em>数据验证大部分对象会在新生代被回收，这个数值由 IBM 量化，98%的对象会被回收</em>， 所以 hotspot 采用了使用一个 <code>Eden</code> 和两块 <code>Survivor</code> ，默认比 8:1，这样即只有 10% 的空间留着复制备用，大大提高了 <strong>标记-复制</strong> 算法的可用性。这种划分方式成为 Appel 式回收</p>
+<blockquote>
+<p>多学一点：Appel 式回收还有一个分配担保，即复制到备用的 <em>Survivor</em> 上时空间不够，此时内存将在 <strong>老年代</strong> 完成分配。</p>
+</blockquote>
+<h4 id="标记-整理算法（老年代）"><a href="#标记-整理算法（老年代）" class="headerlink" title="标记-整理算法（老年代）"></a>标记-整理算法（老年代）</h4><p><em>关于这个算法的名字有的叫标记-复制，有的叫标记-整理，这个不要纠结，只是个名字，明白其中的思想就可以了</em></p>
+<blockquote>
+<p>在新生代因为存活的对象很少，即需要复制的对象较小，使用  <strong>标记-复制</strong> 算法可以很高效的解决垃圾收集这件事，不过在老年代因为对象大多存活时间较长，同时这种降低空间利用率的方法在这里便没那么好用了。</p>
+</blockquote>
+<p><strong>标记-整理</strong> 算法在 <strong>标记-清除</strong> 算法的基础上加入了移动操作，标记步骤相同，之后 <strong>标记-整理</strong> 算法会将存活对象向一端移动，直到没有存活对象为止，之后在分界处将内存回收掉。</p>
+<blockquote>
+<p>图片来自周志明《深入理解 Java 虚拟机（第三版）》3.3.4 标记-整理算法</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/12/26/TKzXrLIC5EShmyi.jpg" alt="标记-整理"></p>
+<p>对于 <strong>标记-整理</strong> 算法中的移动操作，有需要取舍的地方</p>
+<p><strong>移动：</strong></p>
+<p>程序停顿与更新对象引用影响程序的吞吐量</p>
+<p>内存移动操作需要暂停用户线程，设计者称其为 “ Stop The World ” ，并且移动存活对象后，对于的对象引用地址需要进行更新（这里的关联知识点就是对象的访问方式，会影响到通过 <code>直接访问</code> 这种方式。使用 <code>句柄</code> 访问的方式不受对象内存位置移动影响）</p>
+<blockquote>
+<p>在 Java 虚拟机里，传统的垃圾回收算法采用的是一种简单粗暴的方式，那便是 Stop-the-world，停止其他非垃圾回收线程的工作，直到完成垃圾回收。这也就造成了垃圾回收所谓的暂停时间（GC pause）。—— 郑雨迪极客时间专栏《深入拆解Java虚拟机》11|垃圾回收（上）</p>
+</blockquote>
+<p>(如果你玩过守望先锋的话)</p>
+<p><img src="https://i.loli.net/2020/12/26/iy1Ppe5jFlz6VfO.jpg" alt="在这停顿"></p>
+<p><strong>不移动：</strong></p>
+<p>链式内存存储影响程序的延迟</p>
+<p>在大量的内存碎片产生后，导致内存通过链式存储的方式来保存对象。这将加大对象的存储和访问开销。</p>
+<p><strong>抉择</strong></p>
+<p>基于以上两种影响，不同的垃圾回收器选择了不同的实现方法。</p>
+<p>在 <strong>hotspot</strong> 虚拟机中关注吞吐量的<strong>Parallel Scavenge收集器是基于标记-整理算法</strong>的，而关注延迟的<strong>CMS收集器则是基于标记-清除算法</strong>的</p>
+<p><em>多学一点：CMS 虽然使用了 <strong>标记-清除算法</strong> 但在其碎片化程度较高时（影响对象分配内存）会进行一次 <strong>标记-整理</strong>。而且 CMS 还有一个特点，不知道你还记得不，在之前我们一起学的对象咋创建的那篇文章，提到了指针碰撞（加法）这种内存分配方式，而这种方式只能在堆空间规整的前提下才能使用，显然 CMS 的标记-清除策略不能够直接使用，所以 CMS 在实现细节上，他在空闲列表上申请内存时，会申请一块较大的空间，然后在这块‘属于自己’的内存空间上在进行造作（指针碰撞）。</em></p>
+<blockquote>
+<p>另外，还有一种“和稀泥式”解决方案可以不在内存分配和访问上增加太大额外负担，做法是让虚拟机平时多数时间都采用标记-清除算法，暂时容忍内存碎片的存在，直到内存空间的碎片化程度已经大到影响对象分配时，再采用标记-整理算法收集一次，以获得规整的内存空间。前面提到的基于标记-清除算法的CMS收集器面临空间碎片过多时采用的就是这种处理办法。</p>
+<p>—— 周志明《深入理解 Java 虚拟机（第三版）》3.3.4 标记-整理算法</p>
+</blockquote>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>简单总结一下前面几篇文章的主要内容：</p>
+<p>开篇的《<a href="http://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&mid=2247485217&idx=1&sn=81fa575d807fcae82bf3fc338a2a02c5&chksm=fc6beec7cb1c67d13af104121d1852929c3107b6f5704d9f101b2af41d4e2f97272f127630e6#rd">JVM 你知道不？一起来学啊</a> 》介绍了一下我们为什么要学习虚拟机，同时对虚拟机内容大纲有所了解</p>
+<p>接着我们通过《<a href="http://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&mid=2247485226&idx=1&sn=5b8ed2e5d06899ff2d7d931f9d964d70&chksm=fc6beecccb1c67da4b405fa8c8c69878958b56d9291bdf8067b4bbf8c137b0194a0cae14e622#rd">你创建的 Java 对象搁哪了</a> 》了解了 Java 程序的运行时数据区域内容。</p>
+<p>知道了具体的内存划分之后，我们急不可耐的想知道《<a href="http://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&mid=2247485249&idx=1&sn=589495ebea994d2ac91110d9bdcf5326&chksm=fc6beea7cb1c67b17258a7da71a36f00b0386b68f7d25d53949ac7de7be5f3f74d3a205e439b#rd">JVM 中对象咋创建啊，又怎么访问啊</a> 》，当我们知道对象怎么创建的之后，就想怎么把分给它的地方要回来，于是我们一起翻开了秘籍《<a href="http://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&mid=2247485257&idx=1&sn=ca53d2e3a29f1a05bcd4b5fd7ec271fc&chksm=fc6beeafcb1c67b9e0b33ea8d59e6d5e9d386f0ef38ef2a3329bb0f1dfabeb5103854a2f2160#rd">JVM 是怎么把“送”出去的内存又“要”回来的</a> 》。</p>
+<p>今天我们又细细的品了品《JVM 把内存”收“回来用的是什么法器》，至此我们已经知道了虚拟机内存管理的大部分内容了，包括内存区域、内存分配、内存回收以及具体的回收法器。接下来的内容就是关于具体的垃圾收集器了。</p>
+<p>（正文完）</p>
+<p>如果觉得写的还不错，欢迎关注催更<strong>收藏、点赞、转发</strong>推荐给更多的人，如果想一起系统学习的话，非常欢迎<strong>加群</strong>一起讨论学习，“我们都是菜鸡，等你来互啄”，让虚拟机知识从此和枯燥乏味说拜拜。</p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM 是怎么把“送”出去的内存又“要”回来的</title>
+    <url>//post/lvgo-jvm-04.html</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2020/12/25/N5GMHKYy6aFOshl.png" alt="内存回收"></p>
+<blockquote>
+<p>之前我们知道了对象是怎么诞生，然后在内存中安家的，不过对象终归有一天也会“死亡”，那它“死亡”的时候，虚拟机都干了什么呢？又怎么判断一个对象”死“没”死“呢？今天一起学习一下虚拟机是怎么把分配出去的内存，“拿”回来的。</p>
+</blockquote>
+<p>想搞懂内存回收，顺着三个问题往下捋就可以很清楚的梳理好这块内容。</p>
+<h1 id="目录："><a href="#目录：" class="headerlink" title="目录："></a>目录：</h1><ol>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>怎么回收？</li>
+</ol>
+<h2 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h2><blockquote>
+<p>自动收集程序运行产生的“垃圾”，回收这部分内存这种思想并不是起源于 Java ，而是早 Java 30 年的 Lisp 语言<em>（作者：John McCarthy）</em>。</p>
+</blockquote>
+<p>我们也先思考 Lisp 作者对垃圾收集，内存回收提出的三个问题</p>
+<ol>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>怎么回收？</li>
+</ol>
+<h3 id="哪些内存需要回收？"><a href="#哪些内存需要回收？" class="headerlink" title="哪些内存需要回收？"></a>哪些内存需要回收？</h3><p>这里在回顾一下 Java 程序在运行时都有哪些数据区域，如果没跟 lvgo 一起学的同学，可以看看之前的文章 《 你创建的 Java 对象都搁哪了》</p>
+<p>PC寄存器（程序计数器）、本地方法/虚拟机栈、方法区、堆这<strong>五</strong>大区域</p>
+<p>程序计数器、虚拟机栈、本地方法栈3个区域都是线程私有的，他们的产生和消失都随着线程的创建和销毁而变化。</p>
+<p>所以 <strong>堆</strong>、<strong>方法区</strong> 这两块内存区域就是需要进行回收的内存。同时这部分内容和程序运行密切相关，具有不确定性，比如你写了1w个类，但实际只使用1个，那在堆和方法区中也只有1个对象的内存大小的区域被使用。所以需要动态的管理这部分内存。</p>
+<h3 id="什么时候回收？"><a href="#什么时候回收？" class="headerlink" title="什么时候回收？"></a>什么时候回收？</h3><p>在堆中的实例对象，如果想要把这部分内存回收，一定要确定这里所保存的实例对象哪些还在被使用，哪些已经没有用了，即允许回收。</p>
+<p>所以回收的条件就是对象已经没有再被引用了。</p>
+<p><strong>对象引用知识补充</strong></p>
+<p>JDK2的时候，对象的引用只有两种情况</p>
+<ol>
+<li>被引用</li>
+<li>没被引用</li>
+</ol>
+<p>后来有了更多场景的需要，</p>
+<ul>
+<li>如果内存还够用，即使我没被引用，也不要回收我。</li>
+<li>如果已经做了一次回收，还是不够用，那就把没被引用的我回收吧。</li>
+<li>…..</li>
+</ul>
+<p>在这种需求提出后 JDK2之后，Java 补充了对象引用的概念，将引用分为强、软、弱、虚四种。</p>
+<p>了解对象引用概念之前先喝杯咖啡提提神。</p>
+<p><strong>4个不同性格的人喝咖啡</strong></p>
+<p>从前有甲乙丙丁四个人去咖啡厅喝咖啡，这四兄弟吧，不知道咖啡厅的规矩，跟我似的，也没去过啊，不知道。进去了之后这 <strong>甲乙丙丁</strong> 四兄弟就找个位置拿着咖啡在那喝。</p>
+<p>结果不巧今天咖啡厅爆满！服务员就想着找一些喝完不走的人聊聊，把它们聊走，</p>
+<p>也不知怎么的，就盯上这四兄弟了，就过来问 <strong>甲</strong> ：“甲先生，你喝完了吗？今天人有点多，你看看..”，“管谁叫先生呢，我是你大姐！没喝完呢，你看不见呐，不走”。<strong>甲</strong> 很 <strong>强</strong> 势，服务员不敢惹。</p>
+<p>接着他就朝着 <strong>乙</strong> 走过来，他还没说话，<strong>乙</strong> 先开口：“刚你跟我大姐说的我听见了，你看这么的行不行，<strong>你先去找别人，如果你找完别人之后位置还不够，来找老妹儿，老妹儿给你让这个位置</strong> ” ，服务员一看 <strong>乙</strong> 是个 <strong>软</strong> 妹子，就答应她走开了。</p>
+<p>这会儿服务员大哥已经有点累了，想赶快找到新位置出来，不然一会内存溢出了擦，来到 <strong>丁</strong> 面前，“兄弟，今天餐厅位置不够了，你看你让一下子行不行”，说着用手拍着 <strong>丁</strong> 的肩膀，<strong>丁</strong> 一看这架势，有点害怕，赶紧说：“行行行”，服务员一看，这 <strong>丁</strong> 也太 <strong>弱</strong> 了。</p>
+<p>服务员大哥准备乘胜追击来到 <strong>丙</strong> 面前，发现这个 <strong>丙</strong> 有点问题，怎么说呢，就像 <strong>幽灵</strong> 一样若隐若现，完事服务员过去拍了一下他，这不拍不知道，一拍差点裤衩子都吓掉了，这压根就没人，甚至那杯咖啡他都拿不起来，服务员只好瑟瑟发抖的说“这地方我先收拾了啊” 然后就灰溜溜的跑开了，不一会这个位置就给其他客人坐上了。</p>
+<p>大哥找了一会安排了一些人坐下，发现位置还是不够，于是他想起 <strong>乙</strong> 说的话，就过去给 <strong>乙</strong> 说了现在的情况，然后 <strong>乙</strong> 也是个守信用的 <strong>软</strong> 妹子，就收拾东西走开了。</p>
+<p>不过当  <strong>乙</strong> 走开之后，服务员发现还有 1 个顾客没有位置坐！实在没办法了，谁也别喝了，关门吧，人都从咖啡厅里溢出去了。</p>
+<p>所以这个故事告诉了我们什么？</p>
+<p><em>咖啡厅里有鬼</em></p>
+<p>总结一下，甲乙丙丁分别对应的 <strong>强软弱虚</strong> 四种引用类型</p>
+<ul>
+<li><p>甲：强引用（Strongly Re-ference）</p>
+<p>只要我的咖啡（引用）还在，就没人敢动他，很强势。</p>
+</li>
+<li><p>乙：软引用（SoftReference）</p>
+<p>一个讲道理的引用，你先去收拾别的地方，如果你收拾完了地方还不够，我再让我的位置，不然你就让我多待一会</p>
+</li>
+<li><p>丁：弱引用（Weak Reference）</p>
+<p>这个引用的生命只能坚持到诞生之后的第一个 GC 就嗝屁了，来收拾你就得让，管你喝完没喝完。</p>
+</li>
+<li><p>丙：虚引用（Phantom Reference）</p>
+<p>幽灵一般的存在，最弱的一种引用关系，随时可能被回收，你不能用它来获取一个实例，这个引用的作用是为了对象被回收是接到通知。</p>
+</li>
+</ul>
+<p>这4种引用强度依次逐渐减弱。强 &gt; 软 &gt; 弱 &gt; 虚</p>
+<h3 id="怎么回收？"><a href="#怎么回收？" class="headerlink" title="怎么回收？"></a>怎么回收？</h3><h4 id="回收堆内存"><a href="#回收堆内存" class="headerlink" title="回收堆内存"></a>回收堆内存</h4><p>关于判断堆中对象是否存活（被引用）的方法，有两种</p>
+<h5 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h5><p>在对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加一；当引用失效时，计数器值就减一；任何时刻计数器为零的对象就是不可能再被使用的。</p>
+<p><em>JVM没有采用过这种方式，原因之一就是循环引用问题</em></p>
+<h5 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h5><p><em>注：摘自周志明《深入理解 Java 虚拟机（第三版）》3.2.2 可达性分析算法部分</em></p>
+<p>通过一系列称为“GC Roots”的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路径称为“引用链”（Reference Chain），如果某个对象到GC Roots间没有任何引用链相连，或者用图论的话来说就是从GC Roots到这个对象不可达时，则证明此对象是不可能再被使用的。</p>
+<p><img src="https://i.loli.net/2020/12/25/BpRlN6fIvbqQXH2.jpg" alt="图片来自周志明《深入理解 Java 虚拟机（第三版）》"></p>
+<p>在Java技术体系里面，<strong>固定可作为GC Roots的对象</strong>包括以下几种：</p>
+<ul>
+<li><p>在虚拟机栈（栈帧中的本地变量表）中引用的对象，譬如各个线程被调用的方法堆栈中使用到的参数、局部变量、临时变量等。</p>
+<p>方法执行时相关的数据</p>
+</li>
+<li><p>在方法区中类静态属性引用的对象，譬如Java类的引用类型静态变量。</p>
+<p>静态变量</p>
+</li>
+<li><p>在方法区中常量引用的对象，譬如字符串常量池（StringTable）里的引用。</p>
+<p>常量</p>
+</li>
+<li><p>在本地方法栈中JNI（即通常所说的Native方法）引用的对象。</p>
+<p>虚拟机本地方法持有的对象</p>
+</li>
+<li><p>Java虚拟机内部的引用，如基本数据类型对应的Class对象，一些常驻的异常对象（比如NullPointExcepiton、OutOfMemoryError）等，还有系统类加载器。</p>
+</li>
+<li><p>所有被同步锁（synchronized关键字）持有的对象。</p>
+</li>
+<li><p>反映Java虚拟机内部情况的 JMXBean、JVMTI 中注册的回调、本地代码缓存等。</p>
+</li>
+</ul>
+<p><em>除了固定的 GC Roots 以外，这部分集合还会根据选用的垃圾回收器和当前区域的不同，临时增加一些 GC Roots 对象。具体的体现为分代收集和局部回收。</em></p>
+<h5 id="对象真正死亡（即可被回收）"><a href="#对象真正死亡（即可被回收）" class="headerlink" title="对象真正死亡（即可被回收）"></a>对象真正死亡（即可被回收）</h5><p>标记：在可达性分析之后，即使对象被标记为不可达，也不会立即回收掉该对象，而是标记为可回收（笔者自释）。</p>
+<p>标记确认：在已经标记的对象集合中，会进行一次筛选，筛选条件是当前对象是否有必要执行 <code>finalize()</code> 方法。<strong>如果有必要执行则继续 <code>存活</code>，如果没有必要则 <code>死亡</code>。</strong></p>
+<p>判断当前对象是否有必要执行 <code>finalize()</code> 方法的条件（<strong>二次确认对象已死亡</strong>）是</p>
+<ol>
+<li>对象没有重写 <code>finalize()</code> 方法</li>
+<li><code>finalize()</code> 方法已经被执行过一次</li>
+</ol>
+<p>满足以上两个条件的话虚拟机则会认为没有必要执行 <code>finalize()</code> 方法，即对象已死亡。</p>
+<p>如有逃过这次的 <code>死亡</code> 时机，只要当前对象在重写的 <code>finalize()</code> 方法中（一定要在 <code>finalize()</code>方法中，这是唯一一个能<em>拯救</em>自己的机会）与 GC Roots 集合中对象的引用链发生关联，即当前对象再次产生引用关系，即可逃离这次垃圾回收。</p>
+<p>所以实际上，我们可以通过重写 <code>finalize()</code> 来“拯救”一次对象的死亡，也只能拯救一次，因为宣布其真正死亡还有第二个条件，就是 <code>finalize()</code> 方法已经执行过一次。</p>
+<h4 id="回收方法区"><a href="#回收方法区" class="headerlink" title="回收方法区"></a>回收方法区</h4><p><em>注：以下摘自周志明《深入理解 Java 虚拟机（第三版）》3.2.5 回收方法区</em></p>
+<p>有些人认为方法区（如HotSpot虚拟机中的元空间或者永久代）是没有垃圾收集行为的。</p>
+<p>《Java虚拟机规范》中提到过可以不要求虚拟机在方法区中实现垃圾收集，事实上也确实有未实现或未能完整实现方法区类型卸载的收集器存在（如JDK 11时期的ZGC收集器就不支持类卸载）。</p>
+<p>方法区垃圾收集的“性价比”通常也是比较低的：在Java堆中，尤其是在新生代中，对常规应用进行一次垃圾收集通常可以回收70%至99%的内存空间，相比之下，方法区回收囿于苛刻的判定条件，其区域垃圾收集的回收成果往往远低于此。</p>
+<p><strong>方法区数据</strong></p>
+<p>方法区中保存的是类信息和运行时常量池两部分内存。</p>
+<p><strong>回收运行时常量池</strong></p>
+<p>运行时常量池的回收比较简单，只需判断当前常量池中的字面量是否有被引用即可。常量池中其他类（接口）、方法、字段的符号引用也与此类似。</p>
+<p><strong>回收类信息</strong>（类卸载）</p>
+<p>判断一个类型信息是否可以被回收需要同时满足以下三个条件，</p>
+<ol>
+<li>该类信息对应的所有实例被回收</li>
+<li>加载该类的加载器被回收</li>
+<li>对应的 <em>java.lang.Class</em> 对象没有在任何地方被引用</li>
+</ol>
+<p>具体内容如下：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例。</li>
+<li>加载该类的类加载器已经被回收，<strong>这个条件除非是经过精心设计的可替换类加载器的场景，如OSGi、JSP的重加载等，否则通常是很难达成的。</strong></li>
+<li>该类对应的 <em>java.lang.Class</em> 对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ol>
+<p><em>多了解一点：</em></p>
+<p><em>其中第三点与我们经常见到的操作诸如 spring 这种大量使用反射的框架、JDK 的动态代理、以及 CG lib 这种操作字节码的框架基本上都需要 JVM 拥有类卸载的功能，否则会导致一些自定义加载器加载的临时类信息占据着方法区的内存，带来不必要的压力。</em></p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
   <entry>
@@ -610,6 +1026,66 @@
       </categories>
       <tags>
         <tag>并发编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MyChat，一个私有的&quot;微信&quot;</title>
+    <url>//post/mychat-01.html</url>
+    <content><![CDATA[<h1 id="星尘的一个朋友"><a href="#星尘的一个朋友" class="headerlink" title="星尘的一个朋友"></a>星尘的一个朋友</h1><blockquote>
+<p>不要抱怨、坚持下去💪。</p>
+</blockquote>
+<h2 id="MyChat"><a href="#MyChat" class="headerlink" title="MyChat"></a>MyChat</h2><p>我希望它是一个简单的沟通工具。使用简单的，开发简单的私有的，或可发展成企业级的聊天系统或是组件。但是，越是看起来简单，它的内部就越复杂。这个复杂不是指它的开发难度，而是设计。</p>
+<p><img src="https://i.loli.net/2021/02/06/IHKsoxGCSYUnvp4.png" alt="mychat"></p>
+<p>之前有人问我（面试官），你说设计模式可以让开发变得容易，又说使用设计模式会让程序变得复杂，这不是自相矛盾吗？我的回答是“如果你只创建一个对象还用工厂模式，那肯定是复杂了，但如果你想扩展你的对象创建，那他就不复杂。因为你开发一次，受用多次，算是一劳永逸了。”</p>
+<p>这次 MyChat 的设计，推翻了几次，至少现在我仍不满意，但它确确实实已经做到了一定的扩展性，比如新增一个 UI 功能，我有为其考虑使用的 模板方法模式， 比如你想新增一种消息类型，我在 SDK 包中的监听器可以轻松应对，这些都已经在我迭代的过程中体现出来了。</p>
+<h2 id="MyChat-由来"><a href="#MyChat-由来" class="headerlink" title="MyChat 由来"></a>MyChat 由来</h2><p>做这个项目的原因和契机有很多，说两个比较关键的。</p>
+<p>一是因为一个叫傅政委的男人，关于这个人(<code>https://bugstack.cn/</code>)，以后再说，要讲的东西有点多，一篇写不下。</p>
+<p>二是对自己一个交代吧，把自己对软件设计的理解，在这个行业的所学所得，还有自认为良好的编码习惯都倾注到这个项目上。如果以后你有机会能够看到 MyChat 项目源码，也希望能评价一番，好的坏的，我都接受。我多么希望有一个能指导自己的人。</p>
+<h2 id="MyChat-项目介绍"><a href="#MyChat-项目介绍" class="headerlink" title="MyChat 项目介绍"></a>MyChat 项目介绍</h2><p>该项目适合 netty 学习者或进行 IM 相关系统开发者。可以基于该项目快速开发出一个带有通讯能力的应用。</p>
+<p>UI 采用的 JavaFx ，了解过 JavaFx 的人都知道这东西在国内的文档表现，为使得页面开发便捷，专门为其开发了一些轮子，比如 FxmlObject ，让你可以轻松的来操作 fxml 文件对象。实现布局的快速调整，功能的快速迭代。</p>
+<p>前端程序准备了 mychat-client 客户端模块 SDK（java语言） ，给你提供足够的 API，将前端开发的权利全都交给你。也就是说，你可以使用任何开发方案，不过要考虑集成问题，因为 JavaFx 可以直接调用 java 程序，所以我这没有集成问题。</p>
+<p>后端可以自己部署（开源以后），也可以使用 mychat 云（暂未开放）。</p>
+<h2 id="应用部分截图"><a href="#应用部分截图" class="headerlink" title="应用部分截图"></a>应用部分截图</h2><p><img src="https://i.loli.net/2021/02/06/WZe1txRyjhTUBfV.png" alt="登录页面"></p>
+<p><img src="https://i.loli.net/2021/02/06/ljAnTBgLOhWvteG.png" alt="登录页面"></p>
+<p><img src="https://i.loli.net/2021/02/06/KiOTJAuc8F3eL5g.png" alt="首页"></p>
+<p><img src="https://i.loli.net/2021/02/06/8GJNBaysTpdFrXf.png" alt="添加好友"></p>
+<p><img src="https://i.loli.net/2021/02/06/PZvpMJcDQqXgjNU.png" alt="创建群聊"></p>
+<p><img src="https://i.loli.net/2021/02/06/RTU7cEGYvh41iFN.png" alt="群聊"></p>
+<p><img src="https://i.loli.net/2021/02/06/XvZW2PIK5xQ9de3.png" alt="好友"></p>
+<p><img src="https://i.loli.net/2021/02/06/BAhdfb6lmHQvI8J.png" alt="聊天"></p>
+<h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><p>开发 MyChat 遇到了很多问题,这里列举一些随手记的问题和大家分享一下,有的已经解决,有的在该项目中仍然存在.</p>
+<p>解决的问题在 MyChat 后续相关文章中会给出我的解决方案.可以关注我一起交流学习.</p>
+<h3 id="UI-问题"><a href="#UI-问题" class="headerlink" title="UI 问题"></a>UI 问题</h3><ol>
+<li>stage 选择无边框模式后, 页面的拖拽. 缩放问题;</li>
+<li>listview 空数据鼠标悬停背景色问题;</li>
+<li>节点边距问题;</li>
+<li>listview 鼠标点击,但不选中. 朋友页面使用 listview 实现, 标题也为 listcell 但可点击,不可选中;</li>
+<li>sketch 文本过长,显示问题;</li>
+<li>页面关闭问题, 关闭后断开连接并结束进程;</li>
+<li>如何让某个页面置顶, 不可失去焦点?;</li>
+<li>滚动条样式问题;</li>
+<li>滚动条如何处理不占位置;</li>
+<li>群头像如何生成?</li>
+<li>聊天内容如何跟着主页面的缩放进行缩放?</li>
+<li>聊天内容的文本域如何动态调整宽高?使文本合理的展示? (难搞)</li>
+<li>javaFx 的边框?边距?背景?</li>
+</ol>
+<h3 id="功能问题"><a href="#功能问题" class="headerlink" title="功能问题"></a>功能问题</h3><ol>
+<li>现在 UI 数据都存在缓存中,重启应用后消失,这部分数据如何处理?</li>
+<li>后端哪些数据需要持久化?</li>
+<li>怎么能提高程序的扩展性,增加一类消息时很简单?</li>
+<li>UI 客户端没有使用 spring , 应用中使用的 bean 如何管理?</li>
+<li>哪些内容需要做成配置?如何做?</li>
+<li>本地存储使用序列化方式保存Java bean, 但要存储的对象没有实现序列化接口(组件中的类),如何存储.</li>
+<li>离线消息如何处理?</li>
+<li>心跳机制实现时, 出现偶发空闲检测事件.</li>
+</ol>
+<hr>
+<p>欢迎关注我，关注 MyChat。</p>
+]]></content>
+      <tags>
+        <tag>MyChat</tag>
+        <tag>Netty</tag>
       </tags>
   </entry>
   <entry>
@@ -897,24 +1373,6 @@
       </tags>
   </entry>
   <entry>
-    <title>octopus 为梦而生的八爪鱼</title>
-    <url>//post/octopus.html</url>
-    <content><![CDATA[<p><a href="https://github.com/lvgocc/octopus">八爪鱼 Octopus</a></p>
-<a id="more"></a>
-
-<p>一个基于 Jsoup 的 Java 爬虫系统</p>
-<p>目前正处于开发阶段, 博客持续更新</p>
-<p>感兴趣的点击上方链接, 围观起来</p>
-<p>砰!砰!</p>
-]]></content>
-      <categories>
-        <category>程序人生</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>try catch 中的异常怎么处理</title>
     <url>//post/try-catch-right-operation.html</url>
     <content><![CDATA[<h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>在我们日常开发中, 经常会遇到一些异常需要去手动处理, 或者说是一些可能出现的异常去处理, 又或者说你不知道的异常, 等着暴露出来发现后去处理, 无论哪种异常, 当它出现的时候都是头疼的. </p>
@@ -972,6 +1430,24 @@
       </categories>
       <tags>
         <tag>编码技巧</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>octopus 为梦而生的八爪鱼</title>
+    <url>//post/octopus.html</url>
+    <content><![CDATA[<p><a href="https://github.com/lvgocc/octopus">八爪鱼 Octopus</a></p>
+<a id="more"></a>
+
+<p>一个基于 Jsoup 的 Java 爬虫系统</p>
+<p>目前正处于开发阶段, 博客持续更新</p>
+<p>感兴趣的点击上方链接, 围观起来</p>
+<p>砰!砰!</p>
+]]></content>
+      <categories>
+        <category>程序人生</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -1191,6 +1667,73 @@
       </tags>
   </entry>
   <entry>
+    <title>一篇浅文让你摆脱事务困扰</title>
+    <url>//post/spring-transaction-02.html</url>
+    <content><![CDATA[<p>这将会是你编程生涯很有意义的10分钟</p>
+<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>反对枯燥的技术学习，拒绝从入门到放弃，从删库到跑路。<br>拒绝！大声跟我念！拒绝！</p>
+<h4 id="啥是事务"><a href="#啥是事务" class="headerlink" title="啥是事务"></a>啥是事务</h4><p><del>事物指的是逻辑上的一组操作，这组操作要么全部成功，要么全部失败</del><br>同生共死</p>
+<h4 id="事务的四个特性-ACID"><a href="#事务的四个特性-ACID" class="headerlink" title="事务的四个特性 ACID"></a>事务的四个特性 ACID</h4><p>原子性（Atomicity）：事物是一个不可分割的工作单位，事物中的操作要么都发生，要么都不发生</p>
+<p>一致性（Consistency）：事物前后数据的完整性必须保持一致</p>
+<p>隔离性（Isolation）：指多个用户并发访问数据库时，一个用户的事物不能被其他用户的事物所干扰，多个并发事物之间数据要相互隔离。</p>
+<p>持久性（Durability）：一个事物一旦被提交，它对数据库中数据的改变就是永久性的，即使数据库发生故障也不应该对其有任何影响。</p>
+<h5 id="事务的7种传播行为"><a href="#事务的7种传播行为" class="headerlink" title="事务的7种传播行为"></a>事务的7种传播行为</h5><p>这里我看到好多官方或者博文写的基本都是差不多. 如果我会用的话, 我可能不会去翻书翻博文找答案. 那既然翻书的和找答案的都是不会用的. 那怎么能让寻求答案的人, 一眼就看到自己想要的东西呢?</p>
+<h5 id="首先7种传播行为分别为"><a href="#首先7种传播行为分别为" class="headerlink" title="首先7种传播行为分别为:"></a>首先7种传播行为分别为:</h5><p><em>名字有可能和大家看到其他的文章内容不一样. 个人理解. 不影响阅读</em></p>
+<ol>
+<li>默认事务  <strong>REQUIRED</strong>(开启事务后不做任何传播行为说明的)</li>
+<li>新启事务  <strong>REQUIRES_NEW</strong></li>
+<li>嵌套事务  <strong>NESTED</strong></li>
+<li>依赖事务  <strong>SUPPORTS</strong></li>
+<li>非事务  <strong>NOT_SUPPORTED</strong></li>
+<li>必须非事务  <strong>NEVER</strong></li>
+<li>必须以事务  <strong>MANDATORY</strong></li>
+</ol>
+<p>那这7个分别对应的是什么情景, 我们来用最直白, 最简单的话来说明一下.</p>
+<h6 id="1-默认事务-REQUIRED"><a href="#1-默认事务-REQUIRED" class="headerlink" title="1. 默认事务 REQUIRED"></a>1. 默认事务 REQUIRED</h6><p>顾名思义, 当你对某个方法开启了事务, 但又不去指定它的传播行为时, 此时的事务管理会默认分配给他一个事务. 那就是调用者如果有事务便加入其中, 否则自身新启事务. 什么意思</p>
+<p>你去小李家玩, 玩累了, 想吃饭, <strong>如果小李家可以吃饭, 那就在小李家一起吃, 否则你就自己吃.</strong></p>
+<h6 id="2-新启事务-REQUIRES-NEW"><a href="#2-新启事务-REQUIRES-NEW" class="headerlink" title="2. 新启事务 REQUIRES_NEW"></a>2. 新启事务 REQUIRES_NEW</h6><p>与默认事务中的第二种情况相同. 只不过, 此时无论小李家可不可以吃饭, 你都要自己吃, 不过还有一种情况, 就是如果调用者存在事务, 那该事务需要挂起.也就是说. 小李家如果可以吃饭, 那他们家人要等你吃完以后才能吃, 相当于暂停. 但是大家要切记, 这段时间只是时间暂停, 资源是在继续使用的. 也就是说, 外层事务挂起时, 数据库连接是一直持有状态. 所以你吃饭要快点. 不然等你吃的太久, 小李家其他人一直在等他们的餐桌吃饭可是要一直等下去的. <strong><code>此时说的是事务挂起的情况</code></strong></p>
+<h6 id="3-嵌套事务-NESTED"><a href="#3-嵌套事务-NESTED" class="headerlink" title="3. 嵌套事务  NESTED"></a>3. 嵌套事务  NESTED</h6><p>厉害的来了, 这个事务比较特殊, 适用的场景大家根据我后面的说明自行 决断;<br>当前存在事务, 加入到这个事务中作为一个附属事务.  如果不存在, 则以默认事务执行, 其实也就是以新启事务执行;</p>
+<p>解释一下附属事务的情况是什么意思. 附属, 归属,具体表现为我们的县城, 归属市区管辖, 但自己又独立. 当市级A()派遣任务给县城B(), 与它一同协作完成. 如果县城B()没有预期完成任务,我们说的抛出异常, 那市级A()会继续执行该市的其他任务. 如果市级预期完成, 那么县城的任务失败, 市级负责的部分任务完成. 此时事务A()提交. 县城事务B()回滚.<br>但, 如果县城B()按期完成任务, 市级A()任务没有完成. 那县城B()的事务要同A()一起回滚.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 独立事务</span><br>a() &#123;<br>	<span class="hljs-comment">// 嵌套事务</span><br>	b();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>a调用b , a 为独立事务 b 为嵌套事务<br>当执行到方法b时, a事务被挂起. 方法 b 无论成功失败, a继续执行<br>a执行成功 a与b 事务提交<br>a执行失败 无论b事务是否完成 与a一同回滚</strong></p>
+<p>嵌套事务只影响本身事务, 不能影响外层事务. 同时受外层事务影响<br>a可以影响b , 但b不能影响a</p>
+<p><strong>顺便提一点</strong> 如果b为默认事务, 此时 b 如果出现异常, 整个事务执行回滚, 不能对b做异常捕获不抛出异常. 否则会出现事务提交异常, 因为此时 a 与 b 同处一个事务中, 要么同时提交, 要么同时回滚.</p>
+<hr>
+<p><strong>上面讲的就是我们最常用的三种传播行为, 下面再看看其他4种不常用的</strong></p>
+<h6 id="4-依赖事务-SUPPORTS"><a href="#4-依赖事务-SUPPORTS" class="headerlink" title="4. 依赖事务  SUPPORTS"></a>4. 依赖事务  SUPPORTS</h6><p>这种事务情况为, 如果调用者有事务我就加入, 没有我就以非事务执行<br>小李家有饭我就吃, 没有我就不吃了</p>
+<h6 id="5-非事务-NOT-SUPPORTED"><a href="#5-非事务-NOT-SUPPORTED" class="headerlink" title="5. 非事务 NOT_SUPPORTED"></a>5. 非事务 NOT_SUPPORTED</h6><p>如果调用者有事务我就把他挂起, 然后以非事务执行<br>小李家有饭我就让他暂停, 然后我做我的事,做完后恢复挂起事务继续执行</p>
+<h6 id="6-必须非事务-NEVER"><a href="#6-必须非事务-NEVER" class="headerlink" title="6. 必须非事务  NEVER"></a>6. 必须非事务  NEVER</h6><p>如果调用者<strong>有事务</strong>我就抛出异常. 不再继续执行<br>小李家<strong>有饭</strong>我就报警, 谁都别想动</p>
+<h6 id="7-必须以事务-MANDATORY"><a href="#7-必须以事务-MANDATORY" class="headerlink" title="7. 必须以事务  MANDATORY"></a>7. 必须以事务  MANDATORY</h6><p>如果调用者<strong>没有事务</strong>我就抛出异常. 不再继续执行<br>小李家<strong>没有饭</strong>我就报警, 谁都别想动</p>
+<hr>
+<h4 id="接下来你应该知道的"><a href="#接下来你应该知道的" class="headerlink" title="接下来你应该知道的"></a>接下来你应该知道的</h4><p>说了基本概念, 我觉得既然是最简单的事务学习, 那一定是要跟大家讲怎么使用事务.具体怎么去配置事务大家随便百度吧. 就不赘述了.</p>
+<p>当你将你的方法配置好事务后. 有几个基础的东西你一定要知道, 当然现在用的事务都是spring的事务.</p>
+<h4 id="1-同方法内-被调用的事务不会生效"><a href="#1-同方法内-被调用的事务不会生效" class="headerlink" title="1. 同方法内, 被调用的事务不会生效"></a>1. 同方法内, 被调用的事务不会生效</h4><p>举例</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceA</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">A</span>() 配有独立事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">A</span>()</span>&#123;<br>		<span class="hljs-comment">// 调用 方法B(), 记笔记. 此时 B 的独立事务不生效</span><br>		B();<br>	&#125;<br>	<span class="hljs-comment">// 方法 B() 配有独立事务</span><br>	<span class="hljs-function">fun <span class="hljs-title">B</span><span class="hljs-params">()</span></span>&#123;<br><br>	&#125;<br>)<br><br></code></pre></td></tr></table></figure>
+
+<p>该问题比较好理解. 原因是由于spring的事务管理是基于 spring 的 AOP 实现的. 而方法增强需要通过调用时执行切点方法才能实现增强. 所以此时的方法B就是正常的一段方法加入到了方法A中, 与 A同事务.</p>
+<h4 id="2-默认事务的异常处理-重点"><a href="#2-默认事务的异常处理-重点" class="headerlink" title="2. 默认事务的异常处理*[重点]"></a>2. 默认事务的异常处理*[重点]</h4><p>我现在有以下几个方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceA</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">A</span>() 配有默认事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">A</span>()</span>&#123;<br>		<span class="hljs-comment">// 调用 方法B()</span><br>		ServiceB.B();<br>	&#125;<br>)<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceB</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">B</span>() 配有默认事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">B</span>()</span>&#123;<br>		<span class="hljs-comment">// 调用 方法C()</span><br>		<span class="hljs-keyword">try</span>&#123;<br>			ServiceC.C();<br>		&#125; <span class="hljs-keyword">catch</span>()&#123;&#125;<br>	&#125;<br>	<br>)<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ServiceC</span> (</span><br><span class="hljs-class">	// 方法 <span class="hljs-title">C</span>() 配有默认事务</span><br><span class="hljs-class">	<span class="hljs-title">fun</span> <span class="hljs-title">C</span>()</span>&#123;<br>		<br>	&#125;<br>)<br><br></code></pre></td></tr></table></figure>
+
+<p>我将Service类A B C 都增加了事务. 但没配置具体事务传播行为. 所以为默认事务.<br>默认事务为: 谁用谁管. 不管我就自己管自己</p>
+<p>此时的情况为, A在调用的时候没有事务, 所以他自己新启了事务, 当它调用B的时候, B发现A存在独立事务, 那么B加入到了A的事务中, 同样 B在调用C的时候已经加入到了A的事务中, 那么C在执行的时候加入到了A的事务中.</p>
+<p>调用者有事务, 我加入,<br>调用者没有, 我新启.</p>
+<p>此时情况. 正常运行, 为独立事务没有问题.</p>
+<p>但当方法 C()出现异常时. 被方法 B()捕获并未抛出.<br>当方法执行结束后, 会出现<br><code>Transaction has been rolled back because it has been marked as rollback</code></p>
+<p>原因为上面提到的</p>
+<p><strong>原子性（Atomicity）：事物是一个不可分割的工作单位，事物中的操作要么都发生，要么都不发生</strong></p>
+<p>方法C()不发生, 其他也不能继续发生 . 所以当C()出现问题时, B() 把它包庇了下来. 当时A()不知道, 还继续做提交, 说我们的事务都提交了. 其实C()回滚了. 最后来事情暴露了. 程序执行中断. 这个锅. B 必须背. 因为当它捕获了异常后, 应将异常继续抛出. 让程序正常中断. 不然就是意外退出.</p>
+<p><strong>切记 – 知识点, 记笔记</strong></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>了解一下，什么是数据结构</title>
     <url>//post/data-structure-concept.html</url>
     <content><![CDATA[<h1 id="数据结构-（计算机存储、组织数据方式）"><a href="#数据结构-（计算机存储、组织数据方式）" class="headerlink" title="数据结构 （计算机存储、组织数据方式）"></a>数据结构 （计算机存储、组织数据方式）</h1><p><a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1450?fr=aladdin">来自百度百科</a></p>
@@ -1289,10 +1832,189 @@
 </blockquote>
 ]]></content>
       <categories>
-        <category>笔记</category>
+        <category>算法</category>
       </categories>
       <tags>
-        <tag>数据结构</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你创建的Java对象搁哪了？</title>
+    <url>//post/lvgo-jvm-02.html</url>
+    <content><![CDATA[<h3 id="关注我一起学习，悄悄超过他"><a href="#关注我一起学习，悄悄超过他" class="headerlink" title="关注我一起学习，悄悄超过他"></a>关注我一起学习，悄悄超过他</h3><h1 id="拒绝做知识“收藏家”"><a href="#拒绝做知识“收藏家”" class="headerlink" title="拒绝做知识“收藏家”"></a>拒绝做知识“收藏家”</h1><p>答应我，跟我一起学习吧，别再做知识收藏家了，把《深入理解 Java 虚拟机》书拿出来，翻它，盘它，磋磨它。</p>
+<h1 id="你创建的-Java-对象搁哪了"><a href="#你创建的-Java-对象搁哪了" class="headerlink" title="你创建的 Java 对象搁哪了"></a>你创建的 Java 对象搁哪了</h1><p><img src="https://i.loli.net/2020/12/23/hzSZBMDYPG9pO5r.png" alt="运行时数据区域"></p>
+<p>今天学习的内容是 JVM 自动内存管理中的 <code>运行时数据区域</code> 内容。</p>
+<h1 id="自动内存管理"><a href="#自动内存管理" class="headerlink" title="自动内存管理"></a>自动内存管理</h1><blockquote>
+<p>Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的高墙，墙外面的人想进去，墙里面的人却想出来。<br>—— 出自周志明《深入理解 Java 虚拟机》</p>
+</blockquote>
+<p>Java 的内存区域与内存溢出。</p>
+<p>对于 Java 程序来讲，内存是由虚拟机的内存自动管理机制<em>垃圾回收</em>来进行管理的。这样便使得程序不容易出现内存溢出和内存泄漏问题。但是一旦出现内存问题，排查和解决起来便不是一件容易的事。</p>
+<h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><ul>
+<li>程序计数器</li>
+<li>虚拟机栈</li>
+<li>本地方法栈</li>
+<li>堆</li>
+<li>方法区 - 运行时常量池</li>
+<li>直接内存</li>
+</ul>
+<h3 id="PC寄存器（程序计数器）"><a href="#PC寄存器（程序计数器）" class="headerlink" title="PC寄存器（程序计数器）"></a>PC寄存器（程序计数器）</h3><ul>
+<li><strong>线程私有</strong></li>
+<li>存储<strong>当前方法的字节码位置</strong>，如果是<strong>本地方法则存储 undefined</strong></li>
+<li>唯一一个不会出现 <strong>OOM</strong> 的位置</li>
+<li>方法执行时使用；</li>
+</ul>
+<h3 id="Java-虚拟机栈"><a href="#Java-虚拟机栈" class="headerlink" title="Java 虚拟机栈"></a>Java 虚拟机栈</h3><ul>
+<li><strong>线程私有</strong></li>
+<li>存储程序方法执行时的 <strong>栈帧</strong></li>
+<li>达到栈允许最大容量抛出 <strong>StackOverflow Error</strong> 栈溢出</li>
+<li>允许动态扩展，申请不到内存时抛出 <strong>OOM</strong>。（允许动态扩展由虚拟机实现方自行选择，hotspot选择的则是不允许动态扩展）</li>
+<li>不需要保证连续的内存</li>
+<li>方法执行时使用；</li>
+</ul>
+<p><em>注：在 hotspot 中不允许扩展栈内存，但同样会发生 OOM ，这是发生在创建线程内存申请时内存不足抛出的OOM，这里也属于栈原因引起的。</em></p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>同上</p>
+<p><em>注：说明两者服务对象，虚拟机栈服务于 Java 程序，本地方法栈服务于 JVM 程序（native 方法）。</em></p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><ul>
+<li>线程共享</li>
+<li>存储类实例、数组对象</li>
+<li>容量超过允许最大值时抛出 <strong>OOM</strong> 异常（允许动态扩展）</li>
+<li>不需要保证连续的内存</li>
+<li>创建对象时使用</li>
+</ul>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><ul>
+<li>线程共享</li>
+<li>存储类的结构信息（方法、字段、构造函数）、运行时常量池</li>
+<li>容量超过允许最大值时抛出 <strong>OOM</strong> 异常（允许动态扩展）</li>
+<li>不需要保证连续的内存</li>
+<li>虚拟机启动时创建</li>
+<li>后被替换为元空间（这里的内容要和 hotspot 的“永久代“一起理解）</li>
+</ul>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>（这部分内存区域同在方法区中体现）</p>
+<ul>
+<li>线程共享</li>
+<li>存储接口或类的常量池（字面量 与 <strong>符号</strong>引用<code>类的全部限定名等信息</code>）</li>
+<li>类加载时创建</li>
+<li>创建过程使用的方法区内存大小，可能出现 <strong>OOM</strong> 异常</li>
+</ul>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>（这部分为延展内容）</p>
+<ul>
+<li>不受虚拟机参数控制，直接使用主机内存，受主机内存大小限制；</li>
+<li>JDK4中的 NIO 首次使用；</li>
+<li>在设置JVM参数时，需考虑直接内存的使用大小，防止其过渡使用出现 <strong>OOM</strong>；</li>
+<li>JDK7开始将方法区移到这部分区域（永久代内容），直到 JDK8 全部移入元空间（这里指 hotspot 虚拟机）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>作用\名称</th>
+<th>PC寄存器（程序计数器）</th>
+<th>Java虚拟机、本地方法栈</th>
+<th>Java 堆</th>
+<th>方法区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>异常情况</td>
+<td>无</td>
+<td>栈溢出、堆溢出</td>
+<td>堆溢出</td>
+<td>堆溢出</td>
+</tr>
+<tr>
+<td>需要连续内存</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>存储内容</td>
+<td>在执行 Java 代码时，存储字节码地址。<br>在执行本地方法时，存储 undefined</td>
+<td>栈帧（每个栈帧以方法为单位）</td>
+<td>类实例、数组对象</td>
+<td>类的结构信息、字段、方法等</td>
+</tr>
+<tr>
+<td>使用时机</td>
+<td>方法执行时</td>
+<td>方法执行时</td>
+<td>创建对象时</td>
+<td>类被加载时</td>
+</tr>
+<tr>
+<td>线程私有</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>Java 的对象搁哪现在你清楚了吗？每天一点点，啃完虚拟机。欢迎加群一起讨论学习，大家一起学习效率很高哦</p>
+<hr>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你说那 class 文件里边都是啥</title>
+    <url>//post/lvgo-jvm-08.html</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2021/01/10/tbYrUAgcL3fhyVH.png"></p>
+<h3 id="开往虚拟机的车已经出发，关注上车"><a href="#开往虚拟机的车已经出发，关注上车" class="headerlink" title="开往虚拟机的车已经出发，关注上车"></a>开往虚拟机的车已经出发，关注上车</h3><h2 id="CLASS文件的结构"><a href="#CLASS文件的结构" class="headerlink" title="CLASS文件的结构"></a>CLASS文件的结构</h2><blockquote>
+<p>我相信你一定打开过 class 文件，你看到的也是下面这个样子，不过这里面都是啥？今天我们一起好好看看。</p>
+</blockquote>
+<h2 id="CLASS文件的结构-1"><a href="#CLASS文件的结构-1" class="headerlink" title="CLASS文件的结构"></a>CLASS文件的结构</h2><ol>
+<li>魔数</li>
+<li>版本号</li>
+<li>常量池</li>
+<li>字段表集合</li>
+<li>方法表集合</li>
+<li>属性表集合</li>
+</ol>
+<p>我相信你一定打开过 class 文件，你看到的也是下面这个样子，不过这里面都是啥？今天我们一起好好看看。（如果不方便看的话，可以在文章末尾关注我的公众号，在手机上阅读）</p>
+<p><img src="https://i.loli.net/2021/01/10/3oGNDJpU91xnfLM.png"></p>
+<blockquote>
+<p>如果上图不方便看的话，可以在文章末尾关注我的公众号，在手机上阅读</p>
+</blockquote>
+<h2 id="属性表"><a href="#属性表" class="headerlink" title="属性表"></a>属性表</h2><p>首先属性表是用来补充信息用的，比如他可以继续补充类文件的信息、就是我们上面最后的那一段内容，还有他可以补充字段的信息，补充方法的信息。所以它出现的位置不同，补充的额外信息也会不一样。</p>
+<p>下面我们 <strong>简单</strong> 的了解一下都有哪些 <strong>主要</strong> 的内容，之所以要简单、要了解主要的，就是因为它保存的额外信息实在太多了。</p>
+<p>属性表的结构是由 2 个字节的属性名索引，4 个字节的属性内容长度，和 1 个字节的属性信息组成。</p>
+<p>按照属性的类别可以分为：类文件属性、字段表属性、方法表属性</p>
+<h3 id="类文件属性"><a href="#类文件属性" class="headerlink" title="类文件属性"></a>类文件属性</h3><h4 id="InnerClass"><a href="#InnerClass" class="headerlink" title="InnerClass"></a>InnerClass</h4><p>保存主类和内部类的关系</p>
+<h4 id="SourceFile"><a href="#SourceFile" class="headerlink" title="SourceFile"></a>SourceFile</h4><p>记录生成这个Class文件的源码文件名称</p>
+<h3 id="方法表属性"><a href="#方法表属性" class="headerlink" title="方法表属性"></a>方法表属性</h3><h4 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h4><p>Java 程序方法体里面的代码经过 Javac 编译器处理之后， 最终变为字节码指令存储在Code属性内。并非所有的方法表都必须存在这个属性， 接口或者抽象类中的方法就不存在Code属性 。</p>
+<p>code 属性里面还有属性表…. （套娃啊），其中包含</p>
+<ul>
+<li>LineNumberTable 源码和生成的字节码行号映射表</li>
+<li>LocalVariableTable 栈帧中的变量与源码变量的映射关系</li>
+<li>ExceptionTable 异常表</li>
+<li>…..</li>
+</ul>
+<h4 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h4><p>Exceptions属性的作用是列举出在throws关键字后面抛出的异常</p>
+<h4 id="MethodParameters"><a href="#MethodParameters" class="headerlink" title="MethodParameters"></a>MethodParameters</h4><p>定义方法的参数信息</p>
+<h3 id="字段表属性"><a href="#字段表属性" class="headerlink" title="字段表属性"></a>字段表属性</h3><h4 id="ConstantValue"><a href="#ConstantValue" class="headerlink" title="ConstantValue"></a>ConstantValue</h4><p>这个属性用于为字段的静态变量赋值。只有字段声明为 static 时才有效。Javac 编译器在编译的时候，如果遇到 static 和 final 同时修饰的 基本类型或String 类型变量，会直接在 ConstantValue 属性进行字段初始化。也就是我们说的常量。如果没有 final 修饰，或者不是基本类型和 String 类型，则会在类初始化方法执行的时候初始化  <code>&lt;clinit&gt;</code></p>
+<h3 id="通用属性"><a href="#通用属性" class="headerlink" title="通用属性"></a>通用属性</h3><h5 id="Deprecated"><a href="#Deprecated" class="headerlink" title="Deprecated"></a>Deprecated</h5><p>Deprecated属性用于表示某个类、 字段或者方法被弃用</p>
+<p>关于属性表的内容还有很多，我只了解了一些基本常见的，这部分内容在周老师书里还是比较全的。想继续了解的可以在书中 6.3.7 章节找到更多内容。</p>
+<p>（正文完）</p>
+<hr>
+<p>如果觉得写的还不错，可以关注点赞在看支持我，如果想一起学习的话，非常欢迎加群一起学习。</p>
+<h2 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485295&amp;idx=1&amp;sn=ebb76f06a0998e12a16d817392de0f7e&amp;chksm=fc6bee89cb1c679f6ef3e0a5327cf0e19d2f833bdec2eb4c3cb7edd233a6d5b66ff3ad39c5eb&token=1494472137&lang=zh_CN#rd">到底是谁在回收 JVM 的垃圾</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485282&amp;idx=1&amp;sn=abde86f06e82c63858d60960b3122fa7&amp;chksm=fc6bee84cb1c67927e360626ac0c1822d8f5e77de14c097989dcbab052028f05ffc24ed93d63&token=1303129454&lang=zh_CN#rd">天天听人家说的 GC 到底是个啥？</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485226&amp;idx=1&amp;sn=5b8ed2e5d06899ff2d7d931f9d964d70&amp;chksm=fc6beecccb1c67da4b405fa8c8c69878958b56d9291bdf8067b4bbf8c137b0194a0cae14e622&token=1941800665&lang=zh_CN#rd">你创建的 Java 对象搁哪了</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485249&amp;idx=1&amp;sn=589495ebea994d2ac91110d9bdcf5326&amp;chksm=fc6beea7cb1c67b17258a7da71a36f00b0386b68f7d25d53949ac7de7be5f3f74d3a205e439b&token=1941800665&lang=zh_CN#rd">JVM 中对象咋创建啊，又怎么访问啊</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485273&amp;idx=1&amp;sn=ca06732e3ce9853446993618ca06a154&amp;chksm=fc6beebfcb1c67a9bee28a755e15a31fb62b87d48e2a795a15765d82595525ce49fc3cb95fee&token=1941800665&lang=zh_CN#rd">JVM 把内存”收“回来用的是什么法器</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485257&amp;idx=1&amp;sn=ca53d2e3a29f1a05bcd4b5fd7ec271fc&amp;chksm=fc6beeafcb1c67b9e0b33ea8d59e6d5e9d386f0ef38ef2a3329bb0f1dfabeb5103854a2f2160&token=1941800665&lang=zh_CN#rd">JVM 是怎么把“送”出去的内存又“要”回来的</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
   <entry>
@@ -1364,6 +2086,261 @@
       </categories>
       <tags>
         <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>写一些友好的代码（上），对人友好</title>
+    <url>//post/code-for-people.html</url>
+    <content><![CDATA[<h2 id="写一些友好的代码（上），对人友好"><a href="#写一些友好的代码（上），对人友好" class="headerlink" title="写一些友好的代码（上），对人友好"></a>写一些友好的代码（上），对人友好</h2><blockquote>
+<p>这是一篇关于程序员的一个最基本条件的文章——编码。也是我学习虚拟机之后最大感触的一些内容。</p>
+</blockquote>
+<p><code>作者：小米(lvgocc)</code></p>
+<p><code>公众号：星尘的一个朋友</code></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>正文之前，还是想强调一下今天关于编码的分享，要 <strong>区别 “好” 与 “友好”</strong>。毕竟还是有差距。就像好的论文、好的书籍，专业性很强，内容质量很高。但它并不一定是友好的，就像现在大多数人在写作都在追求 “通俗易懂”，这就是友好。他们这些人负责把难理解的内容消化掉然后换一种方式来表述出来，同时尽可能的不丢失原来的“本色”。这样的内容就是友好的，同时它也一定是好的。（这个一定，可以通过反证法得出）</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>今天分享的主题是 “对人友好的代码”。希望看过文章的朋友们，能够有所收获。</p>
+<p>关于编码，我想这应该是程序员最熟悉不过的事儿了。也是作为一个程序员最基本的职能了，而恰恰是最常做的事，最容易产生自信。而这种自信，有时便会成为理所应当的坏习惯。</p>
+<h3 id="对人友好"><a href="#对人友好" class="headerlink" title="对人友好"></a>对人友好</h3><p>对人友好的代码怎么理解?</p>
+<p>在很多时候，比如公司内部代码走查、阅读开源代码，甚至看自己写过的代码。都会有一种冲动，什么冲动？重构的冲动！</p>
+<p>我想，有这种想法的人肯定不止我一个。首先我很肯定，有这种想法的人，都是想要写出更加优秀的代码的人。但事实上呢？是不是很多时候是因为别人的代码不如你意呢？又或者只是单纯的觉得这样写就是不合适，原因不知道?。不管怎么说，我还是认为有这种想法的开发人员是很好的。</p>
+<p><img src="https://i.loli.net/2021/02/27/SDxbAr1TV57vaJ3.png" alt="vant 演示中 dialog 的截图 | 写一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<h3 id="好的代码-友好的代码"><a href="#好的代码-友好的代码" class="headerlink" title="好的代码?友好的代码?"></a>好的代码?友好的代码?</h3><p>我要写一手好的代码！这个问题我也经常在敲代码的时候在想。可事实你想写出好的代码并没那么容易，既然<strong>我写不出来好的代码，那我能不能写出一些对人友好的代码？</strong> 我想这应该就是我能写出来好的代码的第一步吧。所以我从写出一些友好的代码下手了。</p>
+<h3 id="我认为对人友好的代码"><a href="#我认为对人友好的代码" class="headerlink" title="我认为对人友好的代码"></a>我认为对人友好的代码</h3><p>对人友好的代码实在是太多了，我列一些自己随便想到的一些，算是抛砖引玉，希望能够和更多人产生友好的代码共鸣。</p>
+<h4 id="首先一定要能读"><a href="#首先一定要能读" class="headerlink" title="首先一定要能读"></a>首先一定要能读</h4><p>最基本的对人友好，就是代码不要看起来很脏，给人一种不能够阅读的感觉。下面举个不可阅读的例子</p>
+<p><img src="https://i.loli.net/2021/02/27/3ikxfuoFXqIEL7V.png" alt="不可阅读代码 | 写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p><code>这种代码我亲身经历在线上版本见到过</code></p>
+<p>对人友好的代码基本条件，能读。</p>
+<h4 id="其次，不要让人误会"><a href="#其次，不要让人误会" class="headerlink" title="其次，不要让人误会"></a>其次，不要让人误会</h4><p><img src="https://i.loli.net/2021/02/27/ntVLATYmFj1g7xW.png" alt="让人误会的代码 | 写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>仔细看，这里的 ① 和 ② 是不在一个条件中的。同事因为这种写法，出过生产问题。当时他说代码没问题叫我帮他看看。说实话，当时挺懵的。</p>
+<h4 id="三，不要做复杂分支的判断鬼才"><a href="#三，不要做复杂分支的判断鬼才" class="headerlink" title="三，不要做复杂分支的判断鬼才"></a>三，不要做复杂分支的判断鬼才</h4><blockquote>
+<p>例子为最基本示意例子，实际情况判断中或更为复杂</p>
+</blockquote>
+<p>在 <strong>复杂</strong>  的逻辑分支判断这一点，我想应该是最常见。因为前面两个完全可以通过 IDE 帮你规避，不过这一点，稍不留意，就会变得有点放肆了。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// A B C 条件同时满足</span><br><span class="hljs-keyword">if</span> (A &amp;&amp; B &amp;&amp; C) &#123;&#125;<br><br><span class="hljs-keyword">if</span> (!A || !B || !C) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在开发组内我一直强调的就是，在 <strong>复杂</strong> 逻辑判断要简单而且使用正向思维。就是多用与，少用或非，注意是少用，不是不允许用。能用与就用与，能不用非就不用非。因为这更能提高理解速度。特别是在一些 <strong>复杂</strong> 的逻辑判断分支中。</p>
+<p>同时，如果分支内容判断条件过多时，建议拆解。比如</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> ((A != AA || A != AB ) &amp;&amp; B &amp;&amp; C) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可替换为</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">boolean</span> a = A != AA || A != AB;<br><span class="hljs-keyword">if</span> (a &amp;&amp; B &amp;&amp; C) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>关于 <strong>复杂</strong> 分支的判断的关键点就在于理解，所谓对人友好，就是让人很快就能看明白你代码的意思。这就需要根据实际的逻辑语境做一些合理的判断写法了。</p>
+<p>下面随便列了一个逻辑判断的代码，简单感受一下。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">int</span> age = <span class="hljs-number">0</span>;<br><span class="hljs-comment">// 0 male 1 female 2 demale</span><br><span class="hljs-keyword">int</span> gender = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">int</span> height = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">int</span> weight = <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">// 筛选出 年龄大于 18 小于 60 , 非人妖, 身高 140 以下, 体重80 以下的人</span><br><span class="hljs-keyword">if</span> (age &gt; <span class="hljs-number">18</span> &amp;&amp; age &lt; <span class="hljs-number">60</span> &amp;&amp; gender != <span class="hljs-number">2</span> &amp;&amp; height &gt; <span class="hljs-number">140</span> &amp;&amp; weight &gt; <span class="hljs-number">80</span>) &#123;<br>    <span class="hljs-comment">// 合格人</span><br>&#125;<br><br><span class="hljs-keyword">if</span> (!((age &lt; <span class="hljs-number">18</span> || age &gt; <span class="hljs-number">60</span>) || gender == <span class="hljs-number">2</span> || height &lt; <span class="hljs-number">140</span> || weight &lt; <span class="hljs-number">80</span>)) &#123;<br>    <span class="hljs-comment">// 合格人</span><br>&#125;<br><br><span class="hljs-keyword">boolean</span> ageFlag = age &gt; <span class="hljs-number">18</span> &amp;&amp; age &lt; <span class="hljs-number">60</span>;<br><span class="hljs-keyword">boolean</span> genderFlag = gender != <span class="hljs-number">2</span>;<br><span class="hljs-keyword">boolean</span> heightFlag = height &gt; <span class="hljs-number">140</span>;<br><span class="hljs-keyword">boolean</span> weightFlag = weight &lt; <span class="hljs-number">80</span>;<br><span class="hljs-keyword">if</span> (ageFlag &amp;&amp; genderFlag &amp;&amp; heightFlag &amp;&amp; weightFlag) &#123;<br>    <span class="hljs-comment">// 合格人 </span><br>&#125;<br>    <br><br></code></pre></td></tr></table></figure>
+
+<h4 id="四，迷惑行为少一点"><a href="#四，迷惑行为少一点" class="headerlink" title="四，迷惑行为少一点"></a>四，迷惑行为少一点</h4><p>前方迷惑代码高能预警，以下代码为项目<strong>真实代码</strong>。请不要对号入座！请不要对号入座！请不要对号入座！</p>
+<h5 id="存了个寂寞"><a href="#存了个寂寞" class="headerlink" title="存了个寂寞"></a>存了个寂寞</h5><p><img src="https://i.loli.net/2021/02/27/SUWeTCgv3QYmVcE.png" alt="存了个寂寞|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>不清楚它要做什么，思来想去，应该只是来浪费了我代码审查的时间，怕我没事做，为我增加工作量。</p>
+<h5 id="任性换行"><a href="#任性换行" class="headerlink" title="任性换行"></a>任性换行</h5><p><img src="https://i.loli.net/2021/02/27/Ztv4a6eOAKNzd5S.png" alt="随性换行与日志框架技术不了解|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>这换行符我说了算，我觉得它该换行了。免疫 IDE 警告。</p>
+<h5 id="截取寂寞"><a href="#截取寂寞" class="headerlink" title="截取寂寞"></a>截取寂寞</h5><p><img src="https://i.loli.net/2021/02/27/6ohMCjdSKyT8u3a.png" alt="截取寂寞|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>免疫 IDE 警告+1。</p>
+<h5 id="异常自己也没想到会这样"><a href="#异常自己也没想到会这样" class="headerlink" title="异常自己也没想到会这样"></a>异常自己也没想到会这样</h5><p><img src="https://i.loli.net/2021/02/27/vbqQ69mGyIFnuwB.png" alt="对于异常，我最了解|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>如果你看不懂这段操作，请关注我。一起讨论一下这件关于异常处理怎么写能写飞这件事。还有，到底还要怎么样才能会用日志框架？</p>
+<h5 id="谢大国的媳妇，香秀"><a href="#谢大国的媳妇，香秀" class="headerlink" title="谢大国的媳妇，香秀"></a>谢大国的媳妇，香秀</h5><p><img src="https://i.loli.net/2021/02/27/2kypgG89sn67KqO.png" alt="彪悍的人生，不需要太多解释|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>免疫 IDE 警告+1。</p>
+<h3 id="友好的代码"><a href="#友好的代码" class="headerlink" title="友好的代码"></a>友好的代码</h3><p>回到我们的主题，对人友好的代码，还是上面那句话，对人友好的代码实在是太多了！我想，任何一个程序员都可以写出对人友好的代码，就看你想不想去写。试想你自己写的代码，过了几个月回去看，心里喷了半天结果一看作者是自己。这就很尴尬了。对人友好的代码它可能并不一定是最好的代码，但最起码是认真写的代码，这将会是写出好代码的第一步，希望大家都能迈出去。</p>
+<p><code>关于编码，我想这应该是程序员最熟悉不过的事儿了。也是作为一个程序员最基本的职能了，而恰恰是最常做的事，最容易产生自信。而这种自信，有时便会成为理所应当的坏习惯。</code></p>
+<p>其实关于对人友好的代码并不是技术上的话题，我觉得这更像是社交上的话题，程序员可能会习惯通过你的代码来了解你这个人。至少我有这样的一点小习惯。见码如见人。</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>最后用 vant demo 中的话结个尾吧：代码是给人看的，附带可以在机器上运行。</p>
+<p>正文完</p>
+<hr>
+<p>欢迎关注我，下一篇分享 【写一些友好的代码（下），对机器友好】。谈谈如何面向虚拟机编程，写出对机器友好的代码。</p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>写一些友好的代码（下），对虚拟机友好</title>
+    <url>//post/code-for-machine.html</url>
+    <content><![CDATA[<h2 id="写一些友好的代码（下），对虚拟机友好"><a href="#写一些友好的代码（下），对虚拟机友好" class="headerlink" title="写一些友好的代码（下），对虚拟机友好"></a>写一些友好的代码（下），对虚拟机友好</h2><blockquote>
+<p>关于编码，我想这应该是程序员最熟悉不过的事儿了。也是作为一个程序员最基本的职能了，而恰恰是最常做的事，最容易产生自信。而这种自信，有时便会成为理所应当的坏习惯。</p>
+</blockquote>
+<p>之前听郑雨迪（Oracle 高级研究员）说他的工作就是怎么让程序员写的代码在虚拟机上跑的更快，听起来很伟大，但细想想，作为程序员的我们。是不是也可以贡献一点力量呢？</p>
+<p>上一篇我整理了一些对人友好的代码内容，简单来说就是不要写一些让人看不懂，或者看着不舒服的代码。</p>
+<p>这一篇我想要分享的内容，就是让我们通过学习虚拟机的一些执行过程来优化我们的代码，为虚拟机分担一些压力。也想借此文章谈谈自己理解的 Java 程序员为什么要去学习虚拟机。</p>
+<p>听过很多朋友说过，我做开发根本都碰不到虚拟机，学这有啥用？还有很多朋友自己在被问到，或者自己正在学习虚拟机时也会觉得“你问我这东西是啥意思？故意难我？我学玩虚拟机能干啥？到底学这东西有啥用？”。这些疑问让我来回答的话，那就是今天的题目了。为了写出对机器友好的代码。</p>
+<h3 id="无奈的虚拟机"><a href="#无奈的虚拟机" class="headerlink" title="无奈的虚拟机"></a>无奈的虚拟机</h3><p>随着时代的发展，我发现越来越明显的一件事，就是更多人，不喜欢 ”浪费时间“。这里的浪费时间想要说的意思是，懒。</p>
+<p>当你注册一个应用程序的账号时候，如果他的流程过于繁琐。那么他可能就因此失去你这个用户。又或者一个游戏如果他的玩法过于复杂，那自然也没什么人会选择继续玩下去。但假如，这个应用是你必须要注册的，而且没有其他的备选应用去选择，那么即使他注册需要再多的流程，在怎么繁琐，你也是要硬着头皮去做，而且边做边觉得让你”恶心“。</p>
+<p>就像我们的 JAVA 虚拟机，即使你的代码写的在怎么糟糕，只要语法没有问题，虚拟机都要去完成代码的执行。但你有没有想过，你写的代码，可能也是虚拟机没有选择余地的那种，他没办法不执行，所以它也边做边觉得“恶心”呢？</p>
+<h3 id="程序编译和代码优化"><a href="#程序编译和代码优化" class="headerlink" title="程序编译和代码优化"></a>程序编译和代码优化</h3><blockquote>
+<p>如果不想让虚拟机“恶心”，我们一起看看虚拟机是怎么处理我们写下的代码吧，从中理解一些对虚拟机友好的代码吧。</p>
+</blockquote>
+<h4 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h4><p>Java 程序编译有两个意思，一个是将源码编译成 class 格式，一个是将 class 格式文件内容编译成可以被机器可直接执行的本地机器码格式。</p>
+<p>在这个过程共分为三类编译器</p>
+<ul>
+<li><p>前端编译器：jdk 的 javac、eclipse 的 JDT</p>
+</li>
+<li><p>即时（JIT）编译器：hotspot 的 c1 c2 graal</p>
+</li>
+<li><p>提前（AOT）编译器：jdk 的 jaotc GNU Compiler for the Java（GCJ）、Excelsior JET。</p>
+</li>
+</ul>
+<h5 id="前端编译-（Javac-编译）"><a href="#前端编译-（Javac-编译）" class="headerlink" title="前端编译 （Javac 编译）"></a>前端编译 （Javac 编译）</h5><p>这里可以参考之前的文章《Java 类的一生》当中的 Javac 的孕育了解更多内容。下面说下前面文章没有提到的内容。</p>
+<h6 id="语法糖"><a href="#语法糖" class="headerlink" title="语法糖"></a>语法糖</h6><p>可以帮助我们提高开发效率、程序严谨，没有实质的功能提升。</p>
+<ol>
+<li><p>泛型 使参数动态化</p>
+</li>
+<li><p>自动拆装箱、增强 for 循环、变长参数</p>
+</li>
+<li><p>条件编译优化</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span> <span class="hljs-params">(String args[])</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">true</span>) &#123;<br>        System.out.println(<span class="hljs-number">1</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        System.out.println(<span class="hljs-number">2</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>条件编译优化后</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span> <span class="hljs-params">(String args[])</span> </span>&#123;<br>    System.out.println(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Java语言还有不少其他的语法糖，如内部类、枚举类、断言语句、数值字面量、对枚举和字符串的switch支持、try语句中定义和关闭资源、Lambda表达式（从JDK 8开始支持，Lambda不能算是单纯的语法糖，但在前端编译器中做了大量的转换工作）</p>
+<h5 id="后端编译（JVM中的编译）"><a href="#后端编译（JVM中的编译）" class="headerlink" title="后端编译（JVM中的编译）"></a>后端编译（JVM中的编译）</h5><p><em>IR：程序语言的一种中间表示形式（Intermediate Representation）</em></p>
+<p>后端编译包括</p>
+<ul>
+<li>即时编译技术 JIT</li>
+<li>提前编译技术 AOT</li>
+</ul>
+<h6 id="即时编译"><a href="#即时编译" class="headerlink" title="即时编译"></a>即时编译</h6><p>带着下面问题来看后面的内容</p>
+<ul>
+<li>为何HotSpot虚拟机要使用解释器与即时编译器并存的架构？</li>
+<li>为何HotSpot虚拟机要实现两个（或三个）不同的即时编译器？</li>
+<li>程序何时使用解释器执行？何时使用编译器执行？</li>
+<li>哪些程序代码会被编译为本地代码？如何编译本地代码？</li>
+<li>如何从外部观察到即时编译器的编译过程和编译结果？</li>
+</ul>
+<p>在解释执行的过程中，当虚拟机发现某部分代码执行频繁，称为热点代码。虚拟机就会把这部分代码提前变成本地可以执行的机器码以提高执行效率。</p>
+<h6 id="解释器与编译器"><a href="#解释器与编译器" class="headerlink" title="解释器与编译器"></a>解释器与编译器</h6><p><strong>解释执行</strong></p>
+<p>当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即运行。</p>
+<p><strong>编译执行</strong></p>
+<p>当程序启动后，随着时间的推移，编译器逐渐发挥作用，把越来越多的代码编译成本地代码，这样可以减少解释器的中间损耗，获得更高的执行效率</p>
+<p><strong>逆优化</strong></p>
+<p>当程序执行过程中的类不断的变化，发生一些特殊情况（优化效果不如不优化）便会发生逆优化操作继续使用解释执行。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210413164156632.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzM0MzQ0MTIz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>即时编译器分为客户端编译器 <code>C1</code> 和服务端编译器 <code>C2</code> 还有目前在 JDK 10 中处于实验阶段的 <code>Graal</code>编译器（为了替换 <code>C2</code>）</p>
+<p>可以通过参数来强制虚拟机仅使用 <code>C1</code> 或 <code>C2</code> 执行</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">-client”或“-server<br></code></pre></td></tr></table></figure>
+
+<p>解释器与编译器搭配使用的方式在虚拟机中被称为“混合模式”（MixedMode）.可以通过 <code>java -version</code> 命令查看</p>
+<ul>
+<li><p>使用参数<code>“-Xint”</code>强制虚拟机运行于<code>“解释模式”</code>（Interpreted Mode），这时候编译器完全不介入工作，全部代码都使用解释方式执行。</p>
+</li>
+<li><p>使用参数<code>“-Xcomp”</code>强制虚拟机运行于<code>“编译模式”</code>（CompiledMode），这时候将优先采用编译方式执行程序，但是解释器仍然要在编译无法进行的情况下介入执行过程。</p>
+</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/202104131642204.png#pic_center" alt="在这里插入图片描述"></p>
+<p>使用参数切换执行方式</p>
+<p><img src="https://img-blog.csdnimg.cn/20210413164229221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzM0MzQ0MTIz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h5 id="分层编译"><a href="#分层编译" class="headerlink" title="分层编译"></a>分层编译</h5><p>hotspot 中包含多个即时编译器，C1（客户端编译器） C2（服务端编译器） Graal（JDK10引入的实验性质编译器，目标是替换 C2）</p>
+<p>JDK 7 以前需要程序特性选择即时编译器</p>
+<ul>
+<li>执行时间短、需要快速启动的程序选择 <strong>编译速度快</strong>  的C1 编译器（参数 -client）</li>
+<li>执行时间长、对峰值有要求的，选择 <strong>执行速度快</strong> 的 C2 编译器 （参数 -server）</li>
+</ul>
+<p><strong>0 层</strong></p>
+<p>解释执行，不开启性能监控</p>
+<p><strong>1 层</strong></p>
+<p>执行C1 编译的代码，这部分代码是由 C1 快速编译成本地代码，进行一些基本的简单优化（如：方法内联、公共子表达式消除、冗余代码消除，包括冗余访问和冗余存储冗余赋值）</p>
+<p><strong>2 层</strong></p>
+<p>执行C1 编译的代码，这部分代码是带有方法执行次数和循环回边次数的 profiling （性能监控状态的数据）</p>
+<p><strong>3 层</strong></p>
+<p>执行 C1 编译的代码，这部分为带所有 profiling 的 C1 代码。</p>
+<p><strong>4 层</strong></p>
+<p>执行 C2 编译的代码，进行更加复杂的优化内容，同时可能会根据 profiling 做一些激进的优化。</p>
+<p><strong>总结</strong></p>
+<p>分层编译也可大致分为三层：</p>
+<ul>
+<li>0层：解释执行</li>
+<li>1层：C1 编译执行 对应 1/2/3 层</li>
+<li>2层0.：C2 编译执行 对应 4 层</li>
+</ul>
+<p>其中 1 层和 4 层为最终状态层，当一个方法进入到 C1 的 1 层编译优化后或到达了 C2 的 4 层编译优化后虚拟机在之后的执行中是不会再发出编译请求的了。</p>
+<h4 id="编译的对象和条件"><a href="#编译的对象和条件" class="headerlink" title="编译的对象和条件"></a>编译的对象和条件</h4><p><strong>编译器编译的对象一般为方法级。</strong></p>
+<p>常说“热点代码”会被虚拟机通过即时编译技术进行优化，那什么样的代码才算热点代码？</p>
+<ul>
+<li>被多次调用的方法</li>
+<li>多次执行的循环体（具体有回边次数值）</li>
+</ul>
+<p><strong>辨别方法多次调用：</strong></p>
+<ol>
+<li>基于采样<ul>
+<li>虚拟机会周期检测各个线程的栈顶，如果某个方法经常出现在栈顶，则视为热点代码<ul>
+<li>特点：简单、高效</li>
+<li>缺点：不准</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>基于计数器：hotspot 使用这种方式<ul>
+<li>为每一个方法维护一个调用次数计数器<ul>
+<li>特点：准确</li>
+<li>缺点：复杂</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>识别循环体多次：</strong></p>
+<p>根据循环的回边次数进行优化的技术又称为 <strong>OSR（On Stack Replacement）</strong> —— <strong>栈上替换</strong>，因为这部分代码是在执行过程中被优化的，在非方法入口处进行解释执行的代码和编译后的代码进行替换。这个触发条件是有参数 （<code>-XX:CompileThreshold</code>）控制的，计算公式如下</p>
+<p><code>CompileThreshold * （OnStackReplacePercentage - InterpreterProfilePercentage）/ 100</code></p>
+<p>参数 <code>-XX:InterpreterProfilePercentage</code>  默认值 33</p>
+<p>C1 情况下 <code>OnStackReplacePercentage</code> 默认值 933</p>
+<p>C2 情况下 OnStackReplacePercentage 默认值 140</p>
+<p>所以在默认情况下， C1 的循环回边次数达到 13500 时会启用 <code>OSR</code> 技术进行即时编译优化代码， C2 则在 10700 时启用。</p>
+<p><em>通常情况下，程序代码不会触发 OSR，在测试中常见</em></p>
+<p><strong>循环回边次数触发的 OSR 技术优化的对象为 代码块。</strong></p>
+<p><strong>方法调用次数的优化对象为 整个方法。</strong></p>
+<h3 id="提前编译"><a href="#提前编译" class="headerlink" title="提前编译"></a>提前编译</h3><p>关于提前编译，我这里只是简单的理解一下。如果对这个感兴趣的话，需要继续找资料深入。我就简单说下我的理解在这里。</p>
+<p>Java 程序在早期就拥有这项技术，就是提前把字节码文件编译成机器码。这样就可以加快执行速度。 但是 Java 又想拥有跨平台的小目标，所以也就不好推进。不过另一个弟兄，Android 做的很好，不过后来是因为提前编译时间太长（安装包安装时间），又不得不使用解释执行和即时编译技术。</p>
+<h3 id="编译优化技术"><a href="#编译优化技术" class="headerlink" title="编译优化技术"></a>编译优化技术</h3><p>除了上面的两个“热点代码”优化，编译器是如何优化普通的字节码的？首先两个关键的技术 <strong>方法内联</strong> <strong>逃逸分析</strong></p>
+<h4 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h4><p>将方法的调用，优化成调用者内部代码，省去入栈出栈操作。例如 set get 方法均会被方法内联所优化掉</p>
+<h4 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h4><p>分析一个对象的动态作用域，举例来说：</p>
+<ul>
+<li>一个对象当做参数传给了另外方法称为 <strong>方法逃逸</strong>。</li>
+<li>对一个类变量进行了赋值称为 <strong>线程逃逸</strong>。</li>
+</ul>
+<p>通过这两种逃逸方式，可以进行相关优化操作，比如：</p>
+<ul>
+<li>一个对象如果没有发生 <strong>方法逃逸</strong> ，可以进行栈上分配或者 <strong>标量替换</strong>（hotspot 使用这种方式进行优化代码）</li>
+<li>如果一个变量没有发生过 <strong>线程逃逸</strong> ，可以进行 <strong>同步（锁）消除</strong> 优化。</li>
+</ul>
+<p>通过逃逸分析，我们可以利用到一点，就是锁消除，即不加锁。而不用是去加了锁，然后等到真正执行时由虚拟机去优化。</p>
+<h4 id="循环优化"><a href="#循环优化" class="headerlink" title="循环优化"></a>循环优化</h4><ol>
+<li>循环无关代码外提：将循环过程中不变的代码外提至循环外，减少重复的冗余计算</li>
+<li>循环展开：再循环过程中进行多次迭代，减少循环次数。特殊形式是完全展开；</li>
+<li>循环判断外提：无关循环的判断移到循环外。</li>
+<li>循环剥离：循环的前几次或后几次一般可以被优化掉，减少循环次数。</li>
+</ol>
+<h4 id="冗余代码消除"><a href="#冗余代码消除" class="headerlink" title="冗余代码消除"></a>冗余代码消除</h4><ol>
+<li>公共子表达式消除（对相同的表达式只计算一次，后面的代码复用之前的结果）</li>
+</ol>
+   <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> a = b * c + d * e + c * b;<br><span class="hljs-comment">// 优化后 b * c 等于 c * b;</span><br><span class="hljs-keyword">int</span> a = f + d * e + f;<br></code></pre></td></tr></table></figure>
+
+<p>   关于这里，我们是不是可以直接写出 <code>int a = 2f + d * e</code> 的代码呢？让虚拟机也不那么“累”。</p>
+<ol start="2">
+<li><p>冗余访问、存储消除</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> a = obj.getValue();<br><span class="hljs-comment">// 冗余访问</span><br><span class="hljs-keyword">int</span> b = obj.getValue();<br><span class="hljs-comment">// 消除后</span><br><span class="hljs-keyword">int</span> a = b;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> a = obj.getValue();<br><span class="hljs-comment">// 冗余存储</span><br><span class="hljs-keyword">int</span> b = a;<br>sum = a + b;<br><span class="hljs-comment">// 消除后</span><br>sum = a + a;<br></code></pre></td></tr></table></figure>
+<p>还有一些其他的优化手段了解一下。</p>
+</li>
+<li><p>数组范围检查消除</p>
+</li>
+<li><p>空值检查消除</p>
+</li>
+<li><p>自动装箱消除</p>
+</li>
+</ol>
+<hr>
+<h3 id="学习虚拟机的思考"><a href="#学习虚拟机的思考" class="headerlink" title="学习虚拟机的思考"></a>学习虚拟机的思考</h3><p>关于虚拟机的学习东西很多，而且很枯燥。能坚持学完除了兴趣，还要有耐心。虽然自己只学习了一些虚拟机的皮毛，但再去写代码的时候，也会有很多帮助，比如你定义的常量值，在 javac 的时候就会被替换成具体的值。也是那为什么你替换了一个常量值文件导致这个值没生效的原因。比如在写代码的时候也能利用一些优化知识来写一些相对精致的代码。比如对自己写下的代码它将来会发生什么比较清楚等等。总之这些价值都不能够直接的体现出来，因为只有你自己才知道。</p>
+<p>不要因为一时看不到结果而放弃一些追求，凡事坚持下去终会有结果。</p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
   <entry>
@@ -1461,7 +2438,185 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（一）创建型之单例模式</title>
+    <title>到底是谁在回收 JVM 的垃圾</title>
+    <url>//post/lvgo-jvm-07.html</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2020/12/28/5SbBtcVkKdOIx2E.png" alt="到底是谁在回收 JVM 的垃圾"></p>
+<blockquote>
+<p>虚拟机的垃圾回收器，没有哪一个是绝对好的，只有比较好的。</p>
+</blockquote>
+<p>今天的这篇文章，我要与你分享虚拟机的那些垃圾回收器们。内容不多，可以耐心看完。</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>之前我们已经了解过具体的 GC 涉及的细节知识点，现在我们站在更高的角度，来看看各种垃圾收集器，以及其中两个的工作过程（CMS 和 G1）。</p>
+<p>我们知道，虚拟机将保存对象实例的区域分为了两个叫做 <strong>新生代</strong> 和 <strong>老年代</strong> 的地方，为此虚拟机针对不同的内存区域利用不同的算法设计了不同的垃圾收集器。</p>
+<p>了解垃圾收集器之前，我觉得还是有必要在复习一下  <strong>Stop The World</strong> ，其用来形容在安全点用户线程暂停的这种状态的一个叫法。关于这个垃圾收集器工作的时候为什么要 Stop The World 还有一个比较有意思的事 ，“你妈妈在给你打扫房间的时候， 肯定也会让你老老实实地在椅子上或者房间外待着， 如果她一边打扫， 你一边乱扔纸屑， 这房间还能打扫完？  ”这是虚拟机团队对 Stop The World 的说明，嗯，很有道理，哈哈哈。</p>
+<h3 id="那些回收-JVM-垃圾的家伙"><a href="#那些回收-JVM-垃圾的家伙" class="headerlink" title="那些回收 JVM 垃圾的家伙"></a>那些回收 JVM 垃圾的家伙</h3><h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>关键字：新生代、Stop The World 、标记 - 复制算法、单线程</p>
+<p><strong>Serial</strong> 是作用在新生代的垃圾收集器，单线程工作，在工作的时候需要 Stop The World，（包括之前提到的 GC 工作，都是指可达性分析）。采用的是标记 - 复制算法，（关于标记 - 复制的内容之前有讲过就不再展开说了）。</p>
+<p>看起来 Serial 收集器没什么特别的，但实际上 Serial 收集器在一些特殊的场景下有着不错的表现，这些要得益于他的额外内存消耗，因为其相比其他收集器要小一些，所以在服务器资源受限的情况下（单核或较少核心以及内存紧张），这个简单的单线程收集器效率还是很可观的。</p>
+<h4 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h4><p>关键字：新生代、Stop The World 、标记 - 复制算法、多线程、<strong>绝配</strong></p>
+<p><strong>ParNew</strong> 可以看成 new parallel gc ，一个新的并行垃圾收集器。是一个对标 Serial 的收集器，它与 Serial 的区别就是它在工作的时候是使用多线程进行工作的。还有，它是目前（JDK 9 以后）<strong>唯一一个</strong>能配合 CMS 在新生代工作的垃圾收集器。</p>
+<h4 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h4><p>关键字：新生代、Stop The World、标记 - 复制算法、多线程、可控吞吐量【用户线程执行时间 /（用户线程执行时间+GC线程执行时间）】、<strong>自适应策略</strong></p>
+<p>与 ParNew 相比，Parallel Scavenge 多了一些额外的功能，停顿时间和吞吐量可控（通过参数配置-XX： MaxGCPauseMillis  单位毫秒，控制每次垃圾回收的最大停顿时间。-XX： GCTimeRatio  控制吞吐量 0 - 100 整数，1/(1+设置的参数) = 垃圾收集时间占程序执行的总时间比率。</p>
+<p>对于 Parallel Scavenge 还有一个特点，就是自适应策略，把内存管理工作完全交由虚拟机，通过参数 -XX： +UseAdaptiveSizePolicy  启用自适应内存策略，这样就不需要指定内存参数，比如新生代大小、eden survivor 比例 晋升年龄等参数。虚拟机会根据当前系统运行状态动态的调整，达到一个合适的停顿时间和吞吐量。</p>
+<p>上面这三种 <strong>Serial</strong>  、 <strong>ParNew</strong>  、 <strong>Parallel Scavenge</strong> 都是新生代的垃圾收集器，下面我们来看看老年代的垃圾收集器。</p>
+<h4 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h4><p>关键字：老年代、Stop The World、标记 - 整理算法、单线程、<strong>替补</strong></p>
+<p>Serial Old 是和 Serial 一样的一款收集器，只不过，它是工作在老年代的。换句话说就是 Serial Old 就是 Serial 的老年代版本。Serial Old 有一个特殊的用途就是作为 CMS 并发清除失败的时候的替补，这里后面 CMS 收集器再看。</p>
+<h4 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h4><p>关键字：老年代、Stop The World、标记 - 整理算法、多线程、CP（组合）</p>
+<p>Parallel Old 是一个多线程并行的老年代垃圾收集器。它的出现也是为了解决吞吐量最大化的问题。因为他没出现之前，只有 Serial Old 一款老年代垃圾收集器来配合 Parallel Scavenge ，因为 Serial Old 的单线程性能原因，导致 Parallel Scavenge 吞吐量的优势体现不出来。直到它的出现，它与 Paralle Scavenge 就组成了一对完美的吞吐量 CP。</p>
+<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>关键字：老年代、Stop The World、标记 - 清除算法、多线程、短停顿</p>
+<p>Concurrent Mark Sweep 的设计初衷就是要停顿的时间最短！JDK 5 开始使用，JDK 9 以前最优秀，为啥是 JDK 9 以前最优秀，因为 JDK 9 发布的时候，默认启用了 G1 收集器，同时你如果手动改成 CMS 的话，会受到一个 CMS 被声明为不推荐的警告，下面是它具体的工作过程，一共经历 4 个阶段</p>
+<p>具体步骤如下：</p>
+<ul>
+<li>初始标记：需要 Stop The World<ul>
+<li>标记 GC Roots 直接关联的对象（直达），速度较快，停顿时间短。</li>
+</ul>
+</li>
+<li>并发标记：与用户线程并发<ul>
+<li>进行标记追踪，完成全部对象的标记任务。可能出现漏标或错标情况。</li>
+</ul>
+</li>
+<li>重新标记：需要 Stop The World<ul>
+<li>修正并发标记阶段的对象标记，因为大部分对象不需要修正，所以执行时间相比并发标记时间短，但是停顿时间要比初始标记停顿时间长。</li>
+</ul>
+</li>
+<li>并发清除：与用户线程并发<ul>
+<li>耗时较长，可以与用户线程共同工作。</li>
+</ul>
+</li>
+</ul>
+<p>CMS 虽然有了一个较短的停顿时间，但是也有一些其他随之而来的问题。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>并发执行速度快、停顿时间短。这一点没得说，因为它其中有两个阶段是和用户线程并发。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><strong>占用线程资源</strong>，因为 CMS 工作有两个阶段是和用户线程并发，所以这里便会抢占用户线程资源。</li>
+<li><strong>浮动垃圾</strong>，清理一次之后还会有清理不掉的对象，需要在下次清理的时候才能够清理到。这里的原因是因为并发清除阶段是和用户线程并发，一边清除一边使用，可能会出现一些无法清理掉的新生垃圾，比如清理过程中，程序断开了某个引用，被断开的引用 GC Roots 不可达，所以这个被断开的引用指向的对象变成了浮动垃圾。</li>
+<li><strong>空间利用率低</strong>，因为并发清理的原因，所以不能等到内存完全用完之后再做清理，所以需要当内存使用达到一定阈值（默认值68%，JDK6的时候提高到了 92%）时就开始进行垃圾回收动作，具体数值可以通过参数控制。这里 JVM 给了风险预案：冻结用户线程，启动 serial old 来进行一次老年代垃圾回收。这也是上面我们说 Serial Old 的时候，提到他的关键字里有 “替补” 的原因。</li>
+<li><strong>空间碎片</strong>，因为使用标记-清除算法的原因，会导致碎片空间的产生。CMS 的做法是在其不能够满足对象分配任务的时候，FULL GC 的时候，会进行一次空间整理的动作。对这个整理的动作也是有参数可以进行控制，参数设置情况为，满足几次FullGC之后，进行一次空间整理，默认值为 0 ，即每次 full gc 都会进行一次空间整理。这一点虽然是缺点，不过 CMS 已经尽力去你补了，包括这里的 FULL GC 之后的内存空间整理，还有对象分配时 CMS 会在 Free List 申请一块较大的内存空间，然后通过指针碰撞的方式来进行对象分配，尽可能减小空间碎片的产生。空间碎片问题也是 CMS 不能直接使用指针碰撞的方式来为对象分配内存的原因。</li>
+</ul>
+<h4 id="Garbage-First-（G1）"><a href="#Garbage-First-（G1）" class="headerlink" title="Garbage First （G1）"></a>Garbage First （G1）</h4><p>关键字：里程碑、JDK 9、区域管理、按需回收、<strong>延迟可控的最高吞吐量</strong></p>
+<p>要说 CMS 是一个划时代收集器，那 G1 可以称得上划时代的划时代收集器，其作为 JVM 的垃圾收集器的里程碑是有一定原因的，我们继续往下看。G1 出现的原因也很简单，那就是替换掉 CMS 。G1的设计是颠覆性的设计思路，它跳出了内存一定要划分新生代老年代的这个枷锁，它的工作模式为 Mixed Mode。并且 JDK 9 的时候开始启用，成为了服务端模式下的默认垃圾收集器，替换掉了原来的吞吐量组合（Parallel Scavenge + Parallel Old），同时 CMS 被声明为不推荐使用，CMS 也是从JDK 9 开始准备退役。按需回收说的是 G1 在做清理的时候，是依据一个<strong>可预测停顿时间模型</strong>来做的，这是个什么东西呢？简单来说就是，在清理之前，G1 对每个待回收的区域根据回收价值和时间进行排序，然后根据用户所期望的停顿时间来做一个最优回收，后面会继续说。</p>
+<blockquote>
+<p>多了解一点，关于 G1 的工作模式，Mixed Mode  的扩展：G1 有纯 GC 模式和分代回收模式，分代模式会分为 Minor GC 和 Mixed GC 两种，这里的模式选择会影响最后的筛选回收阶段的回收集合的内容。这块内容可参考后面留的 R大 的链接</p>
+</blockquote>
+<p>上面有一点展开说一下，就是 G1 不是没有这分代这种操作了吗？是通过内存区域来管理垃圾的，但是事实上 G1 将内存分成多个大小相等的 Region（区域） ，这些 Region 都可以作为Eden、Survivor、Humongous（Humongous 同老年代的作用）。</p>
+<p>下面我们一起了解一下 G1 工作的具体步骤：</p>
+<ul>
+<li><p>初始标记：Stop The World</p>
+<ul>
+<li>标记 GC Roots 直接关联的对象，同时修改 <strong>TAMS</strong> 指针</li>
+</ul>
+</li>
+<li><p>并发标记：与用户线程并发</p>
+<ul>
+<li>标记全部要回收的对象，与用户线程并发，标记完成之后，重新处理 <strong>SATB</strong> 记录下在并发时有引用变动的对象</li>
+</ul>
+</li>
+<li><p>最终标记：Stop The World</p>
+<ul>
+<li>处理并发标记阶段 SATB 遗留的引用，同时这个阶段也进行弱引用处理。</li>
+</ul>
+</li>
+<li><p>筛选回收：Stop The World</p>
+<ul>
+<li><p>这个阶段会更新 Region 的统计数据，对每个 Region 根据其回收价值和成本进行排序，然后根据用户所期望的停顿时间（参数设置）来制定一个回收计划。再根据这个计划，选择任意 Region 来组成一个回收集（collection set）。将回收集中的 Region（被选中的区域） 中的存活对象复制到空的 Region 中，然后将旧的（选中的） Region 清理掉。</p>
+<p><em>以上过程由多线程并行完成，同时因为移动对象需要暂停用户线程（Stop The World）</em></p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>TAMS：Top at Mark Start   Region 中的两个指针名称，他们的作用是将 Region 的一部分空间划分出来给并发回收过程中程序运行产生的新对象使用</p>
+<p>SATB：原始快照，还记得之前我们对漏标的解决方案吗？一种是增量更新（CMS 采用的这种方案），另外一个就是原始快照，这里可以翻翻之前的内容。</p>
+</blockquote>
+<p>G1除了并发标记阶段都需要暂停用户线程</p>
+<p>G1的理想目标：在延迟可控的情况下达到最大的吞吐量</p>
+<p>用户可以通过参数设置所期望的停顿时间，这个时间一般建议设置为 100 ~ 300 ms。</p>
+<h4 id="垃圾收集器小结"><a href="#垃圾收集器小结" class="headerlink" title="垃圾收集器小结"></a>垃圾收集器小结</h4><p>上面一共说了 7 款垃圾收集器，不过他们的具体使用我觉得有必要了解一下。</p>
+<p><strong>按照年代划分</strong></p>
+<p>新生代：Serial 、ParNew、Parallel Scavenge</p>
+<p>老年代：Serial Old、Parallel Old、CMS</p>
+<p>内存区域：G1</p>
+<p><strong>搭配组合</strong></p>
+<p>因为不同的阶段，垃圾收集器之间的搭配不同，所以我们就按照 JDK 9 作为划分界线，来看下 JDK 9 前后的搭配情况</p>
+<p><strong>JDK 9 以前</strong></p>
+<p><img src="https://i.loli.net/2021/01/01/OdRybzt4MJefsoC.png" alt="JVM-JDK9之前"></p>
+<p><strong>JDK 9 之后</strong></p>
+<p><img src="https://i.loli.net/2021/01/01/QshYcn19xkyN4q3.png" alt="JVM-JDK9以后"></p>
+<p>通过搭配关系我们可以看出，JDK 9 以前，Hotspot 提供了多种选择，而且场面看起来很和谐，解释一下 CMS 与 Serial Old 之间的虚线，这代表 CMS 并发清除失败的时候，以 Serial Old 作为备选方案的组合。</p>
+<p>JDK 9 之后，因为 G1 的出现，hotspot 取消了两种方案的支持（Serial + CMS 和 ParNew + CMS），仅提供了 4 种虚拟机搭配方案，他们分别是</p>
+<ul>
+<li>Serial + Serial Old  的单线程组合，适用于资源受限的场景。</li>
+<li>ParNew + CMS 这组曾经的王者组合，新生代的多线程并行高性能加上老年代的短暂停顿组合，可以应对大部分场景。</li>
+<li>Parallel Scavenge + Serial Old 这是 Paralle Old 没出现的时候的应对组合（不明白为何 JDK 9 的时候没取消这对奇葩组合）</li>
+<li>Parallel Scavenge + Parallel Old 这对高吞吐量 CP</li>
+</ul>
+<p>看起来这 4 组搭配很完美，不过因为 G1 的出现，<em>看起来的美好也没那么好了</em> G1在 server 模式下取代了高吞吐量的 CP （Parallel Scavenge + Parallel Old）成为了默认的垃圾收集器，同时在 JDK 9 使用 ParNew + CMS 这组搭配时，还会收到来自 hotspot 的警告，CMS 已经被声明为不推荐使用，因为 ParNew 此时只能与 CMS 搭配使用，所以可以说当时 CMS 拯救了 ParNew 的尴尬局面（当时新生代高性能的 ParNew 只能选择拖后腿的 Serial Old 一起工作），现在 ParNew 也要陪着 CMS 一起下岗了。综上所述，JDK 9 还剩下建议使用的组合</p>
+<ul>
+<li>G1</li>
+<li>Serial + Serial Old</li>
+<li>Parallel Scavenge + Serial Old （还是它，我一定要关注它俩啥时候下岗）</li>
+</ul>
+<p>所以通过上面的分析，也能看出来 HotSpot 的用意，在 JDK 9 以后就是要将 G1 作为一个全能型的垃圾收集器来发展。</p>
+<h4 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h4><p>上面总结了截止 JDK 9 的垃圾收集器内容，其实对于垃圾收集器还有很多内容，比如 Shenandoah ，一个由 Red Hat 开发的低延迟垃圾收集器，还有 Oracle 后面的 ZGC。这两个垃圾收集器都采用了更加优秀的思想和实现方案。不过因为我没有对其深入的了解，所以在这就不再多说了。如果你对垃圾收集器的具体算法仍感兴趣，推荐访问下面这个链接，R大 写的虚拟机相关内容</p>
+<p><a href="https://www.iteye.com/blog/rednaxelafx-362738">https://www.iteye.com/blog/rednaxelafx-362738</a></p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《和 lvgo 一起学设计模式》.PDF</title>
+    <url>//post/lvgo-design-patterns-pdf.html</url>
+    <content><![CDATA[<h1 id="和-lvgo-一起学习设计模式-PDF"><a href="#和-lvgo-一起学习设计模式-PDF" class="headerlink" title="和 lvgo 一起学习设计模式.PDF"></a>和 lvgo 一起学习设计模式.PDF</h1><p>大家好，我是 lvgo（小米），刚刚用了60天时间学完了 <code>设计模式</code>，输出了 23 份关于设计模式的学习文章，我为了自己复习方便，把它整理成了一本 PDF 。现在我想把它分享出去，<strong>这份文档内容很纯粹</strong><br>，因为它是由“草根”程序员整理出来的，所以我觉得它更适合更多的开发者！</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>国庆的时候，开始了对设计模式这个知识点的学习。</p>
+<p>因为是系统的学习，所以我同时阅读了<strong>大量</strong>关于设计模式的资料，</p>
+<p>其中包括</p>
+<ul>
+<li>GOF 的原著《设计模式.可复用面向对象软件的基础》</li>
+<li>国内口碑较高的《大话设计模式》程杰著，</li>
+<li>秦小波《设计模式之禅（第2版）》</li>
+<li>很多博客网站等等（详情见文末）</li>
+<li>…….</li>
+</ul>
+<p><img src="https://i.loli.net/2020/12/20/9uokIFMYTgbKJle.png" alt="books"></p>
+<p>看这么多资料的原因嘛，有两点</p>
+<ol>
+<li>目前市面知识要么多是凑数，要么多是营销，在这个人们称为的“知识付费”的时代，已经很难找到从“根本传授知识的“（这也是自己沉淀输出知识的一个原因，希望自己能做到一个朴实无华，作为一个技术人员的角度来真真正正的把自己对这个领域的所见所得输出出去。）</li>
+<li>另外一方面就是方便自己学习理解、提高对知识的接受程度，讲真你很难从一个地方学到更多东西，所以我无论学哪个知识点都是会搜罗很多资料去学习，其实在资料选择这一块就是一个非常耗时的过程，因为有很多东西别人说好，但是他不一定适合你。技术这东西更是如此，因为每个人的技术起点不同，只有选取合适自己的“高度”才能学到东西，这也算是“仁者见仁智者见智”的一种体现吧。</li>
+</ol>
+<h2 id="部分截图"><a href="#部分截图" class="headerlink" title="部分截图"></a>部分截图</h2><p><img src="https://i.loli.net/2020/12/20/jZ8ArtpGDR2cXQN.png" alt="部分截图"></p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><h3 id="设计模式的学习问题⁉❔"><a href="#设计模式的学习问题⁉❔" class="headerlink" title="设计模式的学习问题⁉❔"></a>设计模式的学习问题⁉❔</h3><p>我一直都在想如何学会一个新东西，和掌握一个旧东西🤔，有很多前辈给过一些建议和意见📑，（当然不是直接给我，都是看大佬的文章或者书籍当中。）先去用，再去学。嗯，我想是的，这样肯定是个很正常的学习过程。但是对于一些你暂时无法使用的东西，你如何去掌握它呢？我认为应该抛开表象去了解本质，通过本质的类比去掌握那些暂时无法使用的东西。设计模式就是这种情况，在平常的开发中，常用的设计模式就那么几种，其它的那些没有机会去接触，干学，如何才能掌握呢？🗃</p>
+<p>我从小就是一个好为人师的家伙🤓，然而自己学习却一直都不怎么样😢。人太实在，也不懂的包装，我只知道我学习这么差的能学会的东西，讲给别人应该差不哪去。😊</p>
+<p>在学习算法的时候，学到一个特别巧妙而且很好用的解题思路或者说逻辑思维<code>”分而治之“</code>，还有之前和网友讨论的一个叫做<code>”复杂度守恒定律“</code>的东西。这两个东西放在一起，可以说是很”矛盾“⚔🛡了。</p>
+<p>说了这么多我想说的就是，设计模式这个知识点，真的很简单又很难。简单是因为每种设计模式的定义拿出来都能看的懂，难是难在如何，何时的应用。而我希望我写的这个设计模式系列是去应用化的，就是单纯的把设计模式的思想记录下来。我所理解的设计模式就该如此。</p>
+<p>GOF的 <strong>《设计模式.可复用面向对象软件的基础》</strong> 通过一个应用案例的实现，串起了23种设计模式，我想在系列更新完之后也更新一个应用，将 23<br>种设计模式尽可能的应用到一个应用案例中去，而不是每个设计模式都涉及具体的应用，因为我觉得这可能会带的人们更关注应用的实现，而不是设计模式的应用，这是我的一些想法。</p>
+<p><strong>不要纠结每种模式的具体实现，把它们抽象出来，你能够清楚的描述每种模式是为了解决什么问题而存在的时候，就已经掌握它了，就可以把它用在任何当你需要的时候。而不是问什么时候需要它，这可能有点绕，不过它是真的。不要问我设计模式可以解决哪些问题，把问题给我，我告诉你用什么设计模式可以解决它！</strong></p>
+<h3 id="返璞归真"><a href="#返璞归真" class="headerlink" title="返璞归真"></a>返璞归真</h3><p>我认为学习设计模式的过程就像拿到一台游戏机，玩到最后，我都会拆开看看里面是什么，而早已不关心游戏好不好玩了。</p>
+<p>知识也是一样，知其然而知其所以然。</p>
+<p><strong>我们为了学会使用某种东西看他的操作手册就可以了；</strong></p>
+<p><strong>我们如果想要学会修某种东西就需要看他的设计手册；</strong></p>
+<p><strong>当我们想要创造某种东西，你就需要掌握很多很多设计手册，将他们的经验进行吸收、消化、提炼。才能有更好的结果。</strong></p>
+<p><em>当然，如果你只想会用，有一份差不多的操作指南也就够了。</em></p>
+<h2 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h2><p>60 天说长不长，说短不短，我完成了这一部分知识点的学习，并将其整理成为对应的 23 篇 <strong>原创</strong> 文章提交到了 git 仓库<em>（这个参考包括了涉及的源码、文章原文、素材、UML类图这些内容）</em>。</p>
+<p>同时也将他们发表在了 <code>星尘的一个朋友</code> 这个公众号上。公众号我也只认为是一个分享知识的地方，我没有营销他的想法，所以就像平常发表文章一样在上面写写记记，能帮到一个人也是极好的。</p>
+<p>越来越多的时候想将自己在技术上的所见所得与人分享或交流，当然能有机会和大佬交谈学到东西就更好了，这样我就可以将知识传承下去了。写《和 lvgo 一起学设计模式》这个系列文章让我学到了很多，感谢所有！</p>
+<p><img src="https://i.loli.net/2020/12/20/WrRjE9wYtc7bhKp.png" alt="源码"></p>
+<h2 id="如何获取"><a href="#如何获取" class="headerlink" title="如何获取"></a>如何获取</h2><p>大家可以关注公众号回复：<code>设计模式</code> 获得这本《和 lvgo 一起学习设计模式》 PDF 以及这个设计模式的 <code>github 仓库</code> ，<em>如果可以，希望你给个 <strong>star</strong> 支持一下我！</em></p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>保持热爱，奔赴山海。</p>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单例模式：资源, 要合理的分配使用！</title>
     <url>//post/lvgo-design-patterns-singleton.html</url>
     <content><![CDATA[<h1 id="单例（Singleton）模式-📍"><a href="#单例（Singleton）模式-📍" class="headerlink" title="单例（Singleton）模式 📍"></a>单例（Singleton）模式 📍</h1><blockquote>
 <p>前排提醒：学习设计模式的时候，千万不要咬文嚼字。因为模式本身就是一种思想，我们将其思想领悟，然后活学活用，而不是为了学语文。为了技术，放下语文。因为你接触的模式越多，越会发现很多模式的定义的界线开始模糊，这就是模式本身。一生万物，万物归一。</p>
@@ -1574,7 +2729,7 @@
 <p><del>优点：资源的合理分配和利用</del></p>
 <p><del>缺点：违反了单一职责原则</del></p>
 <h2 id="简单说说-Joshua-Bloch"><a href="#简单说说-Joshua-Bloch" class="headerlink" title="简单说说 Joshua Bloch"></a>简单说说 Joshua Bloch</h2><p>《Effective Java》、Effective 系列图书作者。同时我们每天都在使用着他写的代码，集合框架，它们的位置位于<code>java.util.*</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"> * <span class="hljs-meta">@param</span> &lt;E&gt; the type of elements in <span class="hljs-keyword">this</span> collection<br> *<br> * <span class="hljs-meta">@author</span>  Josh Bloch<br> * <span class="hljs-meta">@author</span>  Neal Gafter<br> * <span class="hljs-meta">@see</span>     Set<br> * <span class="hljs-meta">@see</span>     List<br> * <span class="hljs-meta">@see</span>     Map<br> * <span class="hljs-meta">@see</span>     SortedSet<br> * <span class="hljs-meta">@see</span>     SortedMap<br> * <span class="hljs-meta">@see</span>     HashSet<br> * <span class="hljs-meta">@see</span>     TreeSet<br> * <span class="hljs-meta">@see</span>     ArrayList<br> * <span class="hljs-meta">@see</span>     LinkedList<br> * <span class="hljs-meta">@see</span>     Vector<br> * <span class="hljs-meta">@see</span>     Collections<br> * <span class="hljs-meta">@see</span>     Arrays<br> * <span class="hljs-meta">@see</span>     AbstractCollection<br> * <span class="hljs-meta">@since</span> <span class="hljs-number">1.2</span><br> */<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Collection</span>&lt;<span class="hljs-title">E</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">Iterable</span>&lt;<span class="hljs-title">E</span>&gt; </span><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"> <span class="hljs-comment">/* @param &lt;E&gt; the type of elements in this collection</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @author  Josh Bloch</span><br><span class="hljs-comment"> * @author  Neal Gafter</span><br><span class="hljs-comment"> * @see     Set</span><br><span class="hljs-comment"> * @see     List</span><br><span class="hljs-comment"> * @see     Map</span><br><span class="hljs-comment"> * @see     SortedSet</span><br><span class="hljs-comment"> * @see     SortedMap</span><br><span class="hljs-comment"> * @see     HashSet</span><br><span class="hljs-comment"> * @see     TreeSet</span><br><span class="hljs-comment"> * @see     ArrayList</span><br><span class="hljs-comment"> * @see     LinkedList</span><br><span class="hljs-comment"> * @see     Vector</span><br><span class="hljs-comment"> * @see     Collections</span><br><span class="hljs-comment"> * @see     Arrays</span><br><span class="hljs-comment"> * @see     AbstractCollection</span><br><span class="hljs-comment"> * @since 1.2</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Collection</span>&lt;<span class="hljs-title">E</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">Iterable</span>&lt;<span class="hljs-title">E</span>&gt; </span>&#123;&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -1588,7 +2743,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（七）结构型之装饰者模式</title>
+    <title>装饰者模式：玩了把坦克大战居然彻底搞懂了装饰者模式！</title>
     <url>//post/lvgo-design-patterns-decorator.html</url>
     <content><![CDATA[<h2 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h2><p>一直都有看到“包装者模式“ 出现在一些文章，甚至书中。它们被应用在装饰者模式和适配器模式中，这个原因笔者猜测源自 GOF 最早在书中给模式命名的时候提到了这两个模式的别名 wrapper同时还有适配器也被成为 wrapper, 所以有人将这几个名称混来混去。后来 GOF 在结尾讲书的简史的时候有提到一些模式的名称变化，其中 glue 改成了 facade， wrapper 改为 decorator ，walker 变成了 visitor 。</p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前阵子出于自己学习使用的原因开发了一个 chrome extension ，这样我的 chrome 变得比以前更强了，我赋予了它一个可以保存某个页面的某个片段的位置，后续通过点击这个记录可以快速的回到并高亮当时浏览的记录。</p>
@@ -1689,7 +2844,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（三）创建型之抽象工厂模式</title>
+    <title>抽象工厂模式：抽象工厂模式和工厂模式有区别吗？</title>
     <url>//post/lvgo-design-patterns-abstract-factory.html</url>
     <content><![CDATA[<h1 id="抽象工厂模式-🌉"><a href="#抽象工厂模式-🌉" class="headerlink" title="抽象工厂模式 🌉"></a>抽象工厂模式 🌉</h1><blockquote>
 <p>提供一个创建产品族的接口，其每个子类可以生产一系列相关的产品。</p>
@@ -1776,7 +2931,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（九）结构型之适配器模式</title>
+    <title>适配器模式：今天轻松点，就说说什么是“榫”，什么是“卯”，什么是“榫卯”！</title>
     <url>//post/lvgo-design-patterns-adapter.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/10/29/ir7LvpWXUykRABw.png" alt="adapter-title.png"></p>
 <h1 id="什么是”榫”"><a href="#什么是”榫”" class="headerlink" title="什么是”榫”"></a>什么是”榫”</h1><p>嘶衣唔嗯ěn损，fao喽密，榫！</p>
@@ -1852,7 +3007,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（二十一）行为型之中介者模式</title>
+    <title>中介者模式：还记得你到单位入职的第一天吗？你有没有遇到文中‘王二’的事呢？</title>
     <url>//post/lvgo-design-patterns-mediator.html</url>
     <content><![CDATA[<h1 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h1><blockquote>
 <p>用一个中介对象来封装一系列的对象交互。中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。</p>
@@ -1931,7 +3086,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（二十三）行为型之解释器模式</title>
+    <title>解释器模式：你能看懂TA的“眼色”吗？</title>
     <url>//post/lvgo-design-patterns-interpreter.html</url>
     <content><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>这篇是<strong>《和 lvgo 一起学设计模式》</strong>系列的最后一个设计模式了，这篇就轻松一些吧。</p>
 <h1 id="解释器模式"><a href="#解释器模式" class="headerlink" title="解释器模式"></a>解释器模式</h1><blockquote>
@@ -2001,7 +3156,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（二十二）行为型之访问者模式</title>
+    <title>访问者模式：是“凡尔赛”让我“认清”了解释器模式：你能看懂TA的“眼色”吗？访问者模式！</title>
     <url>//post/lvgo-design-patterns-visitor.html</url>
     <content><![CDATA[<h1 id="访问者模式"><a href="#访问者模式" class="headerlink" title="访问者模式"></a>访问者模式</h1><blockquote>
 <p>将作用于某种数据结构中的各元素的操作分离出来封装成独立的类，使其在不改变数据结构的前提下可以添加作用于这些元素的新的操作，为数据结构中的每个元素提供多种访问方式。它将对数据的操作与数据结构进行分离，是行为类模式中最复杂的一种模式。</p>
@@ -2099,7 +3254,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（二十）行为型之状态模式</title>
+    <title>状态模式：从工作状态，再到订单状态一点点深入学习状态模式</title>
     <url>//post/lvgo-design-patterns-state.html</url>
     <content><![CDATA[<h1 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h1><blockquote>
 <p>允许一个对象在其内部状态发生改变时改变其行为能力。</p>
@@ -2172,7 +3327,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（二）创建型之工厂模式</title>
+    <title>工厂模式：像工厂一样创建对象，让业务代码更专注！</title>
     <url>//post/lvgo-design-patterns-factory.html</url>
     <content><![CDATA[<h1 id="工厂模式-🏗"><a href="#工厂模式-🏗" class="headerlink" title="工厂模式 🏗"></a>工厂模式 🏗</h1><blockquote>
 <p>定义一个用于创建产品的接口，由子类决定生产什么产品。</p>
@@ -2277,7 +3432,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（五）创建型之建造者模式</title>
+    <title>建造者模式：学个设计模式还和人生扯上关系了？</title>
     <url>//post/lvgo-design-patterns-build.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/10/17/8NsSJTuzyraGeOV.png" alt="build"></p>
 <h1 id="建造者模式-🔨"><a href="#建造者模式-🔨" class="headerlink" title="建造者模式 🔨"></a>建造者模式 🔨</h1><blockquote>
@@ -2376,7 +3531,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（八）结构型之桥接模式</title>
+    <title>桥接模式：这个不常用的设计模式居然被我学的最透，草率了！</title>
     <url>//post/lvgo-design-patterns-bridge.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/10/29/YIpkj5QDBHb7ytN.png" alt="timg"></p>
 <h1 id="科普闲聊"><a href="#科普闲聊" class="headerlink" title="科普闲聊"></a>科普闲聊</h1><blockquote>
@@ -2484,7 +3639,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（六）结构型之代理模式</title>
+    <title>代理模式：有什么问题跟我律师说吧！</title>
     <url>//post/lvgo-design-patterns-proxy.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/10/22/5l9eIS7tXdofFAE.png" alt="代理模式"></p>
 <h1 id="设计模式的学习问题⁉❔"><a href="#设计模式的学习问题⁉❔" class="headerlink" title="设计模式的学习问题⁉❔"></a>设计模式的学习问题⁉❔</h1><p>我一直都在想如何学会一个新东西，和掌握一个旧东西🤔，有很多前辈给过一些建议和意见📑，（当然不是直接给我，都是看大佬的文章或者书籍当中。）先去用，再去学。嗯，我想是的，这样肯定是个很正常的学习过程。但是对于一些你暂时无法使用的东西，你如何去掌握它呢？我认为应该抛开表象去了解本质，通过本质的类比去掌握那些暂时无法使用的东西。设计模式就是这种情况，在平常的开发中，常用的设计模式就那么几种，其它的那些没有机会去接触，干学，如何才能掌握呢？🗃</p>
@@ -2552,7 +3707,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十一）结构型之享元模式</title>
+    <title>享元模式：如果让你开发英雄联盟的兵线，你会怎么设计？</title>
     <url>//post/lvgo-design-patterns-flyweight.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/12/CKNbypcrJwdgflx.png" alt="flyweight-title"></p>
 <h1 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h1><blockquote>
@@ -2602,7 +3757,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十七）行为型之备忘录模式</title>
+    <title>备忘录模式：这款游戏你玩过吗？是不是经常”重来“？</title>
     <url>//post/lvgo-design-patterns-memento.html</url>
     <content><![CDATA[<h1 id="备忘录（Memento）模式"><a href="#备忘录（Memento）模式" class="headerlink" title="备忘录（Memento）模式"></a>备忘录（Memento）模式</h1><blockquote>
 <p>在不破坏封装性的前提下，获取并保存一个对象的内部状态，以便以后恢复它。</p>
@@ -2654,7 +3809,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十三）行为型之策略模式</title>
+    <title>策略模式：学习JDK的比较器架构是如何设计的</title>
     <url>//post/lvgo-design-patterns-strategy.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/22/EbcfqsQpOhvYCad.png" alt="strategy-title.png"></p>
 <h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p>策略模式最早的时候是在马老师的坦克大战看的，讲的很干，也挺清楚。现在回想起来更是记忆犹新。</p>
@@ -2759,7 +3914,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十九）行为型命令之模式</title>
+    <title>命令模式：如果把请求变成一个对象，在一些场景更好用！</title>
     <url>//post/lvgo-design-patterns-command.html</url>
     <content><![CDATA[<p><img src="https://img-blog.csdnimg.cn/img_convert/4b0c6fc7d3e8ee4f4a942c404366a274.png#pic_center" alt="土方令"></p>
 <h1 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h1><blockquote>
@@ -2824,7 +3979,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十二）结构型之组合模式</title>
+    <title>组合模式：使用组合模式做一个简单的推荐功能</title>
     <url>//post/lvgo-design-patterns-composite.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/18/X5GxW3w6OH9pijR.png" alt="composite-title.png"></p>
 <h1 id="聊聊自己理想的“知识”"><a href="#聊聊自己理想的“知识”" class="headerlink" title="聊聊自己理想的“知识”"></a>聊聊自己理想的“知识”</h1><h2 id="知识该怎么分享"><a href="#知识该怎么分享" class="headerlink" title="知识该怎么分享"></a>知识该怎么分享</h2><p>周末的时候去了图书馆，去计算机技术区域想找一些书看，于是翻到了一本《零基础读懂云计算》，我发现我和作者的心态非常相似，他所谈及的就是因为“云计算”被太多太多的人去层层定义，结果导致人们对“云计算”这个词语已经开始有了一些丢失本质的理解了。他站在了“云计算”的本身出发，去掉了对它的层层包装，让读者真正的明白了什么是“云计算”（通过自己的思考），而不是将“云计算”给你定义一个什么什么高大上的名词来让你觉得很神奇的一种姿态来讲，字里行间也流露着他书名的意图。至少我看了之后，可以拨开很多营销或应用谈及的“云计算”虚伪的面纱，如果某人给我说哪个应用是怎么怎么利用“云计算”来完成的某个什么什么业务的时候，我也知道该怎么去追问他然后去判断到底他是不是应用了“云计算”。</p>
@@ -2893,7 +4048,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十五）行为型之观察者模式</title>
+    <title>观察者模式：原来观察者模式是JDK与生俱来的</title>
     <url>//post/lvgo-design-patterns-observer.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/24/NYiKTrU5G2BnkEs.png" alt="observer-title.png"></p>
 <h1 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h1><blockquote>
@@ -2962,7 +4117,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十八）行为型之迭代器模式</title>
+    <title>迭代器模式：你真的“会”遍历list吗？</title>
     <url>//post/lvgo-design-patterns-iterator.html</url>
     <content><![CDATA[<p><img src="https://img-blog.csdnimg.cn/img_convert/ef7aed4c24f3d2f219e4ea4451a2e3c9.png#pic_center" alt="海尔"></p>
 <h1 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h1><blockquote>
@@ -3075,7 +4230,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十六）行为型责任链模式之模式</title>
+    <title>责任链模式：“张三为了纪念王二请假的悲催经历想出来的一种设计模式”</title>
     <url>//post/lvgo-design-patterns-chain-of-responsibility.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/28/25fjXDYo4VriF9l.png" alt="chain-of-responsibility.png"></p>
 <blockquote>
@@ -3127,7 +4282,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十四）行为型之模板方法模式</title>
+    <title>模板方法模式：你知道AQS它是干什么的吧，那这个框架是怎么设计的呢？</title>
     <url>//post/lvgo-design-patterns-template-method.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/24/65JlOrxysH82ivQ.png" alt="template-method-title.png"></p>
 <h1 id="冲啊！"><a href="#冲啊！" class="headerlink" title="冲啊！"></a>冲啊！</h1><p>最近经常看《四驱兄弟》，脑子已经被“冲啊”洗掉了。</p>
@@ -3187,7 +4342,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（十）结构型之外观模式</title>
+    <title>外观模式：书生的家书是谁送的？书童到底是个什么角色？</title>
     <url>//post/lvgo-design-patterns-facade.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/11/02/EhWVb7JoP3mCi9j.png" alt="facade"></p>
 <p>今天用5分23秒，搞懂外观模式，计时~开始！</p>
@@ -3237,7 +4392,7 @@
       </tags>
   </entry>
   <entry>
-    <title>和 lvgo 一起学设计模式（四）创建型之原型模式</title>
+    <title>原型模式：啥？盗图、盗文章的人居然用的是一种设计模式！原型模式？</title>
     <url>//post/lvgo-design-patterns-prototype.html</url>
     <content><![CDATA[<p><img src="https://i.loli.net/2020/10/17/q62IGUFY1xmdbw4.png" alt="clone-wordpress"></p>
 <h1 id="原型模式-🎭"><a href="#原型模式-🎭" class="headerlink" title="原型模式 🎭"></a>原型模式 🎭</h1><blockquote>
@@ -4096,11 +5251,10 @@
 <p>抱着和大家共同学习的目的，记录学习总结。不足之处还希望能够指出共同进步！</p>
 ]]></content>
       <categories>
-        <category>Java</category>
-        <category>JVM</category>
+        <category>虚拟机</category>
       </categories>
       <tags>
-        <tag>JVM</tag>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
   <entry>
@@ -4357,6 +5511,152 @@
       </tags>
   </entry>
   <entry>
+    <title>Java 类的一生</title>
+    <url>//post/lvgo-jvm-09.html</url>
+    <content><![CDATA[<p>这篇文章说实话，难产了🤪（手动捂脸）</p>
+<a id="more"></a>
+
+<h1 id="Java-类的一生"><a href="#Java-类的一生" class="headerlink" title="Java 类的一生"></a>Java 类的一生</h1><blockquote>
+<p>首先要知道，我说的这个类，也就是我们上篇内容说的那个 <code>Class 文件</code> 通常指一串 “二进制字节流”。</p>
+</blockquote>
+<p>从我们码出 <code>public class Cafe</code> 的时候，可以说。这个种子 <code>bean</code> 就已经埋下了。然后我们将它通过前端编译器 <code>javac</code> 编译成了 <code>Class</code> 文件 。</p>
+<p>紧接着它被 <code>JVM</code> 加载，后被应用到程序中，最后被 <code>JVM</code> 卸载。短短的几句话，概括了 <code>Java 类</code> 的一生。但这其中每一步，都有着可以用来喝一宿的故事。今天我还是长话短说，少喝点，讲一讲 <code>Java</code> 类的一生。</p>
+<h2 id="Javac-的孕育"><a href="#Javac-的孕育" class="headerlink" title="Javac 的孕育"></a>Javac 的孕育</h2><p>当你敲完最后一个 <code>;</code> 或 <code>)</code> 时，你高兴的执行了你的代码。而此时，<code>类</code> 的一生，算是开始了。</p>
+<p><code>类</code> 首先经历的就是被 <code>Javac</code> 这个前端编译器进行编译。因为这样，它才能被 <code>JVM</code> 所使用，这一步 <code>Javac</code> 都对它做了什么呢？</p>
+<h3 id="第一步：词法、语法分析"><a href="#第一步：词法、语法分析" class="headerlink" title="第一步：词法、语法分析"></a>第一步：词法、语法分析</h3><p><code>Javac</code> 把 <code>.java</code> 文件中的每个 <code>标记</code> 通过词法和语法分析构建出一颗抽象语法树。我们在编码的时候，都是敲下 <code>abcde</code> 的单个字符为最小单元，但在 <code>Javac</code> 这里，最小的单元就是 <code>public</code> <code>int</code> <code>a</code> <code>=</code> <code>11</code>，这些，每一项都会作为一个 <code>标记</code>。把每个单元转成 <code>标记</code> 集合的过程称为词法分析，根据 <code>标记</code> 构建出来抽象语法树这个过程叫语法分析。有了这颗 <code>树</code> 就方便后面的操作了。</p>
+<h3 id="第二步：填充符号表"><a href="#第二步：填充符号表" class="headerlink" title="第二步：填充符号表"></a>第二步：填充符号表</h3><p>对刚刚的语法树进行遍历，将出现的符号定义和符号信息保存到符号表中;</p>
+<h3 id="第三步：注解处理器"><a href="#第三步：注解处理器" class="headerlink" title="第三步：注解处理器"></a>第三步：注解处理器</h3><p>这一步是干啥呢，这么跟你说吧， <code>lombok</code> 用过吗？就干那个了。没错，代码的修改。这些还要得益于 <code>插入式注解处理器</code> ，它可以让你很轻松的来操作第一步生成出来的那颗抽象语法树，来达到对代码进行额外的操作。哦对了，如果这一步有对抽象语法树进行过操作，那么需要重新执行填充符号表的动作。</p>
+<h3 id="第四步：语义分析"><a href="#第四步：语义分析" class="headerlink" title="第四步：语义分析"></a>第四步：语义分析</h3><p>对程序进行语义逻辑分析。也是我们经常说的编译报错的地方，就在这了。比如你写个 <code>int i = 0</code> <code>boolean j = false</code> <code>int k = i + j</code> 你这样写肯定没问题，不过在编译的时候，就会报错了。不要说你在 <code>IDE</code> 中写的时候就会爆红。细品。还有一个例子，就是你定义的 <code>final</code> 的变量。你在编写的时候，是必须要初始化，而且不允许再被修改的，这个值有没有被改过，也是在这个阶段来检查的。你不要说在 <code>IDE</code> 编写的时候改就会爆红。</p>
+<h3 id="第五步：解语法糖"><a href="#第五步：解语法糖" class="headerlink" title="第五步：解语法糖"></a>第五步：解语法糖</h3><p>关于 Java 的语法糖，我们几乎只要在编码，就会多多少少的使用到，比如 <code>泛型</code>、<code>自动拆装箱</code>、<code>增强 for 循环</code>。这一步就是将其还原成他们本来的样子。</p>
+<h3 id="第六步：生成字节码文件"><a href="#第六步：生成字节码文件" class="headerlink" title="第六步：生成字节码文件"></a>第六步：生成字节码文件</h3><p>经历了上面几步之后，最终会得到一个 <code>.class</code> 的字节码文件。其使用的就是第二步填充的那个符号表的信息。这一步比较关键的内容就是生成 <clinit> 方法和 <init> 方法。类构造器和实例构造器。这个实例构造器和我们代码中的构造函数不同。<clinit> 和 <init> 的作用主要是代码收敛，比如 <clinit> 可以确定父类的 <code>static</code> 代码块一定先于子类执行。</p>
+<blockquote>
+<p>关于符号表的这里，我相信大家很多人都看过一些相关的博文或资料，不过几乎无人谈及这个符号表里到底是个什么东西，所以，我也就不说了。那必不可能，其实这个符号表是编译原理层面的内容，还是需要了解一下编译原理的这块内容才行，不过我之前也说过，关于编译原理这块自己真的是一概不知。所以这没办法在这里写清楚，不过抱着技术分享的认真态度，还是去了解了一些，这块还是相对较基础的。所谓的符号表，在编译原理中，它是讲，将程序中出现的有关标识的符号的属性信息保存下来。主要是用于语法分析和内存分配阶段。保存的形式也不单一，可以用数组、散列表、栈、树等数据结构来进行登记。内容的话，比如 Java 中的方法为例 <code>public void fun(param1,param2)</code> 那么在符号表中就要保存 <code>fun</code> 与之对应的值，<code>param1</code> 与之对应的值，以此类推。这里的举例为个人理解所写，真正编译原理所表达的符号与之类似。如感兴趣可进行编译原理内容学习。</p>
+</blockquote>
+<h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p>当编译器 Javac 孕育出 .class 字节码之后，接下来类的生命周期就围绕以下 <strong>加载 - 验证 - 准备 - 解析 - 初始化 - 使用 - 卸载 7步</strong> 展开了。</p>
+<h3 id="1-加载"><a href="#1-加载" class="headerlink" title="1. 加载"></a>1. 加载</h3><p>将字节码二进制流加载到内存，当我们的代码经历过前端编译器，便成为了可以被虚拟机加载的字节码文件。当然，这个类，可能是我们自己写的（编码）也有可能是通过运行时生成的字节码内容，所以前面说加载的时候说的是 <code>将字节码二进制流加载到内存</code>，而不是 <code>class</code> 文件加载到内存，因为字节码包含了各种形式的内容，比如 <code>class</code> 文件，或者本地或网络传输的二进制流等。</p>
+<p>加载的过程中，主要是将这个字节码二进制流转换成虚拟机所能使用的信息，基本内容包含</p>
+<ol>
+<li>通过全部限定名来获取一个二进制的字节流；</li>
+<li>把字节流中定义的内容转到方法区中的数据结构；</li>
+<li>生成一个可以表示这个二进制流的 Class 对象，作为访问方法区内容的入口；</li>
+</ol>
+<p>以上的操作，是由一个叫做 <strong>类加载器</strong> 的家伙完成的，关于这哥们，待会我们再好好看看它。</p>
+<h3 id="2-验证"><a href="#2-验证" class="headerlink" title="2. 验证"></a>2. 验证</h3><p>验证加载的字节码内容是否合法，这一步主要是防止虚拟机遭到破坏</p>
+<ul>
+<li>验证文件格式</li>
+<li>元数据验证</li>
+<li>字节码验证</li>
+<li>符号引用验证</li>
+</ul>
+<h3 id="3-准备"><a href="#3-准备" class="headerlink" title="3. 准备"></a>3. 准备</h3><p>准备阶段为类中定义的静态变量（类变量）分配内存并赋默认值（非程序中的默认值）</p>
+<ul>
+<li><code>public static int id = 123</code> 默认值赋值 0 而非 123</li>
+<li>123 会在对应程序的类构造器（注意与实例构造器区别）中的<code>&lt;clinit&gt;()</code> 方法中完成，</li>
+<li>如果是 <code>public static final int id = 123</code> 会在此阶段完成赋值</li>
+</ul>
+<p><strong>继续深入：</strong></p>
+<p>123 会在对应程序的类构造器（注意与实例构造器区别）中的<code>&lt;clinit&gt;()</code> 方法中完成，这个 <code>&lt;clinit&gt;()</code> 方法是由 javac 编译器编译出来的方法</p>
+<ul>
+<li><code>&lt;clinit&gt;()</code>方法是由编译器自动收集类中的所有<strong>类变量的赋值动作和静态语句块（static{}块）</strong>中的语句合并产生的，编译器收集的顺序是由语句在<strong>源文件中出现的顺序决定</strong>的，静态语句块中<strong>只能访问到定义在静态语句块之前的变量，定义在它之后的变量，在前面的静态语句块可以赋值，但是不能访问</strong></li>
+<li><code>&lt;clinit&gt;()</code>方法与类的构造函数（即在虚拟机视角中的实例构造器<code>&lt;init&gt;()</code>方法）不同，它不需要显式地调用父类构造器，Java虚拟机会保证在子类的<code>&lt;clinit&gt;()</code>方法执行前，父类的<code>&lt;clinit&gt;()</code>方法已经执行完毕。因此在Java虚拟机中第一个被执行的<code>&lt;clinit&gt;()</code>方法的类型肯定是java.lang.Object</li>
+<li>由于父类的<code>&lt;clinit&gt;()</code>方法先执行，也就意味着父类中定义的静态语句块要优先于子类的变量赋值操作</li>
+<li>非必须，如果类或接口中没有静态变量或方法，编译器会省略生成<code>&lt;clinit&gt;()</code>方法这步操作</li>
+<li><code>&lt;clinit&gt;()</code> 方法在多线程环境会被正确同步</li>
+</ul>
+<h3 id="4-解析"><a href="#4-解析" class="headerlink" title="4. 解析"></a>4. 解析</h3><p>解析阶段将类的符号引用替换为直接引用</p>
+<ul>
+<li>符号引用（Symbolic References）：还记得之前文章中提到的 Class 文件中存的内容吗，还记得那些表吗？这个符号引用就是那时的索引。</li>
+<li>直接引用（Direct References）：可以直接或间接定位到目标的真实的内存地址的引用。可以是直接指针、偏移量。</li>
+</ul>
+<h3 id="5-初始化"><a href="#5-初始化" class="headerlink" title="5. 初始化"></a>5. 初始化</h3><p>对于类加载，虚拟机规范没有严格要求，具体可由虚拟机的实现自行决定。</p>
+<p>但对类，虚拟机规范明确了类必须初始化的 6 个场景（有且仅有）</p>
+<ol>
+<li>遇到new、getstatic、putstatic或invokestatic这四条字节码指令时，能够触发这四条指令的场景<ul>
+<li>new关键字</li>
+<li>读取或设置一个类型的静态字段（被final修饰、已在编译期把结果放入常量池的静态字段除外）的时候</li>
+<li>调动类的静态方法</li>
+</ul>
+</li>
+<li>对类型使用反射调用。</li>
+<li>子类初始化时会优先初始化父类。</li>
+<li>虚拟启动时用户指定的那个类。（包含 <code>main()</code> 方法的类）会被初始化。</li>
+<li>当使用JDK 7新加入的动态语言支持时，执行句柄为静态字段或方法，或构造函数时需要对目标进行初始化（此处需了解 JDK 7 新增的动态语言支持，后续有机会会对此出内容单独整理文章说明，欢迎关注）。</li>
+<li><strong>当一个接口中定义了JDK 8新加入的默认方法（被default关键字修饰的接口方法）时，如果有这个接口的实现类发生了初始化，那该接口要在其之前被初始化。</strong></li>
+</ol>
+<p>上面说的是 6 种 <strong>主动</strong> 方式触发的初始化，还有 3 种 <strong>被动</strong> 引用不会引发类的初始化。</p>
+<ol>
+<li>通过子类访问父类静态变量，只会初始化父类，不会初始化子类。</li>
+<li>使用new关键字来创建类型数组不会触发初始化。</li>
+<li>访问常量字段，即 <code>static final</code> 共同修饰的字段。这个原因上面有说明过，在这里再墨迹一下，会在编译器 javac 阶段将其放入常量池。</li>
+</ol>
+<h3 id="6-使用"><a href="#6-使用" class="headerlink" title="6. 使用"></a>6. 使用</h3><p>就是使用咯。</p>
+<h3 id="7-卸载"><a href="#7-卸载" class="headerlink" title="7. 卸载"></a>7. 卸载</h3><blockquote>
+<p>还记得之前我们写的一篇文章 <a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485257&amp;idx=1&amp;sn=ca53d2e3a29f1a05bcd4b5fd7ec271fc&amp;chksm=fc6beeafcb1c67b9e0b33ea8d59e6d5e9d386f0ef38ef2a3329bb0f1dfabeb5103854a2f2160#rd">JVM 是怎么把“送”出去的内存又“要”回来的</a> 其中有写到 <strong>类卸载</strong> 的相关内容，没读过的朋友可以点击链接阅读全文，效果更好，也可以阅读下面截取的片段。</p>
+</blockquote>
+<p>类的卸载还是比较严格的，而且这个条件也比较苛刻，判断一个类型信息是否可以被回收（卸载）需要 <strong>同时</strong> 满足以下三个条件：</p>
+<ol>
+<li>该类信息对应的所有实例被回收</li>
+<li>加载该类的加载器被回收（<em>关键</em>）</li>
+<li>对应的 <em>java.lang.Class</em> 对象没有在任何地方被引用</li>
+</ol>
+<p>具体内容如下：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例。</li>
+<li>加载该类的类加载器已经被回收，<strong>这个条件除非是经过精心设计的可替换类加载器的场景，否则通常是很难达成的。</strong></li>
+<li>该类对应的 <em>java.lang.Class</em> 对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ol>
+<p><em>多了解一点：</em></p>
+<p><em>其中第三点与我们经常见到的操作诸如 spring 这种大量使用反射的框架、JDK 的动态代理、以及 CG lib 这种操作字节码的框架基本上都需要 JVM 拥有类卸载的功能，否则会导致一些自定义加载器加载的临时类信息占据着方法区的内存，带来不必要的压力。</em></p>
+<p>当类被卸载后，类的一个生命周期就结束了，还有，上面的顺序并非一成不变，不过 加载 - 使用 - 卸载，这个大的框架顺序还是必须这样的，简单说明下这是因为 Java 动态语言的支持导致的。以上，就是我这次要分享的主要内容 <strong>Java 类的一生</strong>，谢谢你的阅读。</p>
+<hr>
+<p>下面我们简单扩展一下类加载这哥儿们。</p>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><p>关于这哥们，它的工作很简单，只需要负责把二进制流加载到内存中，哦对了，加载完了会打个标。完事。</p>
+<p>打标就是通过类的 <strong>完全限定名</strong> 来为每个 <code>Class文件的二进制流</code> 命名，这样做是可以方便应用程序加载自己需要的类，还有一个原因我们下面会看到。</p>
+<h3 id="类与类加载器的区别"><a href="#类与类加载器的区别" class="headerlink" title="类与类加载器的区别"></a>类与类加载器的区别</h3><p>类加载器只实现类的加载动作。</p>
+<p>类之间的比较，前提条件是同一个类加载器。如果由不同类加载器加载的相同完全限定名的类，那他们也是完全不同的（打标的原因其二）。也不能这样去做比较。</p>
+<h3 id="两类类加载器"><a href="#两类类加载器" class="headerlink" title="两类类加载器"></a>两类类加载器</h3><ul>
+<li><p>由 C++ 实现的启动类加载器（BootStrap ClassLoader）</p>
+</li>
+<li><p>由 Java 实现的 （java.lang.ClassLoader）的子类</p>
+</li>
+</ul>
+<h4 id="启动类加载器-（C-实现）"><a href="#启动类加载器-（C-实现）" class="headerlink" title="启动类加载器 （C++ 实现）"></a>启动类加载器 （C++ 实现）</h4><p>负责加载 JAVA_HOME/lib 目录下的 jar，<strong>注意：识别方式为文件名识别，即使放入不符合规范的文件也不能被加载。</strong> 该加载器不能被 Java 程序引用，访问时会返回 <code>null</code></p>
+<h4 id="扩展类加载器（Java-实现）"><a href="#扩展类加载器（Java-实现）" class="headerlink" title="扩展类加载器（Java 实现）"></a>扩展类加载器（Java 实现）</h4><p>负责加载 JAVA_HOME/lib/ext 目录下的类，可被程序调用。也可加载 <code>java.ext.dirs</code> 系统变量所指定的路径中所有的类库。</p>
+<h4 id="应用-系统类加载器（Java-实现）"><a href="#应用-系统类加载器（Java-实现）" class="headerlink" title="应用/系统类加载器（Java 实现）"></a>应用/系统类加载器（Java 实现）</h4><blockquote>
+<p>这个类加载器由sun.misc.Launcher$AppClassLoader来实现。由于应用程序类加载器是ClassLoader类中的getSystem-ClassLoader()方法的返回值，所以有些场合中也称它为“系统类加载器”</p>
+</blockquote>
+<p>它负责加载用户类路径（ClassPath）上所有的类库</p>
+<p>可以直接在代码中使用这个类加载器。</p>
+<p>如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</p>
+<h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h3><p><img src="https://img-blog.csdnimg.cn/img_convert/b164f8b96064da462108e84d724bdb2a.png" alt="双亲委派模型"></p>
+<p>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到最顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去完成加载。</p>
+<h4 id="破坏双亲委派模型"><a href="#破坏双亲委派模型" class="headerlink" title="破坏双亲委派模型"></a>破坏双亲委派模型</h4><p>不遵守这个模型规则就可以破坏双亲委派模型</p>
+<ol>
+<li>重写 loadClass 方法</li>
+<li>JVM 自己被自己的 SPI 机制打破。<em>后 JDK6 通过 ServiceLoader + 责任链模式解决</em></li>
+</ol>
+<p><em>关于 SPI 的话，我们后面有机会在深入聊聊，因为其不属于虚拟机范畴，暂时先不深入讨论了。这部分内容和 JNDI 有关（Java Naming and Directory Interface,Java命名和目录接口）是 Java 的一个关键技术点。不知道可不太好，关注我，一起学习。</em></p>
+<p>(正文完)</p>
+<hr>
+<p>如果觉得写的还不错，可以关注点赞在看支持我。(#^.^#)</p>
+<h2 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485332&amp;idx=1&amp;sn=4c4d4afd9ed564798e460299847df27b&amp;chksm=fc6bee72cb1c67647e3034e314ec3ea1fccf1955e44ff1344e46ade31b7ffd7a01d85b7b1b7c&token=183649644&lang=zh_CN#rd">你说那 class 文件里边都是啥</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485295&amp;idx=1&amp;sn=ebb76f06a0998e12a16d817392de0f7e&amp;chksm=fc6bee89cb1c679f6ef3e0a5327cf0e19d2f833bdec2eb4c3cb7edd233a6d5b66ff3ad39c5eb&token=1494472137&lang=zh_CN#rd">到底是谁在回收 JVM 的垃圾</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485282&amp;idx=1&amp;sn=abde86f06e82c63858d60960b3122fa7&amp;chksm=fc6bee84cb1c67927e360626ac0c1822d8f5e77de14c097989dcbab052028f05ffc24ed93d63&token=1303129454&lang=zh_CN#rd">天天听人家说的 GC 到底是个啥？</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485226&amp;idx=1&amp;sn=5b8ed2e5d06899ff2d7d931f9d964d70&amp;chksm=fc6beecccb1c67da4b405fa8c8c69878958b56d9291bdf8067b4bbf8c137b0194a0cae14e622&token=1941800665&lang=zh_CN#rd">你创建的 Java 对象搁哪了</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485249&amp;idx=1&amp;sn=589495ebea994d2ac91110d9bdcf5326&amp;chksm=fc6beea7cb1c67b17258a7da71a36f00b0386b68f7d25d53949ac7de7be5f3f74d3a205e439b&token=1941800665&lang=zh_CN#rd">JVM 中对象咋创建啊，又怎么访问啊</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485273&amp;idx=1&amp;sn=ca06732e3ce9853446993618ca06a154&amp;chksm=fc6beebfcb1c67a9bee28a755e15a31fb62b87d48e2a795a15765d82595525ce49fc3cb95fee&token=1941800665&lang=zh_CN#rd">JVM 把内存”收“回来用的是什么法器</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485257&amp;idx=1&amp;sn=ca53d2e3a29f1a05bcd4b5fd7ec271fc&amp;chksm=fc6beeafcb1c67b9e0b33ea8d59e6d5e9d386f0ef38ef2a3329bb0f1dfabeb5103854a2f2160&token=1941800665&lang=zh_CN#rd">JVM 是怎么把“送”出去的内存又“要”回来的</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring中Quartz2.2.2的使用</title>
     <url>//post/course-spring-quartz.html</url>
     <content><![CDATA[<p>本文介绍的内容为, 在spring管理的项目中使用Quartz2.2.2版本进行任务调度</p>
@@ -4566,13 +5866,6 @@
 <li><a href="https://blog.csdn.net/hikvision_java_gyh/article/details/8964155">https://blog.csdn.net/hikvision_java_gyh/article/details/8964155</a> 《JAVA内部类 （吐血之作）</li>
 </ul>
 ]]></content>
-      <categories>
-        <category>Java</category>
-        <category>Java基础</category>
-      </categories>
-      <tags>
-        <tag>Java基础</tag>
-      </tags>
   </entry>
   <entry>
     <title>和 lvgo 一起学设计模式（零）序</title>
@@ -4777,6 +6070,114 @@
       </categories>
       <tags>
         <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>天天听人家说的 GC 到底是个啥？</title>
+    <url>//post/lvgo-jvm-06.html</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2020/12/27/okDzWcqyAlr9mR6.png" alt="啥是 GC"></p>
+<blockquote>
+<p>其实首先我觉得怎么着自己肯定都扫过盲 “Garbage Collection” 垃圾收集。接着你就要去看我们前几天刚学完的几篇内容了。有了那些个基础再看 GC 才能更有价值，不然这篇对你来说，还只是个扫盲文章。</p>
+</blockquote>
+<p>目录：</p>
+<ol>
+<li>根结点枚举</li>
+<li>安全点<ul>
+<li>啥是安全点？</li>
+<li>安全点在哪？</li>
+<li>怎么到达安全点？</li>
+<li>安全区域又是啥？</li>
+</ul>
+</li>
+<li>啥是记忆集？</li>
+<li>卡表是啥？</li>
+<li>啥是写屏障？</li>
+<li>虚共享又是啥？</li>
+<li>三色标记你应该是知道了，来看看它的一个严重问题吧。</li>
+</ol>
+<h2 id="垃圾收集器的具体实现"><a href="#垃圾收集器的具体实现" class="headerlink" title="垃圾收集器的具体实现"></a>垃圾收集器的具体实现</h2><blockquote>
+<p>这部分的内容，笔者点到为止，觉得看的不爽的欢迎进群一起讨论。因为不确定的东西我不能写出来误导别人，要做一个将笔德的作者。</p>
+</blockquote>
+<p>此时我正站在周老师的肩上高歌 ”HotSpot 是这么实现的垃圾收集器！“</p>
+<h3 id="根节点枚举"><a href="#根节点枚举" class="headerlink" title="根节点枚举"></a>根节点枚举</h3><p>通过上一篇的内容我们知道了一些可以固定作为 GC Roots 的内容，他们包括静态变量、常量、方法运行时上下文。我们也知道了可达性分析算法 <em>（这里如果不清楚的请参考笔者前两篇文章内容）</em> 。不过运行时这么多引用，全部都扫描一遍这啥虚拟机也受不了啊，GC 2秒钟，扫描8小时啊。</p>
+<p>所以就有了第一阶段的根结点枚举，这一步就是直接扫描与 GC Roots 直接相关的那部分内容。这一步的操作需要 “Stop The World”（Stop The World 就是用来形容在安全点用户线程暂停的这种状态的一个叫法，关于安全点接下来就会提到）。</p>
+<p>可达性分析时，并不会全部的挨个扫描执行上下文和全局引用。在 HotSpot 中，有一个叫做 OopMap 的数据结构，专门存放着引用信息，这个普通对象指针是在类加载和即时编译时分别将全局引用和执行上下文<strong>特定</strong>的相关位置记录下来的。 （这地方与后面的内容有关，记一下）</p>
+<blockquote>
+<p>OopMap（ Ordinary Object Pointer）  点到为止，这部分内容可以根据代码的编译结果看到，感兴趣的可以研究研究。图片来自《深入理解 Java 虚拟机》3.4.1 代码清单 3-3</p>
+<p><img src="https://i.loli.net/2020/12/27/AmY8cHEMjNKWJ5r.png" alt="OopMap"></p>
+</blockquote>
+<h3 id="安全点"><a href="#安全点" class="headerlink" title="安全点"></a>安全点</h3><p>通过上面我们知道 GC 要做的事是通过 OopMap 找出来那些被引用的对象，而这个 OopMap 里面存了两种数据，一部分是全局引用，这好说，类加载的时候怼上，不会变了。那执行上下文怎么办？那一个个方法的调用，一个个栈帧，栈帧里又那么多变量 <em>（这部分内容在前面已经学过了，如果不清楚可以回到前面文章复习）</em> 。如果把全部的字节码指令全部都存下来那不疯了？所以 hotspot 没疯，它只存了一些特定的位置把这个信息记到 OopMap 中。在程序执行过程中会有多个这样的特定位置，这些特定的位置就被称为 <strong>安全点</strong> 。</p>
+<h4 id="在安全点才能-GC"><a href="#在安全点才能-GC" class="headerlink" title="在安全点才能 GC"></a>在安全点才能 GC</h4><p>有了安全点我们就应该知道了，GC 不是任何时候都能做的。必须要等到程序到达安全点之后才能做。为啥应该不难理解吧，两个安全点之间如果你执行了 GC ，是不是会导致一部分执行上下文相关的引用你不知道，因为 OopMap 里面只存了最近一个安全点内的指令内容。</p>
+<h4 id="安全点在哪"><a href="#安全点在哪" class="headerlink" title="安全点在哪"></a>安全点在哪</h4><p>明白了这个必须等到安全点才能 GC 之后，又有新的问题了，（ GC 做一次真是太难了）你说这个安全点，你放多少个合适，间隔又要多少才合理，放远了吧，半天半天不能做一次 GC ，放近了吧倒是随时想做就能做，但是你要知道这个安全点也是一条指令啊，那插入那么多额外的指令到程序中你觉得合适吗？而且这玩应也要存储啊不是 OopMap 了解一下。于是 hotspot 的开发者就研究。最后来有了一个比较银杏的解决办法。</p>
+<p>因为一般指令执行的时间很短，所以这个解决办法就是，在一些长时间执行的部分给它怼一个安全点，防止程序长时间执行我没办法 GC ，根据长时间执行的特征，有些地方就显而易见的被选出来祭天了，它们是 <code>方法调用</code> 、<code>循环回边处</code> 、<code>异常跳转</code></p>
+<h4 id="怎么到达安全点"><a href="#怎么到达安全点" class="headerlink" title="怎么到达安全点"></a>怎么到达安全点</h4><p>现在我们知道了 GC 需要通过 OopMap 找到 GC Roots 中的相关引用，又知道了要在安全点的时候暂停的时候开始找这些引用，但又有问题了，我知道 GC 要在线程执行到安全点的时候暂停，可怎么才能让每一个线程到达最近的安全点上，并且暂停呢？</p>
+<p>两种办法，虚拟机强行等你到安全点，还有一种就全凭自觉。</p>
+<p>什么叫虚拟机强行等你到安全点呢，他还有个名字叫 <strong>Preemptive Suspension</strong>，就是 <code>先发制人</code>（抢先式中断） 。虚拟机直接中断用户线程，然后看你到没到安全点，没到继续跑，然后在中断。再看再跑再看再跑，直到全部线程都到达安全点，over 任务完成。</p>
+<p>相比虚拟机怼我到安全点，我还不如自觉点  **Voluntary Suspension  ** <code>主动式中断</code> 。虚拟机会发出一个安全点集合信号，所有线程轮询这个集合信号，一旦信号为真时，当前线程会在最近的一个安全点到达时挂起。</p>
+<p>人生苦短，我选自觉。现在大部分虚拟机都是选的自觉方式来到达安全点。毕竟先发制人太不讲武德了。</p>
+<blockquote>
+<p>点到为止内容，就是线程的这个轮询操作的实现。因为需要频繁执行，且高效。HotSpot 只使用了一条汇编指令实现了这个操作。</p>
+<p><code>test %eax,0x160100</code> 当需要暂停用户线程时， 虚拟机把0x160100的内存页设置为不可读， 那线程执行到test指令时就会产生一个自陷异常信号， 然后在预先注册的异常处理器中挂起线程实现等待。</p>
+</blockquote>
+<h3 id="安全区域"><a href="#安全区域" class="headerlink" title="安全区域"></a>安全区域</h3><p>这部分可以算是安全点的扩展，因为程序执行过程中，不能保证线程全部都在运行状态，或等待或阻塞等等，所以就有了安全区域的概念，这部分区域内容标志着在这个区域中，对象的引用关系不会发生改变。不会影响 GC 正常进行，当用户线程执行到安全区域后会标志自己现在在安全区域， GC 不要管我，等到用户线程从安全区域出来的时候要和 GC 打招呼，“GC 你完事了吗？我要出来了” 如果这个时候没有 GC 动作，那你就可以出来了，如果这个时候在 根结点枚举 阶段，或在收集过程需要用户线程暂停的阶段，那么用户线程就需要等待，知道 GC 结束才能从安全区域出来。</p>
+<h3 id="记忆集（Remembered-Set）"><a href="#记忆集（Remembered-Set）" class="headerlink" title="记忆集（Remembered Set）"></a>记忆集（Remembered Set）</h3><p>上面的 GC 过程，在只有新生代内存被使用，老年代没有使用的时候还是没问题的，但是一旦出现之前文章提到过的跨代引用问题，就需要考虑了，跨代引用是指老年代中存在引用新生代对象的指针。为了解决对象跨代引用所带来的问题，垃圾收集器在新生代中建立了名为记忆集（Remembered Set）的数据结构，一种用于记录从非收集区域指向收集区域的指针集合的抽象数据结构。这个在后面不光用在了这种只有新生代和老年代的收集器中，后面的区域收集器也会用到。</p>
+<blockquote>
+<p>区域收集器指的是 G1 ，ZGC 还有 Shenandoah收集器这种。</p>
+</blockquote>
+<h3 id="卡表（Card-Table）"><a href="#卡表（Card-Table）" class="headerlink" title="卡表（Card Table）"></a>卡表（Card Table）</h3><p>有了记忆集的概念之后，就考虑怎么保存含有跨代引用的信息，可以将有跨代引用的对象全部保存下来，但是这样做太占内存，而且维护起来也不方便。于是有一种较好的记录方案，就是按区域划分内存，将有跨代引用的那部分内存区域记录下来，这种实现方式称为 “卡表”。</p>
+<p>HotSpot 将整个堆划分为一个个大小为 512 字节的卡页，维护成一个卡表，每个卡表的大小默认为 1 个字节用来存储每张卡的一个标识位0或者1。这个标识位代表对应的卡<strong>是否可能存有指向新生代对象的引用</strong>。如果可能存在，那么这张卡就是 <strong>脏卡</strong>。在 GC 的时候，只需要筛选脏卡对应内存区域中的对象就好了，不需要扫描全部的对象。</p>
+<blockquote>
+<p>注意不要搞混记忆集与卡表的概念，一个是定义的数据结构，另一个是具体的实现方法。</p>
+</blockquote>
+<h3 id="写屏障"><a href="#写屏障" class="headerlink" title="写屏障"></a>写屏障</h3><p>知道了用卡表来解决跨代或跨内存区域的问题，当某个卡页可能存在跨代引用时就会变脏，那这个变脏的过程是怎么样的呢？又是怎么实现的呢？</p>
+<p>正常情况下，卡表变脏的时机是当前区域中的对象中，引用了其他区域的对象，此时更新这张表为脏表。如果解释执行，一条条执行下去可以，虚拟机可以根据变量赋值的指令来判断，进行相应的操作，但是在即时编译过程中，这个就需要一些对应的机器指令操作了。在HotSpot虚拟机里是通过写屏障（Write Barrier）技术来维护卡表状态的。<strong>与 volatile 的重排序屏障指令不同！！！</strong></p>
+<p>这个写屏障的具体实现分为两个，一个叫做写前屏障，一个叫做写后屏障。他们的操作类似 AOP ，他们可以在一个变量赋值操作前后做出一个通知。在 hotspot 中大多使用了写后屏障。这样就可以在变量赋值操作之后，将其对应的卡表更新为脏表。</p>
+<h3 id="虚共享"><a href="#虚共享" class="headerlink" title="虚共享"></a>虚共享</h3><p>写屏障带来了一个问题，这个问题是由 CPU 引起的，现在的 CPU 缓存中都是有一个个缓冲行保存的数据，在多核处理器的情况下，可能存在多个线程共享一个缓冲行的情况，比如一个缓冲行的大小是 32 kb，那么一张存有 64 张卡页的卡表（64 * 512字节）就有可能在同一个缓冲行上面。为了解决多个线程同时更新同一个缓冲行浪费的性能开销。hotspot 在更新卡表状态时，加入了一个当前卡表是否为脏表的判断，如果是脏表就不再进行更新操作。</p>
+<blockquote>
+<p>在JDK 7之后，HotSpot虚拟机增加了一个新的参数-XX：+UseCondCardMark，用来决定是否开启卡表更新的条件判断。开启会增加一次额外判断的开销，但能够避免伪共享问题，两者各有性能损耗，是否打开要根据应用实际运行情况来进行测试权衡。</p>
+</blockquote>
+<h3 id="并发的可达性分析"><a href="#并发的可达性分析" class="headerlink" title="并发的可达性分析"></a>并发的可达性分析</h3><p>上面已经对整个垃圾回收过程涉及的细节过了一遍，接下来就要看看其中的重头戏，可达性分析算法了，也就是上面一直说的扫描扫描的内各。</p>
+<p>我们知道可达性分析算法是需要暂停用户线程才能够使用，就是需要 Stop The World ，根结点枚举这一步的暂停时间虽然很短，但是还是要暂停的，同时这个暂停的时候会随着系统的对象的增长而增长，程正比关系。</p>
+<h4 id="三色标记"><a href="#三色标记" class="headerlink" title="三色标记"></a>三色标记</h4><p>可达性分析算法的描述目前都是采用三色标记来辅助理解的。</p>
+<blockquote>
+<p>希望这块的内容能够和之前的 finalize 方法联系起来，还记得之前文章中我们提到的自己救自己一次的那个地方吗，待会可以倒过去看一看，这可以帮助你加深这块的理解，当然也只有我才会给你说这么细的提醒</p>
+</blockquote>
+<ul>
+<li>白色：死亡的颜色，即没有引用的对象。只会发生在 GC 开始标记工作之前（还没开始标记，大家都是白色），和 GC 工作之后（标记完了，就你是白色）</li>
+<li>黑色：GC 已经开始工作到过这里，而且确认这个节点存活，其存在有效的引用，即这个对象的引用也全都扫描过。被黑色节点引用的对象一定可以活下来。可达性分析算法对已经是黑色的节点，不会在进行扫描（重要，后面理解三色标记的问题会用到）</li>
+<li>灰色：GC 已经开始工作到过这里，但这个对象上至少还有一个引用没有扫描。</li>
+</ul>
+<h4 id="并发标记的问题"><a href="#并发标记的问题" class="headerlink" title="并发标记的问题"></a>并发标记的问题</h4><blockquote>
+<p>周老师《深入理解 Java 虚拟机》（第三版）3.4.6插图</p>
+<p>此例子中的图片引用了Aleksey Shipilev在DEVOXX 2017上的主题演讲：《Shenandoah GC Part I：The Garbage Collector That Could》。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/12/27/ra2CyMjoImEqRVx.jpg" alt="标记示意图"></p>
+<p>上图最后两个情况说明了在并发阶段的标记问题。因为并发标记是指 GC 的工作线程与用户线程并发执行，所以就会出现一边标记一边改变对象引用的情况。</p>
+<p>并发标记会出现两类问题，一类是漏标，一类是误标。漏标是指某个应该为白色的对象没有被标记成白色，这种问题一般不会有太大影响。最多浪费一部分内存在下一次 GC 时将其再次标记回收。而另一类问题就是误标。这两个问题在上图的最后两个里面可以体现出来。</p>
+<p>误标的危害是很严重的，如果一个正在引用的对象，被误标记成了白色。那么 GC 结束之后这个对象被清除，可能直接导致系统崩溃。</p>
+<p>这个问题的出现原因有被证实过，当且仅当满足以下两点时才会出现误标的情况</p>
+<ol>
+<li>赋值器插入一条以上由黑色节点指向白色节点的引用</li>
+<li>赋值器删除了灰色节点直接或间接到达白色节点的全部引用</li>
+</ol>
+<p>通过这两个情况，我们也不难理解误标的产生，因为黑色节点的规则是不会在扫描，而灰色则是会再进行扫描。所以对应的解决办法也比较清晰，只需要不要让以上两个条件同时满足即可。HotSpot 针对以上两点分别使用了<strong>增量更新</strong>和<strong>原始快照</strong>两种解决方案。</p>
+<p>增量更新的意思是指，如果一个引用关系是从黑色节点指向白色节点，那么就需要在并发标记结束对这些个黑色节点作为根节点，重新进行扫描，即黑色节点发生新的引用关系后，其会变成灰色节点。（CMS 收集器中的重新标记使用的这种方案）</p>
+<p>原始快照指的是，如果一个灰色节点删除了指向白色节点的引用，那么需要将这个删除的引用记录下来，在并发标记结束对这个记录的引用关系中灰色节点作为根结点重新扫描。无论这个对象是否删除了，都会重新再扫描一次。（G1 的最终标记使用的这种方案）</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我相信，你现在对 GC 已经不再陌生了吧，至少我不陌生了，我们在一起回顾一下这篇文章的内容。</p>
+<p>上来我们就先介绍了一下 <strong>GC 的概念</strong>，接着我们说到了 GC 开始阶段是需要通过 Stop The World 做一次根结点直达的扫描过程，这个扫描过程是有 <strong>OopMap</strong> 的加持，所以不会扫描全部的具体对象。</p>
+<p>随之我们又通过 OopMap 引出了<strong>安全点</strong>和<strong>安全区域</strong>的概念，安全点是为了帮助 GC 完成停顿这个步骤，而且其是靠插入指令代码来完成的，为了权衡 GC 时间和指令的开销，一般是在 <code>方法调用、循环回边处、异常抛出</code> 的特殊位置来插入安全点指令。</p>
+<p>接着线程在安全点是如何暂停的，我们了解到了先发制人（<strong>抢先式</strong>）和主动式中断两种方式，hotspot 选择的是主动式主动，由线程自己挂起来完成暂停操作。</p>
+<p>之后我们由跨代引用问题知道了<strong>记忆集</strong>的概念以及 hotspot 中记忆集的实现，<strong>卡表</strong>，的一些内容。为了维护卡表的状态，何时变脏，我们又一次的学习了新的内容 <strong>写屏障</strong>，而写屏障在当代的CPU中又存在一个<strong>虚共享</strong>问题，接着我们知道了HotSpot 是使用条件判断来规避这个问题的。</p>
+<p>最后我与你分享了GC在扫描过程中的并发问题，以及在不同收集器中的解决方案。如果你对这篇文章内容有什么问题，或者不清楚有异议的地方欢迎关注或者加我微信为我指出。（lvgocc）</p>
+<p>（正文完）</p>
+<hr>
+<p>如果觉得写的还不错，欢迎关注催更收藏点赞转发推荐给更多的人，如果想一起系统学习的话，非常欢迎加群一起讨论学习。下一篇是 hotspot 中所使用的各种垃圾收集器的内容，其中会对 <strong>CMS</strong> 和 <strong>G1</strong>着重说明，记得关注可以第一时间收到推文。</p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
 </search>

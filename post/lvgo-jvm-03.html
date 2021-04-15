@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="new....">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      JVM 中对象咋创建啊，又怎么访问啊 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>JVM 中对象咋创建啊，又怎么访问啊</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-24</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/12/24/NxJUsyce3If1wdh.png" alt="对象的创建与访问"></p>
+<h2 id="JVM-中对象咋创建啊，又怎么访问啊"><a href="#JVM-中对象咋创建啊，又怎么访问啊" class="headerlink" title="JVM 中对象咋创建啊，又怎么访问啊"></a>JVM 中对象咋创建啊，又怎么访问啊</h2><blockquote>
+<p>虚拟机遇到 new 指令，会根据指令参数去常量池找对应类的符号引用，如果没找到会进行类加载，此时会执行类构造器指令<clinit>。类加载完成之后，初始化之前，开始进行对象内存分配，分配好之后将内存区域的值全部置为0（成员变量初始化），之后执行实例构造器指令 <init>，完成后返回对象引用。</p>
+</blockquote>
+<h3 id="对象是怎么完成创建的？"><a href="#对象是怎么完成创建的？" class="headerlink" title="对象是怎么完成创建的？"></a>对象是怎么完成创建的？</h3><p>对象的创建一共有四种方式</p>
+<ul>
+<li>new 关键字</li>
+<li>复制（clone操作）</li>
+<li>序列化（另类操作）</li>
+<li>反射（另类）</li>
+</ul>
+<h4 id="※new-关键字创建普通-java-对象的过程"><a href="#※new-关键字创建普通-java-对象的过程" class="headerlink" title="※new 关键字创建普通 java 对象的过程"></a>※new 关键字创建普通 java 对象的过程</h4><ol>
+<li>在常量池中查找类信息（根据全部限定名），如果没有先进行类加载（后面在虚拟机执行章节中有具体的加载过程笔记），然后检验其是否被初始化（这个初始化是指的类初始化，也就是执行<clinit>）过</li>
+<li>类加载完成确定类的内存大小</li>
+<li>在新生代分配内存</li>
+<li>执行构造函数，返回引用地址</li>
+</ol>
+<p>简单总结：类初始化 - 分配内存 - 实例初始化 - 返回引用地址</p>
+<p><em>多学一点，这里的几个步骤涉及多个指令操作，所以就有了 DCL 单例使用 volatile 来禁止指令重排来保证单例模式的实例同步</em></p>
+<blockquote>
+<p>class 文件中的 static 关键字修饰的方法或变量成为类变量，没有被 static 修饰的部分称为实例变量</p>
+</blockquote>
+<p><strong>下面是对象创建细节的拆分</strong></p>
+<h4 id="怎么分配内存"><a href="#怎么分配内存" class="headerlink" title="怎么分配内存"></a>怎么分配内存</h4><ul>
+<li><p>指针碰撞</p>
+<p>如果内存中现有的分配情况为整齐分布，则会有一个 <em>分界点指示器</em> 在 <em>已用内存</em> 和 <em>未用内存</em> 之间。对于这种情况，只需要将该指示器的位置向后移动当前对象的内存大小位置即可。</p>
+</li>
+<li><p>空闲列表</p>
+<p>更多情况下，内存的使用是不连续的，所以在 JVM 中有一个对于当前内存情况管理的一个列表，称为 <em>空闲列表</em> ，可以通过查询该表来完成对象的内存的分配。</p>
+</li>
+</ul>
+<p>使用 <strong>指针碰撞</strong> 的前提是堆内存空间完整，而内存空间完整的前提是垃圾收集器是否有空间压缩整理能力。</p>
+<p><em>Serial</em> 和 <em>ParNew</em> 垃圾回收器是带有压缩整理能力的，其可以使用指针碰撞的分配方式</p>
+<p><em>CMS</em> 是不具有压缩整理能力的，所以其使用的是空闲列表方式，但在 <em>CMS</em> 垃圾回收器中，它仍然可以使用类似 <code>指针碰撞</code> 的功能，其在空闲列表中申请内存时会申请较大的一块区域，然后对这块区域是 <code>指针碰撞</code> 来分配。</p>
+<p><em>注：指针碰撞在极客时间郑雨迪的《深入拆解Java虚拟机》中翻译成指针加法</em></p>
+<blockquote>
+<p>我猜测会有留言问为什么不把 bump the pointer 翻译成指针碰撞。这里先解释一下，在英语中我们通常省略了 bump up the pointer 中的 up。在这个上下文中 bump 的含义应为“提高”。另外一个例子是当我们发布软件的新版本时，也会说 bump the version number。</p>
+</blockquote>
+<h4 id="内存分配的并发问题"><a href="#内存分配的并发问题" class="headerlink" title="内存分配的并发问题"></a>内存分配的并发问题</h4><p>由于多线程情况，有可能刚申请的内存被其他线程提前写入，导致内存分配出现问题。所以 JVM 提出了两种解决方案。</p>
+<ol>
+<li>使用 CAS + 失败重试；</li>
+<li>为本地线程分配缓冲区 <em>TLAB</em> （通过参数可选 -Xx : - UseTLAB）缓冲区用完之后在使用 CAS + 失败重试分配内存；</li>
+</ol>
+<blockquote>
+<p>TLAB : 线程需要维护两个指针（实际上可能更多，但重要也就两个），一个指向 TLAB 中空余内存的起始位置，一个则指向 TLAB 末尾。接下来的 new 指令，便可以直接通过指针加法（bump the pointer）来实现，即把指向空余内存位置的指针加上所请求的字节数。如果加法后空余内存指针的值仍小于或等于指向末尾的指针，则代表分配成功。否则，TLAB 已经没有足够的空间来满足本次新建操作。这个时候，便需要当前线程重新申请新的 TLAB。</p>
+</blockquote>
+<h4 id="使用内存"><a href="#使用内存" class="headerlink" title="使用内存"></a>使用内存</h4><p>内存分配完之后， JVM 会将这部分区域的值置为0（这就是基本数据类型的默认值的实现），如果使用的是本地线程缓冲区的方案，在分配缓冲区时即已经置为了0，然后开始设置对象头的信息，包括类信息、元数据地址、GC分代年龄、偏向锁等信息，其中哈希值延迟到调用时才会计算并设置。</p>
+<p>至此对象在内存中”完成创建”，但此时的对象并不能使用，接着会继续执行构造函数中的内容，来完成对象程序中的初始化步骤，构造函数执行结束后，对象完成创建。</p>
+<p><em>注：以上对象创建过程代码在 hotspot 虚拟机 bytecodeInterpreter.cpp  line:2179</em></p>
+<h3 id="对象在内存中都存了什么？"><a href="#对象在内存中都存了什么？" class="headerlink" title="对象在内存中都存了什么？"></a>对象在内存中都存了什么？</h3><ul>
+<li>对象头</li>
+<li>实例数据</li>
+<li>对齐填充</li>
+</ul>
+<h4 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h4><ol>
+<li>MarkWord —— 对象自身运行时数据</li>
+<li>类型指针 —— 对象的类型元数据指针</li>
+<li>数组长度 —— 如果是数组对象的话</li>
+</ol>
+<p><strong>MarkWord</strong></p>
+<ul>
+<li>哈希码</li>
+<li>GC分代年龄</li>
+<li>锁标志</li>
+<li>线程持有的锁</li>
+<li>偏向锁持有线程ID</li>
+<li>偏向时间戳</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>存储内容</th>
+<th>锁标志</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>哈希码、分代年龄</td>
+<td>01</td>
+<td>未锁定</td>
+</tr>
+<tr>
+<td>指向锁记录的指针</td>
+<td>00</td>
+<td>轻量级锁</td>
+</tr>
+<tr>
+<td>指向重量级锁的指针</td>
+<td>10</td>
+<td>重量级锁</td>
+</tr>
+<tr>
+<td>空</td>
+<td>11</td>
+<td>GC标记</td>
+</tr>
+<tr>
+<td>持有偏向锁的线程ID、时间戳</td>
+<td>01</td>
+<td>偏向锁</td>
+</tr>
+</tbody></table>
+<p><strong>类型指针</strong></p>
+<p>JVM 通过类型指针来确定当前对象的类型。这个类型指针指向方法区中该对象的元空间数据。</p>
+<p><strong>数组长度</strong></p>
+<p>之所以会单独区分出数组的长度信息，是因为 JVM 无法通过类的元空间数据得出对象的大小，所以单独记录数组对象的长度信息在对象头中。</p>
+<p><em>HotSpot虚拟机代表Mark Word中的代码（markOop.cpp）注释片段，它描述了32位虚拟机MarkWord的存储布局</em></p>
+<h4 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h4><p>无论是从父类继承下来的，还是在子类中定义的字段存储顺序会受到虚拟机分配策略参数</p>
+<p><strong>（-XX：FieldsAllocationStyle参数）</strong> 和字段在Java源码中定义顺序的影响。</p>
+<p>HotSpot虚拟机默认的分配顺序为</p>
+<ol>
+<li>longs/doubles</li>
+<li>ints</li>
+<li>shorts/chars</li>
+<li>bytes/booleans</li>
+<li>oops（Ordinary Object Pointers，OOPs）</li>
+</ol>
+<p>从以上默认的分配策略中可以看到，相同宽度的字段总是被分配到一起存放，在满足这个前提条件的情况下，在父类中定义的变量会出现在子类之前。</p>
+<p>如果HotSpot虚拟机的 <strong>+XX：CompactFields</strong> 参数值为true（默认就为true），那子类之中较窄的变量也允许插入父类变量的空隙之中，以节省出一点点空间。</p>
+<h4 id="对齐填充"><a href="#对齐填充" class="headerlink" title="对齐填充"></a>对齐填充</h4><p>hotspot 实现的虚拟机，对对象的起始地址有要求，需要是8字节的整数倍，所以对象的大小就必须是8字节的整数倍，如果不足便需要通过占位符来补充至8字节的倍数。</p>
+<h3 id="怎么在内存中定位访问一个对象？"><a href="#怎么在内存中定位访问一个对象？" class="headerlink" title="怎么在内存中定位访问一个对象？"></a>怎么在内存中定位访问一个对象？</h3><p>Java 程序通过栈上的 reference 数据来操作堆上的对象。</p>
+<p>《Java虚拟机规范》没有说明和约束 reference 的实现方式，所以具体的实现由虚拟机决定。</p>
+<p>通常由下面两种方式实现</p>
+<h4 id="句柄"><a href="#句柄" class="headerlink" title="句柄"></a>句柄</h4><p>句柄保存在句柄池中</p>
+<p>句柄保存对象数据的地址和对象类型信息的地址，多进行一次操作。但在 GC 做标记-整理操作时，无需关心对象内存地址的信息变化。</p>
+<h4 id="直接指针"><a href="#直接指针" class="headerlink" title="直接指针"></a>直接指针</h4><p>保存对象的数据信息和对象类型信息的地址，可以直接访问到对象数据。当需要使用类信息的时候，需要在进行一次查找。</p>
+<p><img src="https://i.loli.net/2020/12/24/KsRq1Lk9e4pmxYC.jpg" alt="句柄"></p>
+<p><img src="https://i.loli.net/2020/12/24/CtlidYOgJ4VweTn.jpg" alt="直接指针"></p>
+<blockquote>
+<p>图片来自《深入理解 Java 虚拟机》（第三版）周志明</p>
+</blockquote>
+<p>（正文完）</p>
+<p>下一篇学习对象是怎么回收的，非常欢迎关注加群一起学习，一起学劲儿大！</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-jvm-02.html">
+        <span class="nav-arrow">← </span>
+        
+          你创建的Java对象搁哪了？
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-jvm-04.html">
+        
+          JVM 是怎么把“送”出去的内存又“要”回来的
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '127fc08ef2d12e97c5441bb90f9669ec',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#JVM-%E4%B8%AD%E5%AF%B9%E8%B1%A1%E5%92%8B%E5%88%9B%E5%BB%BA%E5%95%8A%EF%BC%8C%E5%8F%88%E6%80%8E%E4%B9%88%E8%AE%BF%E9%97%AE%E5%95%8A"><span class="toc-nav-text">JVM 中对象咋创建啊，又怎么访问啊</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%8C%E6%88%90%E5%88%9B%E5%BB%BA%E7%9A%84%EF%BC%9F"><span class="toc-nav-text">对象是怎么完成创建的？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E2%80%BBnew-%E5%85%B3%E9%94%AE%E5%AD%97%E5%88%9B%E5%BB%BA%E6%99%AE%E9%80%9A-java-%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-nav-text">※new 关键字创建普通 java 对象的过程</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E6%80%8E%E4%B9%88%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="toc-nav-text">怎么分配内存</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%9A%84%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="toc-nav-text">内存分配的并发问题</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8%E5%86%85%E5%AD%98"><span class="toc-nav-text">使用内存</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E9%83%BD%E5%AD%98%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-nav-text">对象在内存中都存了什么？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%A4%B4"><span class="toc-nav-text">对象头</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%9E%E4%BE%8B%E6%95%B0%E6%8D%AE"><span class="toc-nav-text">实例数据</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AF%B9%E9%BD%90%E5%A1%AB%E5%85%85"><span class="toc-nav-text">对齐填充</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%8E%E4%B9%88%E5%9C%A8%E5%86%85%E5%AD%98%E4%B8%AD%E5%AE%9A%E4%BD%8D%E8%AE%BF%E9%97%AE%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%EF%BC%9F"><span class="toc-nav-text">怎么在内存中定位访问一个对象？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%8F%A5%E6%9F%84"><span class="toc-nav-text">句柄</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E9%92%88"><span class="toc-nav-text">直接指针</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-jvm-03.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

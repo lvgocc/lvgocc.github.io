@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="CAFEBABE">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      你说那 class 文件里边都是啥 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>你说那 class 文件里边都是啥</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2021-01-10</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2021/01/10/tbYrUAgcL3fhyVH.png"></p>
+<h3 id="开往虚拟机的车已经出发，关注上车"><a href="#开往虚拟机的车已经出发，关注上车" class="headerlink" title="开往虚拟机的车已经出发，关注上车"></a>开往虚拟机的车已经出发，关注上车</h3><h2 id="CLASS文件的结构"><a href="#CLASS文件的结构" class="headerlink" title="CLASS文件的结构"></a>CLASS文件的结构</h2><blockquote>
+<p>我相信你一定打开过 class 文件，你看到的也是下面这个样子，不过这里面都是啥？今天我们一起好好看看。</p>
+</blockquote>
+<h2 id="CLASS文件的结构-1"><a href="#CLASS文件的结构-1" class="headerlink" title="CLASS文件的结构"></a>CLASS文件的结构</h2><ol>
+<li>魔数</li>
+<li>版本号</li>
+<li>常量池</li>
+<li>字段表集合</li>
+<li>方法表集合</li>
+<li>属性表集合</li>
+</ol>
+<p>我相信你一定打开过 class 文件，你看到的也是下面这个样子，不过这里面都是啥？今天我们一起好好看看。（如果不方便看的话，可以在文章末尾关注我的公众号，在手机上阅读）</p>
+<p><img src="https://i.loli.net/2021/01/10/3oGNDJpU91xnfLM.png"></p>
+<blockquote>
+<p>如果上图不方便看的话，可以在文章末尾关注我的公众号，在手机上阅读</p>
+</blockquote>
+<h2 id="属性表"><a href="#属性表" class="headerlink" title="属性表"></a>属性表</h2><p>首先属性表是用来补充信息用的，比如他可以继续补充类文件的信息、就是我们上面最后的那一段内容，还有他可以补充字段的信息，补充方法的信息。所以它出现的位置不同，补充的额外信息也会不一样。</p>
+<p>下面我们 <strong>简单</strong> 的了解一下都有哪些 <strong>主要</strong> 的内容，之所以要简单、要了解主要的，就是因为它保存的额外信息实在太多了。</p>
+<p>属性表的结构是由 2 个字节的属性名索引，4 个字节的属性内容长度，和 1 个字节的属性信息组成。</p>
+<p>按照属性的类别可以分为：类文件属性、字段表属性、方法表属性</p>
+<h3 id="类文件属性"><a href="#类文件属性" class="headerlink" title="类文件属性"></a>类文件属性</h3><h4 id="InnerClass"><a href="#InnerClass" class="headerlink" title="InnerClass"></a>InnerClass</h4><p>保存主类和内部类的关系</p>
+<h4 id="SourceFile"><a href="#SourceFile" class="headerlink" title="SourceFile"></a>SourceFile</h4><p>记录生成这个Class文件的源码文件名称</p>
+<h3 id="方法表属性"><a href="#方法表属性" class="headerlink" title="方法表属性"></a>方法表属性</h3><h4 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h4><p>Java 程序方法体里面的代码经过 Javac 编译器处理之后， 最终变为字节码指令存储在Code属性内。并非所有的方法表都必须存在这个属性， 接口或者抽象类中的方法就不存在Code属性 。</p>
+<p>code 属性里面还有属性表…. （套娃啊），其中包含</p>
+<ul>
+<li>LineNumberTable 源码和生成的字节码行号映射表</li>
+<li>LocalVariableTable 栈帧中的变量与源码变量的映射关系</li>
+<li>ExceptionTable 异常表</li>
+<li>…..</li>
+</ul>
+<h4 id="Exceptions"><a href="#Exceptions" class="headerlink" title="Exceptions"></a>Exceptions</h4><p>Exceptions属性的作用是列举出在throws关键字后面抛出的异常</p>
+<h4 id="MethodParameters"><a href="#MethodParameters" class="headerlink" title="MethodParameters"></a>MethodParameters</h4><p>定义方法的参数信息</p>
+<h3 id="字段表属性"><a href="#字段表属性" class="headerlink" title="字段表属性"></a>字段表属性</h3><h4 id="ConstantValue"><a href="#ConstantValue" class="headerlink" title="ConstantValue"></a>ConstantValue</h4><p>这个属性用于为字段的静态变量赋值。只有字段声明为 static 时才有效。Javac 编译器在编译的时候，如果遇到 static 和 final 同时修饰的 基本类型或String 类型变量，会直接在 ConstantValue 属性进行字段初始化。也就是我们说的常量。如果没有 final 修饰，或者不是基本类型和 String 类型，则会在类初始化方法执行的时候初始化  <code>&lt;clinit&gt;</code></p>
+<h3 id="通用属性"><a href="#通用属性" class="headerlink" title="通用属性"></a>通用属性</h3><h5 id="Deprecated"><a href="#Deprecated" class="headerlink" title="Deprecated"></a>Deprecated</h5><p>Deprecated属性用于表示某个类、 字段或者方法被弃用</p>
+<p>关于属性表的内容还有很多，我只了解了一些基本常见的，这部分内容在周老师书里还是比较全的。想继续了解的可以在书中 6.3.7 章节找到更多内容。</p>
+<p>（正文完）</p>
+<hr>
+<p>如果觉得写的还不错，可以关注点赞在看支持我，如果想一起学习的话，非常欢迎加群一起学习。</p>
+<h2 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485295&amp;idx=1&amp;sn=ebb76f06a0998e12a16d817392de0f7e&amp;chksm=fc6bee89cb1c679f6ef3e0a5327cf0e19d2f833bdec2eb4c3cb7edd233a6d5b66ff3ad39c5eb&token=1494472137&lang=zh_CN#rd">到底是谁在回收 JVM 的垃圾</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485282&amp;idx=1&amp;sn=abde86f06e82c63858d60960b3122fa7&amp;chksm=fc6bee84cb1c67927e360626ac0c1822d8f5e77de14c097989dcbab052028f05ffc24ed93d63&token=1303129454&lang=zh_CN#rd">天天听人家说的 GC 到底是个啥？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485226&amp;idx=1&amp;sn=5b8ed2e5d06899ff2d7d931f9d964d70&amp;chksm=fc6beecccb1c67da4b405fa8c8c69878958b56d9291bdf8067b4bbf8c137b0194a0cae14e622&token=1941800665&lang=zh_CN#rd">你创建的 Java 对象搁哪了</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485249&amp;idx=1&amp;sn=589495ebea994d2ac91110d9bdcf5326&amp;chksm=fc6beea7cb1c67b17258a7da71a36f00b0386b68f7d25d53949ac7de7be5f3f74d3a205e439b&token=1941800665&lang=zh_CN#rd">JVM 中对象咋创建啊，又怎么访问啊</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485273&amp;idx=1&amp;sn=ca06732e3ce9853446993618ca06a154&amp;chksm=fc6beebfcb1c67a9bee28a755e15a31fb62b87d48e2a795a15765d82595525ce49fc3cb95fee&token=1941800665&lang=zh_CN#rd">JVM 把内存”收“回来用的是什么法器</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU2MjM2NDU1Mw==&amp;mid=2247485257&amp;idx=1&amp;sn=ca53d2e3a29f1a05bcd4b5fd7ec271fc&amp;chksm=fc6beeafcb1c67b9e0b33ea8d59e6d5e9d386f0ef38ef2a3329bb0f1dfabeb5103854a2f2160&token=1941800665&lang=zh_CN#rd">JVM 是怎么把“送”出去的内存又“要”回来的</a></li>
+</ul>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-jvm-07.html">
+        <span class="nav-arrow">← </span>
+        
+          到底是谁在回收 JVM 的垃圾
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-jvm-09.html">
+        
+          Java 类的一生
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '75fbe349829d88354d2d42d261dd3de2',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%BC%80%E5%BE%80%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E8%BD%A6%E5%B7%B2%E7%BB%8F%E5%87%BA%E5%8F%91%EF%BC%8C%E5%85%B3%E6%B3%A8%E4%B8%8A%E8%BD%A6"><span class="toc-nav-text">开往虚拟机的车已经出发，关注上车</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CLASS%E6%96%87%E4%BB%B6%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-nav-text">CLASS文件的结构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CLASS%E6%96%87%E4%BB%B6%E7%9A%84%E7%BB%93%E6%9E%84-1"><span class="toc-nav-text">CLASS文件的结构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B1%9E%E6%80%A7%E8%A1%A8"><span class="toc-nav-text">属性表</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%B1%BB%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-nav-text">类文件属性</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#InnerClass"><span class="toc-nav-text">InnerClass</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#SourceFile"><span class="toc-nav-text">SourceFile</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%96%B9%E6%B3%95%E8%A1%A8%E5%B1%9E%E6%80%A7"><span class="toc-nav-text">方法表属性</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Code"><span class="toc-nav-text">Code</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Exceptions"><span class="toc-nav-text">Exceptions</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#MethodParameters"><span class="toc-nav-text">MethodParameters</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AD%97%E6%AE%B5%E8%A1%A8%E5%B1%9E%E6%80%A7"><span class="toc-nav-text">字段表属性</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ConstantValue"><span class="toc-nav-text">ConstantValue</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%80%9A%E7%94%A8%E5%B1%9E%E6%80%A7"><span class="toc-nav-text">通用属性</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#Deprecated"><span class="toc-nav-text">Deprecated</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB"><span class="toc-nav-text">推荐阅读</span></a>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-jvm-08.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="难道是它们？">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      到底是谁在回收 JVM 的垃圾 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>到底是谁在回收 JVM 的垃圾</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2021-01-01</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/12/28/5SbBtcVkKdOIx2E.png" alt="到底是谁在回收 JVM 的垃圾"></p>
+<blockquote>
+<p>虚拟机的垃圾回收器，没有哪一个是绝对好的，只有比较好的。</p>
+</blockquote>
+<p>今天的这篇文章，我要与你分享虚拟机的那些垃圾回收器们。内容不多，可以耐心看完。</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p>之前我们已经了解过具体的 GC 涉及的细节知识点，现在我们站在更高的角度，来看看各种垃圾收集器，以及其中两个的工作过程（CMS 和 G1）。</p>
+<p>我们知道，虚拟机将保存对象实例的区域分为了两个叫做 <strong>新生代</strong> 和 <strong>老年代</strong> 的地方，为此虚拟机针对不同的内存区域利用不同的算法设计了不同的垃圾收集器。</p>
+<p>了解垃圾收集器之前，我觉得还是有必要在复习一下  <strong>Stop The World</strong> ，其用来形容在安全点用户线程暂停的这种状态的一个叫法。关于这个垃圾收集器工作的时候为什么要 Stop The World 还有一个比较有意思的事 ，“你妈妈在给你打扫房间的时候， 肯定也会让你老老实实地在椅子上或者房间外待着， 如果她一边打扫， 你一边乱扔纸屑， 这房间还能打扫完？  ”这是虚拟机团队对 Stop The World 的说明，嗯，很有道理，哈哈哈。</p>
+<h3 id="那些回收-JVM-垃圾的家伙"><a href="#那些回收-JVM-垃圾的家伙" class="headerlink" title="那些回收 JVM 垃圾的家伙"></a>那些回收 JVM 垃圾的家伙</h3><h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>关键字：新生代、Stop The World 、标记 - 复制算法、单线程</p>
+<p><strong>Serial</strong> 是作用在新生代的垃圾收集器，单线程工作，在工作的时候需要 Stop The World，（包括之前提到的 GC 工作，都是指可达性分析）。采用的是标记 - 复制算法，（关于标记 - 复制的内容之前有讲过就不再展开说了）。</p>
+<p>看起来 Serial 收集器没什么特别的，但实际上 Serial 收集器在一些特殊的场景下有着不错的表现，这些要得益于他的额外内存消耗，因为其相比其他收集器要小一些，所以在服务器资源受限的情况下（单核或较少核心以及内存紧张），这个简单的单线程收集器效率还是很可观的。</p>
+<h4 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h4><p>关键字：新生代、Stop The World 、标记 - 复制算法、多线程、<strong>绝配</strong></p>
+<p><strong>ParNew</strong> 可以看成 new parallel gc ，一个新的并行垃圾收集器。是一个对标 Serial 的收集器，它与 Serial 的区别就是它在工作的时候是使用多线程进行工作的。还有，它是目前（JDK 9 以后）<strong>唯一一个</strong>能配合 CMS 在新生代工作的垃圾收集器。</p>
+<h4 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h4><p>关键字：新生代、Stop The World、标记 - 复制算法、多线程、可控吞吐量【用户线程执行时间 /（用户线程执行时间+GC线程执行时间）】、<strong>自适应策略</strong></p>
+<p>与 ParNew 相比，Parallel Scavenge 多了一些额外的功能，停顿时间和吞吐量可控（通过参数配置-XX： MaxGCPauseMillis  单位毫秒，控制每次垃圾回收的最大停顿时间。-XX： GCTimeRatio  控制吞吐量 0 - 100 整数，1/(1+设置的参数) = 垃圾收集时间占程序执行的总时间比率。</p>
+<p>对于 Parallel Scavenge 还有一个特点，就是自适应策略，把内存管理工作完全交由虚拟机，通过参数 -XX： +UseAdaptiveSizePolicy  启用自适应内存策略，这样就不需要指定内存参数，比如新生代大小、eden survivor 比例 晋升年龄等参数。虚拟机会根据当前系统运行状态动态的调整，达到一个合适的停顿时间和吞吐量。</p>
+<p>上面这三种 <strong>Serial</strong>  、 <strong>ParNew</strong>  、 <strong>Parallel Scavenge</strong> 都是新生代的垃圾收集器，下面我们来看看老年代的垃圾收集器。</p>
+<h4 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h4><p>关键字：老年代、Stop The World、标记 - 整理算法、单线程、<strong>替补</strong></p>
+<p>Serial Old 是和 Serial 一样的一款收集器，只不过，它是工作在老年代的。换句话说就是 Serial Old 就是 Serial 的老年代版本。Serial Old 有一个特殊的用途就是作为 CMS 并发清除失败的时候的替补，这里后面 CMS 收集器再看。</p>
+<h4 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h4><p>关键字：老年代、Stop The World、标记 - 整理算法、多线程、CP（组合）</p>
+<p>Parallel Old 是一个多线程并行的老年代垃圾收集器。它的出现也是为了解决吞吐量最大化的问题。因为他没出现之前，只有 Serial Old 一款老年代垃圾收集器来配合 Parallel Scavenge ，因为 Serial Old 的单线程性能原因，导致 Parallel Scavenge 吞吐量的优势体现不出来。直到它的出现，它与 Paralle Scavenge 就组成了一对完美的吞吐量 CP。</p>
+<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>关键字：老年代、Stop The World、标记 - 清除算法、多线程、短停顿</p>
+<p>Concurrent Mark Sweep 的设计初衷就是要停顿的时间最短！JDK 5 开始使用，JDK 9 以前最优秀，为啥是 JDK 9 以前最优秀，因为 JDK 9 发布的时候，默认启用了 G1 收集器，同时你如果手动改成 CMS 的话，会受到一个 CMS 被声明为不推荐的警告，下面是它具体的工作过程，一共经历 4 个阶段</p>
+<p>具体步骤如下：</p>
+<ul>
+<li>初始标记：需要 Stop The World<ul>
+<li>标记 GC Roots 直接关联的对象（直达），速度较快，停顿时间短。</li>
+</ul>
+</li>
+<li>并发标记：与用户线程并发<ul>
+<li>进行标记追踪，完成全部对象的标记任务。可能出现漏标或错标情况。</li>
+</ul>
+</li>
+<li>重新标记：需要 Stop The World<ul>
+<li>修正并发标记阶段的对象标记，因为大部分对象不需要修正，所以执行时间相比并发标记时间短，但是停顿时间要比初始标记停顿时间长。</li>
+</ul>
+</li>
+<li>并发清除：与用户线程并发<ul>
+<li>耗时较长，可以与用户线程共同工作。</li>
+</ul>
+</li>
+</ul>
+<p>CMS 虽然有了一个较短的停顿时间，但是也有一些其他随之而来的问题。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>并发执行速度快、停顿时间短。这一点没得说，因为它其中有两个阶段是和用户线程并发。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><strong>占用线程资源</strong>，因为 CMS 工作有两个阶段是和用户线程并发，所以这里便会抢占用户线程资源。</li>
+<li><strong>浮动垃圾</strong>，清理一次之后还会有清理不掉的对象，需要在下次清理的时候才能够清理到。这里的原因是因为并发清除阶段是和用户线程并发，一边清除一边使用，可能会出现一些无法清理掉的新生垃圾，比如清理过程中，程序断开了某个引用，被断开的引用 GC Roots 不可达，所以这个被断开的引用指向的对象变成了浮动垃圾。</li>
+<li><strong>空间利用率低</strong>，因为并发清理的原因，所以不能等到内存完全用完之后再做清理，所以需要当内存使用达到一定阈值（默认值68%，JDK6的时候提高到了 92%）时就开始进行垃圾回收动作，具体数值可以通过参数控制。这里 JVM 给了风险预案：冻结用户线程，启动 serial old 来进行一次老年代垃圾回收。这也是上面我们说 Serial Old 的时候，提到他的关键字里有 “替补” 的原因。</li>
+<li><strong>空间碎片</strong>，因为使用标记-清除算法的原因，会导致碎片空间的产生。CMS 的做法是在其不能够满足对象分配任务的时候，FULL GC 的时候，会进行一次空间整理的动作。对这个整理的动作也是有参数可以进行控制，参数设置情况为，满足几次FullGC之后，进行一次空间整理，默认值为 0 ，即每次 full gc 都会进行一次空间整理。这一点虽然是缺点，不过 CMS 已经尽力去你补了，包括这里的 FULL GC 之后的内存空间整理，还有对象分配时 CMS 会在 Free List 申请一块较大的内存空间，然后通过指针碰撞的方式来进行对象分配，尽可能减小空间碎片的产生。空间碎片问题也是 CMS 不能直接使用指针碰撞的方式来为对象分配内存的原因。</li>
+</ul>
+<h4 id="Garbage-First-（G1）"><a href="#Garbage-First-（G1）" class="headerlink" title="Garbage First （G1）"></a>Garbage First （G1）</h4><p>关键字：里程碑、JDK 9、区域管理、按需回收、<strong>延迟可控的最高吞吐量</strong></p>
+<p>要说 CMS 是一个划时代收集器，那 G1 可以称得上划时代的划时代收集器，其作为 JVM 的垃圾收集器的里程碑是有一定原因的，我们继续往下看。G1 出现的原因也很简单，那就是替换掉 CMS 。G1的设计是颠覆性的设计思路，它跳出了内存一定要划分新生代老年代的这个枷锁，它的工作模式为 Mixed Mode。并且 JDK 9 的时候开始启用，成为了服务端模式下的默认垃圾收集器，替换掉了原来的吞吐量组合（Parallel Scavenge + Parallel Old），同时 CMS 被声明为不推荐使用，CMS 也是从JDK 9 开始准备退役。按需回收说的是 G1 在做清理的时候，是依据一个<strong>可预测停顿时间模型</strong>来做的，这是个什么东西呢？简单来说就是，在清理之前，G1 对每个待回收的区域根据回收价值和时间进行排序，然后根据用户所期望的停顿时间来做一个最优回收，后面会继续说。</p>
+<blockquote>
+<p>多了解一点，关于 G1 的工作模式，Mixed Mode  的扩展：G1 有纯 GC 模式和分代回收模式，分代模式会分为 Minor GC 和 Mixed GC 两种，这里的模式选择会影响最后的筛选回收阶段的回收集合的内容。这块内容可参考后面留的 R大 的链接</p>
+</blockquote>
+<p>上面有一点展开说一下，就是 G1 不是没有这分代这种操作了吗？是通过内存区域来管理垃圾的，但是事实上 G1 将内存分成多个大小相等的 Region（区域） ，这些 Region 都可以作为Eden、Survivor、Humongous（Humongous 同老年代的作用）。</p>
+<p>下面我们一起了解一下 G1 工作的具体步骤：</p>
+<ul>
+<li><p>初始标记：Stop The World</p>
+<ul>
+<li>标记 GC Roots 直接关联的对象，同时修改 <strong>TAMS</strong> 指针</li>
+</ul>
+</li>
+<li><p>并发标记：与用户线程并发</p>
+<ul>
+<li>标记全部要回收的对象，与用户线程并发，标记完成之后，重新处理 <strong>SATB</strong> 记录下在并发时有引用变动的对象</li>
+</ul>
+</li>
+<li><p>最终标记：Stop The World</p>
+<ul>
+<li>处理并发标记阶段 SATB 遗留的引用，同时这个阶段也进行弱引用处理。</li>
+</ul>
+</li>
+<li><p>筛选回收：Stop The World</p>
+<ul>
+<li><p>这个阶段会更新 Region 的统计数据，对每个 Region 根据其回收价值和成本进行排序，然后根据用户所期望的停顿时间（参数设置）来制定一个回收计划。再根据这个计划，选择任意 Region 来组成一个回收集（collection set）。将回收集中的 Region（被选中的区域） 中的存活对象复制到空的 Region 中，然后将旧的（选中的） Region 清理掉。</p>
+<p><em>以上过程由多线程并行完成，同时因为移动对象需要暂停用户线程（Stop The World）</em></p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>TAMS：Top at Mark Start   Region 中的两个指针名称，他们的作用是将 Region 的一部分空间划分出来给并发回收过程中程序运行产生的新对象使用</p>
+<p>SATB：原始快照，还记得之前我们对漏标的解决方案吗？一种是增量更新（CMS 采用的这种方案），另外一个就是原始快照，这里可以翻翻之前的内容。</p>
+</blockquote>
+<p>G1除了并发标记阶段都需要暂停用户线程</p>
+<p>G1的理想目标：在延迟可控的情况下达到最大的吞吐量</p>
+<p>用户可以通过参数设置所期望的停顿时间，这个时间一般建议设置为 100 ~ 300 ms。</p>
+<h4 id="垃圾收集器小结"><a href="#垃圾收集器小结" class="headerlink" title="垃圾收集器小结"></a>垃圾收集器小结</h4><p>上面一共说了 7 款垃圾收集器，不过他们的具体使用我觉得有必要了解一下。</p>
+<p><strong>按照年代划分</strong></p>
+<p>新生代：Serial 、ParNew、Parallel Scavenge</p>
+<p>老年代：Serial Old、Parallel Old、CMS</p>
+<p>内存区域：G1</p>
+<p><strong>搭配组合</strong></p>
+<p>因为不同的阶段，垃圾收集器之间的搭配不同，所以我们就按照 JDK 9 作为划分界线，来看下 JDK 9 前后的搭配情况</p>
+<p><strong>JDK 9 以前</strong></p>
+<p><img src="https://i.loli.net/2021/01/01/OdRybzt4MJefsoC.png" alt="JVM-JDK9之前"></p>
+<p><strong>JDK 9 之后</strong></p>
+<p><img src="https://i.loli.net/2021/01/01/QshYcn19xkyN4q3.png" alt="JVM-JDK9以后"></p>
+<p>通过搭配关系我们可以看出，JDK 9 以前，Hotspot 提供了多种选择，而且场面看起来很和谐，解释一下 CMS 与 Serial Old 之间的虚线，这代表 CMS 并发清除失败的时候，以 Serial Old 作为备选方案的组合。</p>
+<p>JDK 9 之后，因为 G1 的出现，hotspot 取消了两种方案的支持（Serial + CMS 和 ParNew + CMS），仅提供了 4 种虚拟机搭配方案，他们分别是</p>
+<ul>
+<li>Serial + Serial Old  的单线程组合，适用于资源受限的场景。</li>
+<li>ParNew + CMS 这组曾经的王者组合，新生代的多线程并行高性能加上老年代的短暂停顿组合，可以应对大部分场景。</li>
+<li>Parallel Scavenge + Serial Old 这是 Paralle Old 没出现的时候的应对组合（不明白为何 JDK 9 的时候没取消这对奇葩组合）</li>
+<li>Parallel Scavenge + Parallel Old 这对高吞吐量 CP</li>
+</ul>
+<p>看起来这 4 组搭配很完美，不过因为 G1 的出现，<em>看起来的美好也没那么好了</em> G1在 server 模式下取代了高吞吐量的 CP （Parallel Scavenge + Parallel Old）成为了默认的垃圾收集器，同时在 JDK 9 使用 ParNew + CMS 这组搭配时，还会收到来自 hotspot 的警告，CMS 已经被声明为不推荐使用，因为 ParNew 此时只能与 CMS 搭配使用，所以可以说当时 CMS 拯救了 ParNew 的尴尬局面（当时新生代高性能的 ParNew 只能选择拖后腿的 Serial Old 一起工作），现在 ParNew 也要陪着 CMS 一起下岗了。综上所述，JDK 9 还剩下建议使用的组合</p>
+<ul>
+<li>G1</li>
+<li>Serial + Serial Old</li>
+<li>Parallel Scavenge + Serial Old （还是它，我一定要关注它俩啥时候下岗）</li>
+</ul>
+<p>所以通过上面的分析，也能看出来 HotSpot 的用意，在 JDK 9 以后就是要将 G1 作为一个全能型的垃圾收集器来发展。</p>
+<h4 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h4><p>上面总结了截止 JDK 9 的垃圾收集器内容，其实对于垃圾收集器还有很多内容，比如 Shenandoah ，一个由 Red Hat 开发的低延迟垃圾收集器，还有 Oracle 后面的 ZGC。这两个垃圾收集器都采用了更加优秀的思想和实现方案。不过因为我没有对其深入的了解，所以在这就不再多说了。如果你对垃圾收集器的具体算法仍感兴趣，推荐访问下面这个链接，R大 写的虚拟机相关内容</p>
+<p><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/rednaxelafx-362738">https://www.iteye.com/blog/rednaxelafx-362738</a></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-jvm-06.html">
+        <span class="nav-arrow">← </span>
+        
+          天天听人家说的 GC 到底是个啥？
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-jvm-08.html">
+        
+          你说那 class 文件里边都是啥
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '4166c2fbd06a9b6e94addc7069e56346',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-nav-text">垃圾收集器</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%82%A3%E4%BA%9B%E5%9B%9E%E6%94%B6-JVM-%E5%9E%83%E5%9C%BE%E7%9A%84%E5%AE%B6%E4%BC%99"><span class="toc-nav-text">那些回收 JVM 垃圾的家伙</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Serial"><span class="toc-nav-text">Serial</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ParNew"><span class="toc-nav-text">ParNew</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Parallel-Scavenge"><span class="toc-nav-text">Parallel Scavenge</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Serial-Old"><span class="toc-nav-text">Serial Old</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Parallel-Old"><span class="toc-nav-text">Parallel Old</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#CMS"><span class="toc-nav-text">CMS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Garbage-First-%EF%BC%88G1%EF%BC%89"><span class="toc-nav-text">Garbage First （G1）</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%B0%8F%E7%BB%93"><span class="toc-nav-text">垃圾收集器小结</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-nav-text">写在最后</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-jvm-07.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

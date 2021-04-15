@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="哪些内存需要回收？什么时候回收？怎么回收？">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      JVM 是怎么把“送”出去的内存又“要”回来的 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>JVM 是怎么把“送”出去的内存又“要”回来的</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2020-12-25</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://i.loli.net/2020/12/25/N5GMHKYy6aFOshl.png" alt="内存回收"></p>
+<blockquote>
+<p>之前我们知道了对象是怎么诞生，然后在内存中安家的，不过对象终归有一天也会“死亡”，那它“死亡”的时候，虚拟机都干了什么呢？又怎么判断一个对象”死“没”死“呢？今天一起学习一下虚拟机是怎么把分配出去的内存，“拿”回来的。</p>
+</blockquote>
+<p>想搞懂内存回收，顺着三个问题往下捋就可以很清楚的梳理好这块内容。</p>
+<h1 id="目录："><a href="#目录：" class="headerlink" title="目录："></a>目录：</h1><ol>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>怎么回收？</li>
+</ol>
+<h2 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h2><blockquote>
+<p>自动收集程序运行产生的“垃圾”，回收这部分内存这种思想并不是起源于 Java ，而是早 Java 30 年的 Lisp 语言<em>（作者：John McCarthy）</em>。</p>
+</blockquote>
+<p>我们也先思考 Lisp 作者对垃圾收集，内存回收提出的三个问题</p>
+<ol>
+<li>哪些内存需要回收？</li>
+<li>什么时候回收？</li>
+<li>怎么回收？</li>
+</ol>
+<h3 id="哪些内存需要回收？"><a href="#哪些内存需要回收？" class="headerlink" title="哪些内存需要回收？"></a>哪些内存需要回收？</h3><p>这里在回顾一下 Java 程序在运行时都有哪些数据区域，如果没跟 lvgo 一起学的同学，可以看看之前的文章 《 你创建的 Java 对象都搁哪了》</p>
+<p>PC寄存器（程序计数器）、本地方法/虚拟机栈、方法区、堆这<strong>五</strong>大区域</p>
+<p>程序计数器、虚拟机栈、本地方法栈3个区域都是线程私有的，他们的产生和消失都随着线程的创建和销毁而变化。</p>
+<p>所以 <strong>堆</strong>、<strong>方法区</strong> 这两块内存区域就是需要进行回收的内存。同时这部分内容和程序运行密切相关，具有不确定性，比如你写了1w个类，但实际只使用1个，那在堆和方法区中也只有1个对象的内存大小的区域被使用。所以需要动态的管理这部分内存。</p>
+<h3 id="什么时候回收？"><a href="#什么时候回收？" class="headerlink" title="什么时候回收？"></a>什么时候回收？</h3><p>在堆中的实例对象，如果想要把这部分内存回收，一定要确定这里所保存的实例对象哪些还在被使用，哪些已经没有用了，即允许回收。</p>
+<p>所以回收的条件就是对象已经没有再被引用了。</p>
+<p><strong>对象引用知识补充</strong></p>
+<p>JDK2的时候，对象的引用只有两种情况</p>
+<ol>
+<li>被引用</li>
+<li>没被引用</li>
+</ol>
+<p>后来有了更多场景的需要，</p>
+<ul>
+<li>如果内存还够用，即使我没被引用，也不要回收我。</li>
+<li>如果已经做了一次回收，还是不够用，那就把没被引用的我回收吧。</li>
+<li>…..</li>
+</ul>
+<p>在这种需求提出后 JDK2之后，Java 补充了对象引用的概念，将引用分为强、软、弱、虚四种。</p>
+<p>了解对象引用概念之前先喝杯咖啡提提神。</p>
+<p><strong>4个不同性格的人喝咖啡</strong></p>
+<p>从前有甲乙丙丁四个人去咖啡厅喝咖啡，这四兄弟吧，不知道咖啡厅的规矩，跟我似的，也没去过啊，不知道。进去了之后这 <strong>甲乙丙丁</strong> 四兄弟就找个位置拿着咖啡在那喝。</p>
+<p>结果不巧今天咖啡厅爆满！服务员就想着找一些喝完不走的人聊聊，把它们聊走，</p>
+<p>也不知怎么的，就盯上这四兄弟了，就过来问 <strong>甲</strong> ：“甲先生，你喝完了吗？今天人有点多，你看看..”，“管谁叫先生呢，我是你大姐！没喝完呢，你看不见呐，不走”。<strong>甲</strong> 很 <strong>强</strong> 势，服务员不敢惹。</p>
+<p>接着他就朝着 <strong>乙</strong> 走过来，他还没说话，<strong>乙</strong> 先开口：“刚你跟我大姐说的我听见了，你看这么的行不行，<strong>你先去找别人，如果你找完别人之后位置还不够，来找老妹儿，老妹儿给你让这个位置</strong> ” ，服务员一看 <strong>乙</strong> 是个 <strong>软</strong> 妹子，就答应她走开了。</p>
+<p>这会儿服务员大哥已经有点累了，想赶快找到新位置出来，不然一会内存溢出了擦，来到 <strong>丁</strong> 面前，“兄弟，今天餐厅位置不够了，你看你让一下子行不行”，说着用手拍着 <strong>丁</strong> 的肩膀，<strong>丁</strong> 一看这架势，有点害怕，赶紧说：“行行行”，服务员一看，这 <strong>丁</strong> 也太 <strong>弱</strong> 了。</p>
+<p>服务员大哥准备乘胜追击来到 <strong>丙</strong> 面前，发现这个 <strong>丙</strong> 有点问题，怎么说呢，就像 <strong>幽灵</strong> 一样若隐若现，完事服务员过去拍了一下他，这不拍不知道，一拍差点裤衩子都吓掉了，这压根就没人，甚至那杯咖啡他都拿不起来，服务员只好瑟瑟发抖的说“这地方我先收拾了啊” 然后就灰溜溜的跑开了，不一会这个位置就给其他客人坐上了。</p>
+<p>大哥找了一会安排了一些人坐下，发现位置还是不够，于是他想起 <strong>乙</strong> 说的话，就过去给 <strong>乙</strong> 说了现在的情况，然后 <strong>乙</strong> 也是个守信用的 <strong>软</strong> 妹子，就收拾东西走开了。</p>
+<p>不过当  <strong>乙</strong> 走开之后，服务员发现还有 1 个顾客没有位置坐！实在没办法了，谁也别喝了，关门吧，人都从咖啡厅里溢出去了。</p>
+<p>所以这个故事告诉了我们什么？</p>
+<p><em>咖啡厅里有鬼</em></p>
+<p>总结一下，甲乙丙丁分别对应的 <strong>强软弱虚</strong> 四种引用类型</p>
+<ul>
+<li><p>甲：强引用（Strongly Re-ference）</p>
+<p>只要我的咖啡（引用）还在，就没人敢动他，很强势。</p>
+</li>
+<li><p>乙：软引用（SoftReference）</p>
+<p>一个讲道理的引用，你先去收拾别的地方，如果你收拾完了地方还不够，我再让我的位置，不然你就让我多待一会</p>
+</li>
+<li><p>丁：弱引用（Weak Reference）</p>
+<p>这个引用的生命只能坚持到诞生之后的第一个 GC 就嗝屁了，来收拾你就得让，管你喝完没喝完。</p>
+</li>
+<li><p>丙：虚引用（Phantom Reference）</p>
+<p>幽灵一般的存在，最弱的一种引用关系，随时可能被回收，你不能用它来获取一个实例，这个引用的作用是为了对象被回收是接到通知。</p>
+</li>
+</ul>
+<p>这4种引用强度依次逐渐减弱。强 &gt; 软 &gt; 弱 &gt; 虚</p>
+<h3 id="怎么回收？"><a href="#怎么回收？" class="headerlink" title="怎么回收？"></a>怎么回收？</h3><h4 id="回收堆内存"><a href="#回收堆内存" class="headerlink" title="回收堆内存"></a>回收堆内存</h4><p>关于判断堆中对象是否存活（被引用）的方法，有两种</p>
+<h5 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h5><p>在对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加一；当引用失效时，计数器值就减一；任何时刻计数器为零的对象就是不可能再被使用的。</p>
+<p><em>JVM没有采用过这种方式，原因之一就是循环引用问题</em></p>
+<h5 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h5><p><em>注：摘自周志明《深入理解 Java 虚拟机（第三版）》3.2.2 可达性分析算法部分</em></p>
+<p>通过一系列称为“GC Roots”的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路径称为“引用链”（Reference Chain），如果某个对象到GC Roots间没有任何引用链相连，或者用图论的话来说就是从GC Roots到这个对象不可达时，则证明此对象是不可能再被使用的。</p>
+<p><img src="https://i.loli.net/2020/12/25/BpRlN6fIvbqQXH2.jpg" alt="图片来自周志明《深入理解 Java 虚拟机（第三版）》"></p>
+<p>在Java技术体系里面，<strong>固定可作为GC Roots的对象</strong>包括以下几种：</p>
+<ul>
+<li><p>在虚拟机栈（栈帧中的本地变量表）中引用的对象，譬如各个线程被调用的方法堆栈中使用到的参数、局部变量、临时变量等。</p>
+<p>方法执行时相关的数据</p>
+</li>
+<li><p>在方法区中类静态属性引用的对象，譬如Java类的引用类型静态变量。</p>
+<p>静态变量</p>
+</li>
+<li><p>在方法区中常量引用的对象，譬如字符串常量池（StringTable）里的引用。</p>
+<p>常量</p>
+</li>
+<li><p>在本地方法栈中JNI（即通常所说的Native方法）引用的对象。</p>
+<p>虚拟机本地方法持有的对象</p>
+</li>
+<li><p>Java虚拟机内部的引用，如基本数据类型对应的Class对象，一些常驻的异常对象（比如NullPointExcepiton、OutOfMemoryError）等，还有系统类加载器。</p>
+</li>
+<li><p>所有被同步锁（synchronized关键字）持有的对象。</p>
+</li>
+<li><p>反映Java虚拟机内部情况的 JMXBean、JVMTI 中注册的回调、本地代码缓存等。</p>
+</li>
+</ul>
+<p><em>除了固定的 GC Roots 以外，这部分集合还会根据选用的垃圾回收器和当前区域的不同，临时增加一些 GC Roots 对象。具体的体现为分代收集和局部回收。</em></p>
+<h5 id="对象真正死亡（即可被回收）"><a href="#对象真正死亡（即可被回收）" class="headerlink" title="对象真正死亡（即可被回收）"></a>对象真正死亡（即可被回收）</h5><p>标记：在可达性分析之后，即使对象被标记为不可达，也不会立即回收掉该对象，而是标记为可回收（笔者自释）。</p>
+<p>标记确认：在已经标记的对象集合中，会进行一次筛选，筛选条件是当前对象是否有必要执行 <code>finalize()</code> 方法。<strong>如果有必要执行则继续 <code>存活</code>，如果没有必要则 <code>死亡</code>。</strong></p>
+<p>判断当前对象是否有必要执行 <code>finalize()</code> 方法的条件（<strong>二次确认对象已死亡</strong>）是</p>
+<ol>
+<li>对象没有重写 <code>finalize()</code> 方法</li>
+<li><code>finalize()</code> 方法已经被执行过一次</li>
+</ol>
+<p>满足以上两个条件的话虚拟机则会认为没有必要执行 <code>finalize()</code> 方法，即对象已死亡。</p>
+<p>如有逃过这次的 <code>死亡</code> 时机，只要当前对象在重写的 <code>finalize()</code> 方法中（一定要在 <code>finalize()</code>方法中，这是唯一一个能<em>拯救</em>自己的机会）与 GC Roots 集合中对象的引用链发生关联，即当前对象再次产生引用关系，即可逃离这次垃圾回收。</p>
+<p>所以实际上，我们可以通过重写 <code>finalize()</code> 来“拯救”一次对象的死亡，也只能拯救一次，因为宣布其真正死亡还有第二个条件，就是 <code>finalize()</code> 方法已经执行过一次。</p>
+<h4 id="回收方法区"><a href="#回收方法区" class="headerlink" title="回收方法区"></a>回收方法区</h4><p><em>注：以下摘自周志明《深入理解 Java 虚拟机（第三版）》3.2.5 回收方法区</em></p>
+<p>有些人认为方法区（如HotSpot虚拟机中的元空间或者永久代）是没有垃圾收集行为的。</p>
+<p>《Java虚拟机规范》中提到过可以不要求虚拟机在方法区中实现垃圾收集，事实上也确实有未实现或未能完整实现方法区类型卸载的收集器存在（如JDK 11时期的ZGC收集器就不支持类卸载）。</p>
+<p>方法区垃圾收集的“性价比”通常也是比较低的：在Java堆中，尤其是在新生代中，对常规应用进行一次垃圾收集通常可以回收70%至99%的内存空间，相比之下，方法区回收囿于苛刻的判定条件，其区域垃圾收集的回收成果往往远低于此。</p>
+<p><strong>方法区数据</strong></p>
+<p>方法区中保存的是类信息和运行时常量池两部分内存。</p>
+<p><strong>回收运行时常量池</strong></p>
+<p>运行时常量池的回收比较简单，只需判断当前常量池中的字面量是否有被引用即可。常量池中其他类（接口）、方法、字段的符号引用也与此类似。</p>
+<p><strong>回收类信息</strong>（类卸载）</p>
+<p>判断一个类型信息是否可以被回收需要同时满足以下三个条件，</p>
+<ol>
+<li>该类信息对应的所有实例被回收</li>
+<li>加载该类的加载器被回收</li>
+<li>对应的 <em>java.lang.Class</em> 对象没有在任何地方被引用</li>
+</ol>
+<p>具体内容如下：</p>
+<ol>
+<li>该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例。</li>
+<li>加载该类的类加载器已经被回收，<strong>这个条件除非是经过精心设计的可替换类加载器的场景，如OSGi、JSP的重加载等，否则通常是很难达成的。</strong></li>
+<li>该类对应的 <em>java.lang.Class</em> 对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ol>
+<p><em>多了解一点：</em></p>
+<p><em>其中第三点与我们经常见到的操作诸如 spring 这种大量使用反射的框架、JDK 的动态代理、以及 CG lib 这种操作字节码的框架基本上都需要 JVM 拥有类卸载的功能，否则会导致一些自定义加载器加载的临时类信息占据着方法区的内存，带来不必要的压力。</em></p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/lvgo-jvm-03.html">
+        <span class="nav-arrow">← </span>
+        
+          JVM 中对象咋创建啊，又怎么访问啊
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/lvgo-jvm-05.html">
+        
+          JVM 把内存”收“回来用的是什么法器
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: 'b1381d85c3ad7c84cb9a2e16c8da6332',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E7%9B%AE%E5%BD%95%EF%BC%9A"><span class="toc-nav-text">目录：</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6"><span class="toc-nav-text">内存回收</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%93%AA%E4%BA%9B%E5%86%85%E5%AD%98%E9%9C%80%E8%A6%81%E5%9B%9E%E6%94%B6%EF%BC%9F"><span class="toc-nav-text">哪些内存需要回收？</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%9B%9E%E6%94%B6%EF%BC%9F"><span class="toc-nav-text">什么时候回收？</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%8E%E4%B9%88%E5%9B%9E%E6%94%B6%EF%BC%9F"><span class="toc-nav-text">怎么回收？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%9B%9E%E6%94%B6%E5%A0%86%E5%86%85%E5%AD%98"><span class="toc-nav-text">回收堆内存</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E7%AE%97%E6%B3%95"><span class="toc-nav-text">引用计数算法</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95"><span class="toc-nav-text">可达性分析算法</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9C%9F%E6%AD%A3%E6%AD%BB%E4%BA%A1%EF%BC%88%E5%8D%B3%E5%8F%AF%E8%A2%AB%E5%9B%9E%E6%94%B6%EF%BC%89"><span class="toc-nav-text">对象真正死亡（即可被回收）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%9B%9E%E6%94%B6%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-nav-text">回收方法区</span></a></li></ol></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/lvgo-jvm-04.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

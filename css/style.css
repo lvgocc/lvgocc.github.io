@@ -1141,6 +1141,19 @@ h2.article-head {
 #gzh_qrcode .small-info {
   font-size: 12px;
 }
+.column {
+  border: 1px solid #7f8c8d;
+}
+#lvgo-design {
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #34495e;
+  border: 1px solid #7f8c8d;
+  margin: 12px;
+  width: 280px;
+  height: 119px;
+  background-image: url("https://i.loli.net/2020/12/26/nQHEdLXfOyU3kYF.png");
+  background-size: cover;
+}
 @-moz-keyframes shine {
   0%, 100% {
     opacity: 0.1;

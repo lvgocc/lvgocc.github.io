@@ -3,7 +3,11 @@
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="description" content="&lt;p&gt;本文介绍的内容为, 在spring管理的项目中使用Quartz2.2.2版本进行任务调度&lt;/p&gt;
+&lt;h4 id=&#34;quartz-非教学介绍&#34;&gt;&lt;a href=&#34;#quartz-非教学介绍&#34; class=&#34;headerlink&#34; title=&#34;quartz 非教学介绍&#34;&gt;&lt;/a&gt;quartz 非教学介绍&lt;/h4&gt;&lt;p&gt;quartz是一款基于java timer开发的一个轻量级任务调度框架, 可以帮助我们快速实现定时/周期任务处理工具组件&lt;/p&gt;
+&lt;p&gt; Quartz中有任务组, 任务, 触发器组, 触发器 cron expression 等概念.&lt;br&gt; JOB_GROUP 、JOB 、TRIGGER_GROUP 、TRIGGER 、CRON&lt;/p&gt;
+&lt;p&gt;顾名思义任务组对应任务, 触发器组对应触发器, 目前实战项目中的用法比较特殊.&lt;/p&gt;
+&lt;p&gt;我们使用一个任务, 对应多个触发器来达到任务调度的实现.当前Quartz支持两种任务配置, 这里使用的是以任务为单位来进行定时执行的概念, 还有一种指定service方法来执行, 具体大家可以参考其他博主的文章自行了解.&lt;/p&gt;">
   <meta name="keyword" content="lvgo star dust">
   
     <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
@@ -218,10 +222,10 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/post/try-catch-right-operation.html">
+      <a class="nav-left" href="/post/spring-transaction-02.html">
         <span class="nav-arrow">← </span>
         
-          try catch 中的异常怎么处理
+          一篇浅文让你摆脱事务困扰
         
       </a>
     
@@ -343,7 +347,7 @@
 </div>
     <footer class="app-footer">
   <p class="copyright">
-    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
     <br>
     Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
   </p>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="专注并发编程、网络编程、大数据方向相关内容研究。">
+  <meta name="keyword" content="lvgo star dust">
+  
+    <link rel="shortcut icon" type="image/ico" href="../images/L.png"/>
+  
+  <title>
+    
+      写一些友好的代码（上），对人友好 | Star Dust 星尘
+    
+  </title>
+  <link href='//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css' rel="stylesheet">
+  <link href='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.css' rel="stylesheet">
+  <link href="//lib.baomitu.com/highlight.js/9.15.10/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src='//lib.baomitu.com/jquery/3.5.0/jquery.min.js'></script>
+  <script src='//lib.baomitu.com/geopattern/1.2.3/js/geopattern.min.js'></script>
+  <script src='//lib.baomitu.com/nprogress/0.2.0/nprogress.min.js'></script>
+  
+  
+  
+    <link rel="stylesheet" href='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.css'>
+    <script src='//lib.baomitu.com/gitalk/1.6.2/gitalk.min.js'></script>
+  
+
+  
+    <link crossorigin="anonymous" integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-Zm+UU4tdcfAm29vg+MTbfu//q5B/lInMbMCr4T8c9rQFyOv6PlfQYpB5wItcXWe7" src="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  
+
+
+  
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'sV9GoccAvPsX-CXyXEeaUzDEvk4d77Ca-eoFKT5-2RM');
+    </script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Star Dust 星尘" type="application/atom+xml">
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo">
+          <img src="/images/L.png" alt="logo"/>
+      </div>
+      <span>Star Dust 星尘</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">开源项目</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">开源项目</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>写一些友好的代码（上），对人友好</h2>
+  <p class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i>　2021-02-27</p>
+  <!-- Tags START -->
+  
+      
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+  
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="写一些友好的代码（上），对人友好"><a href="#写一些友好的代码（上），对人友好" class="headerlink" title="写一些友好的代码（上），对人友好"></a>写一些友好的代码（上），对人友好</h2><blockquote>
+<p>这是一篇关于程序员的一个最基本条件的文章——编码。也是我学习虚拟机之后最大感触的一些内容。</p>
+</blockquote>
+<p><code>作者：小米(lvgocc)</code></p>
+<p><code>公众号：星尘的一个朋友</code></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>正文之前，还是想强调一下今天关于编码的分享，要 <strong>区别 “好” 与 “友好”</strong>。毕竟还是有差距。就像好的论文、好的书籍，专业性很强，内容质量很高。但它并不一定是友好的，就像现在大多数人在写作都在追求 “通俗易懂”，这就是友好。他们这些人负责把难理解的内容消化掉然后换一种方式来表述出来，同时尽可能的不丢失原来的“本色”。这样的内容就是友好的，同时它也一定是好的。（这个一定，可以通过反证法得出）</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>今天分享的主题是 “对人友好的代码”。希望看过文章的朋友们，能够有所收获。</p>
+<p>关于编码，我想这应该是程序员最熟悉不过的事儿了。也是作为一个程序员最基本的职能了，而恰恰是最常做的事，最容易产生自信。而这种自信，有时便会成为理所应当的坏习惯。</p>
+<h3 id="对人友好"><a href="#对人友好" class="headerlink" title="对人友好"></a>对人友好</h3><p>对人友好的代码怎么理解?</p>
+<p>在很多时候，比如公司内部代码走查、阅读开源代码，甚至看自己写过的代码。都会有一种冲动，什么冲动？重构的冲动！</p>
+<p>我想，有这种想法的人肯定不止我一个。首先我很肯定，有这种想法的人，都是想要写出更加优秀的代码的人。但事实上呢？是不是很多时候是因为别人的代码不如你意呢？又或者只是单纯的觉得这样写就是不合适，原因不知道?。不管怎么说，我还是认为有这种想法的开发人员是很好的。</p>
+<p><img src="https://i.loli.net/2021/02/27/SDxbAr1TV57vaJ3.png" alt="vant 演示中 dialog 的截图 | 写一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<h3 id="好的代码-友好的代码"><a href="#好的代码-友好的代码" class="headerlink" title="好的代码?友好的代码?"></a>好的代码?友好的代码?</h3><p>我要写一手好的代码！这个问题我也经常在敲代码的时候在想。可事实你想写出好的代码并没那么容易，既然<strong>我写不出来好的代码，那我能不能写出一些对人友好的代码？</strong> 我想这应该就是我能写出来好的代码的第一步吧。所以我从写出一些友好的代码下手了。</p>
+<h3 id="我认为对人友好的代码"><a href="#我认为对人友好的代码" class="headerlink" title="我认为对人友好的代码"></a>我认为对人友好的代码</h3><p>对人友好的代码实在是太多了，我列一些自己随便想到的一些，算是抛砖引玉，希望能够和更多人产生友好的代码共鸣。</p>
+<h4 id="首先一定要能读"><a href="#首先一定要能读" class="headerlink" title="首先一定要能读"></a>首先一定要能读</h4><p>最基本的对人友好，就是代码不要看起来很脏，给人一种不能够阅读的感觉。下面举个不可阅读的例子</p>
+<p><img src="https://i.loli.net/2021/02/27/3ikxfuoFXqIEL7V.png" alt="不可阅读代码 | 写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p><code>这种代码我亲身经历在线上版本见到过</code></p>
+<p>对人友好的代码基本条件，能读。</p>
+<h4 id="其次，不要让人误会"><a href="#其次，不要让人误会" class="headerlink" title="其次，不要让人误会"></a>其次，不要让人误会</h4><p><img src="https://i.loli.net/2021/02/27/ntVLATYmFj1g7xW.png" alt="让人误会的代码 | 写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>仔细看，这里的 ① 和 ② 是不在一个条件中的。同事因为这种写法，出过生产问题。当时他说代码没问题叫我帮他看看。说实话，当时挺懵的。</p>
+<h4 id="三，不要做复杂分支的判断鬼才"><a href="#三，不要做复杂分支的判断鬼才" class="headerlink" title="三，不要做复杂分支的判断鬼才"></a>三，不要做复杂分支的判断鬼才</h4><blockquote>
+<p>例子为最基本示意例子，实际情况判断中或更为复杂</p>
+</blockquote>
+<p>在 <strong>复杂</strong>  的逻辑分支判断这一点，我想应该是最常见。因为前面两个完全可以通过 IDE 帮你规避，不过这一点，稍不留意，就会变得有点放肆了。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// A B C 条件同时满足</span><br><span class="hljs-keyword">if</span> (A &amp;&amp; B &amp;&amp; C) &#123;&#125;<br><br><span class="hljs-keyword">if</span> (!A || !B || !C) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在开发组内我一直强调的就是，在 <strong>复杂</strong> 逻辑判断要简单而且使用正向思维。就是多用与，少用或非，注意是少用，不是不允许用。能用与就用与，能不用非就不用非。因为这更能提高理解速度。特别是在一些 <strong>复杂</strong> 的逻辑判断分支中。</p>
+<p>同时，如果分支内容判断条件过多时，建议拆解。比如</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> ((A != AA || A != AB ) &amp;&amp; B &amp;&amp; C) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可替换为</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">boolean</span> a = A != AA || A != AB;<br><span class="hljs-keyword">if</span> (a &amp;&amp; B &amp;&amp; C) &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>关于 <strong>复杂</strong> 分支的判断的关键点就在于理解，所谓对人友好，就是让人很快就能看明白你代码的意思。这就需要根据实际的逻辑语境做一些合理的判断写法了。</p>
+<p>下面随便列了一个逻辑判断的代码，简单感受一下。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">int</span> age = <span class="hljs-number">0</span>;<br><span class="hljs-comment">// 0 male 1 female 2 demale</span><br><span class="hljs-keyword">int</span> gender = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">int</span> height = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">int</span> weight = <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">// 筛选出 年龄大于 18 小于 60 , 非人妖, 身高 140 以下, 体重80 以下的人</span><br><span class="hljs-keyword">if</span> (age &gt; <span class="hljs-number">18</span> &amp;&amp; age &lt; <span class="hljs-number">60</span> &amp;&amp; gender != <span class="hljs-number">2</span> &amp;&amp; height &gt; <span class="hljs-number">140</span> &amp;&amp; weight &gt; <span class="hljs-number">80</span>) &#123;<br>    <span class="hljs-comment">// 合格人</span><br>&#125;<br><br><span class="hljs-keyword">if</span> (!((age &lt; <span class="hljs-number">18</span> || age &gt; <span class="hljs-number">60</span>) || gender == <span class="hljs-number">2</span> || height &lt; <span class="hljs-number">140</span> || weight &lt; <span class="hljs-number">80</span>)) &#123;<br>    <span class="hljs-comment">// 合格人</span><br>&#125;<br><br><span class="hljs-keyword">boolean</span> ageFlag = age &gt; <span class="hljs-number">18</span> &amp;&amp; age &lt; <span class="hljs-number">60</span>;<br><span class="hljs-keyword">boolean</span> genderFlag = gender != <span class="hljs-number">2</span>;<br><span class="hljs-keyword">boolean</span> heightFlag = height &gt; <span class="hljs-number">140</span>;<br><span class="hljs-keyword">boolean</span> weightFlag = weight &lt; <span class="hljs-number">80</span>;<br><span class="hljs-keyword">if</span> (ageFlag &amp;&amp; genderFlag &amp;&amp; heightFlag &amp;&amp; weightFlag) &#123;<br>    <span class="hljs-comment">// 合格人 </span><br>&#125;<br>    <br><br></code></pre></td></tr></table></figure>
+
+<h4 id="四，迷惑行为少一点"><a href="#四，迷惑行为少一点" class="headerlink" title="四，迷惑行为少一点"></a>四，迷惑行为少一点</h4><p>前方迷惑代码高能预警，以下代码为项目<strong>真实代码</strong>。请不要对号入座！请不要对号入座！请不要对号入座！</p>
+<h5 id="存了个寂寞"><a href="#存了个寂寞" class="headerlink" title="存了个寂寞"></a>存了个寂寞</h5><p><img src="https://i.loli.net/2021/02/27/SUWeTCgv3QYmVcE.png" alt="存了个寂寞|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>不清楚它要做什么，思来想去，应该只是来浪费了我代码审查的时间，怕我没事做，为我增加工作量。</p>
+<h5 id="任性换行"><a href="#任性换行" class="headerlink" title="任性换行"></a>任性换行</h5><p><img src="https://i.loli.net/2021/02/27/Ztv4a6eOAKNzd5S.png" alt="随性换行与日志框架技术不了解|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>这换行符我说了算，我觉得它该换行了。免疫 IDE 警告。</p>
+<h5 id="截取寂寞"><a href="#截取寂寞" class="headerlink" title="截取寂寞"></a>截取寂寞</h5><p><img src="https://i.loli.net/2021/02/27/6ohMCjdSKyT8u3a.png" alt="截取寂寞|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>免疫 IDE 警告+1。</p>
+<h5 id="异常自己也没想到会这样"><a href="#异常自己也没想到会这样" class="headerlink" title="异常自己也没想到会这样"></a>异常自己也没想到会这样</h5><p><img src="https://i.loli.net/2021/02/27/vbqQ69mGyIFnuwB.png" alt="对于异常，我最了解|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>如果你看不懂这段操作，请关注我。一起讨论一下这件关于异常处理怎么写能写飞这件事。还有，到底还要怎么样才能会用日志框架？</p>
+<h5 id="谢大国的媳妇，香秀"><a href="#谢大国的媳妇，香秀" class="headerlink" title="谢大国的媳妇，香秀"></a>谢大国的媳妇，香秀</h5><p><img src="https://i.loli.net/2021/02/27/2kypgG89sn67KqO.png" alt="彪悍的人生，不需要太多解释|写出一些友好的代码 作者：小米 公众号：星尘的一个朋友"></p>
+<p>免疫 IDE 警告+1。</p>
+<h3 id="友好的代码"><a href="#友好的代码" class="headerlink" title="友好的代码"></a>友好的代码</h3><p>回到我们的主题，对人友好的代码，还是上面那句话，对人友好的代码实在是太多了！我想，任何一个程序员都可以写出对人友好的代码，就看你想不想去写。试想你自己写的代码，过了几个月回去看，心里喷了半天结果一看作者是自己。这就很尴尬了。对人友好的代码它可能并不一定是最好的代码，但最起码是认真写的代码，这将会是写出好代码的第一步，希望大家都能迈出去。</p>
+<p><code>关于编码，我想这应该是程序员最熟悉不过的事儿了。也是作为一个程序员最基本的职能了，而恰恰是最常做的事，最容易产生自信。而这种自信，有时便会成为理所应当的坏习惯。</code></p>
+<p>其实关于对人友好的代码并不是技术上的话题，我觉得这更像是社交上的话题，程序员可能会习惯通过你的代码来了解你这个人。至少我有这样的一点小习惯。见码如见人。</p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>最后用 vant demo 中的话结个尾吧：代码是给人看的，附带可以在机器上运行。</p>
+<p>正文完</p>
+<hr>
+<p>欢迎关注我，下一篇分享 【写一些友好的代码（下），对机器友好】。谈谈如何面向虚拟机编程，写出对机器友好的代码。</p>
+</section>
+    <div id="gzh_qrcode" class="nav-container" align="center">
+      <h3>亦或繁星、亦或尘埃。星尘✨，为了梦想，学习技术，不要抱怨、坚持下去💪。</h3>
+      <p>欢迎关注<b style='color:blue'>星尘的一个朋友</b>一起交流学习🤓。</p>
+      <img alt="星尘的一个朋友" src="https://i.loli.net/2020/10/22/7swJfMCPrThebVI.png">
+      <p class="small-info">扫码关注公众号，回复<span style="color:red">“加群”</span>一起交流学习</p>
+    </div>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#虚拟机" >
+    <span class="tag-code">虚拟机</span>
+  </a>
+
+      </div>
+    
+
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/post/mychat-01.html">
+        <span class="nav-arrow">← </span>
+        
+          MyChat，一个私有的&#34;微信&#34;
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/post/code-for-machine.html">
+        
+          写一些友好的代码（下），对虚拟机友好
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <!-- 二维码 END -->
+    
+      <!-- gitalk START -->
+      <div id="gitalk-container"></div>
+      
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+        clientID: 'c85c431dec5b3fa75527',
+        clientSecret: 'f5f4199617efe01a998333307bb1008a09b4a2d7',
+        repo: 'gitalk',
+        owner: 'lvgocc',
+        admin: 'lvgocc',
+        id: '64be3cb18f0608a4cfb12ef164498fc4',
+        pagerDirection: 'last',
+        distractionFreeMode: 'false'
+    })
+    gitalk.render('gitalk-container')
+</script>
+      <!-- gitalk END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E4%B8%80%E4%BA%9B%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81%EF%BC%88%E4%B8%8A%EF%BC%89%EF%BC%8C%E5%AF%B9%E4%BA%BA%E5%8F%8B%E5%A5%BD"><span class="toc-nav-text">写一些友好的代码（上），对人友好</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-nav-text">正文</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AF%B9%E4%BA%BA%E5%8F%8B%E5%A5%BD"><span class="toc-nav-text">对人友好</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81-%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">好的代码?友好的代码?</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%88%91%E8%AE%A4%E4%B8%BA%E5%AF%B9%E4%BA%BA%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">我认为对人友好的代码</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%A6%96%E5%85%88%E4%B8%80%E5%AE%9A%E8%A6%81%E8%83%BD%E8%AF%BB"><span class="toc-nav-text">首先一定要能读</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%85%B6%E6%AC%A1%EF%BC%8C%E4%B8%8D%E8%A6%81%E8%AE%A9%E4%BA%BA%E8%AF%AF%E4%BC%9A"><span class="toc-nav-text">其次，不要让人误会</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%B8%89%EF%BC%8C%E4%B8%8D%E8%A6%81%E5%81%9A%E5%A4%8D%E6%9D%82%E5%88%86%E6%94%AF%E7%9A%84%E5%88%A4%E6%96%AD%E9%AC%BC%E6%89%8D"><span class="toc-nav-text">三，不要做复杂分支的判断鬼才</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%9B%9B%EF%BC%8C%E8%BF%B7%E6%83%91%E8%A1%8C%E4%B8%BA%E5%B0%91%E4%B8%80%E7%82%B9"><span class="toc-nav-text">四，迷惑行为少一点</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E5%AD%98%E4%BA%86%E4%B8%AA%E5%AF%82%E5%AF%9E"><span class="toc-nav-text">存了个寂寞</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E4%BB%BB%E6%80%A7%E6%8D%A2%E8%A1%8C"><span class="toc-nav-text">任性换行</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E6%88%AA%E5%8F%96%E5%AF%82%E5%AF%9E"><span class="toc-nav-text">截取寂寞</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E5%BC%82%E5%B8%B8%E8%87%AA%E5%B7%B1%E4%B9%9F%E6%B2%A1%E6%83%B3%E5%88%B0%E4%BC%9A%E8%BF%99%E6%A0%B7"><span class="toc-nav-text">异常自己也没想到会这样</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#%E8%B0%A2%E5%A4%A7%E5%9B%BD%E7%9A%84%E5%AA%B3%E5%A6%87%EF%BC%8C%E9%A6%99%E7%A7%80"><span class="toc-nav-text">谢大国的媳妇，香秀</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%8F%8B%E5%A5%BD%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">友好的代码</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-nav-text">写在最后</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://lvgo.org//post/code-for-people.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // zoom image
+    
+
+    
+    /**
+     * Wrap images with fancybox support.
+     */
+    $('img').not('.logo img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+
+    });
+
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      thumbs: false,
+      hash: true,
+      loop: false,
+      fullScreen: true,
+      slideShow: false,
+      protect: true,
+    });
+    
+
+  })();
+</script>
+
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/lvgocc">lvgocc</a>
+  </p>
+</footer>
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279372106'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1279372106' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async('//lib.baomitu.com/fastclick/1.0.6/fastclick.min.js', function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async('//lib.baomitu.com/highlight.js/9.15.10/highlight.min.js', function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
